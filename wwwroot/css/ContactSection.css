@@ -1,0 +1,111 @@
+  /* ── Brief grid ── */
+    .brief-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 24px;
+        margin-bottom: 24px;
+    }
+
+    .brief-field { display: flex; flex-direction: column; gap: 8px; }
+    .brief-field--full { grid-column: 1 / -1; }
+
+    /* ── Labels ── */
+    .brief-label {
+        font-family: var(--font-mono);
+        font-size: 10px;
+        color: var(--text-muted);
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+    }
+
+    /* ── Inputs / selects / textareas ── */
+    .brief-input {
+        width: 100%;
+        font-family: var(--font-body);
+        font-size: 14px;
+        padding: 12px 16px;
+        background: var(--bg-card);
+        border: 1px solid var(--border);
+        color: var(--text-primary);
+        outline: none;
+        transition: border-color 0.2s, box-shadow 0.2s;
+        appearance: none;
+        -webkit-appearance: none;
+    }
+
+    .brief-input::placeholder { color: var(--text-muted); }
+
+    .brief-input:focus {
+        border-color: var(--accent);
+        box-shadow: 0 0 0 3px var(--accent-dim);
+    }
+
+    /* Custom select arrow */
+    .brief-select {
+        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6' viewBox='0 0 10 6'%3E%3Cpath d='M0 0l5 6 5-6z' fill='rgba(240,237,232,0.28)'/%3E%3C/svg%3E");
+        background-repeat: no-repeat;
+        background-position: right 14px center;
+        padding-right: 36px;
+        cursor: pointer;
+    }
+
+    html.light .brief-select {
+        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6' viewBox='0 0 10 6'%3E%3Cpath d='M0 0l5 6 5-6z' fill='rgba(14,14,14,0.32)'/%3E%3C/svg%3E");
+    }
+
+    /* Textarea */
+    .brief-textarea {
+        resize: vertical;
+        min-height: 120px;
+        line-height: 1.6;
+    }
+
+    /* ── Submit button ── */
+    .brief-submit {
+        font-family: var(--font-mono);
+        font-size: clamp(10px, 1.5vw, 11px);
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        background: var(--text-primary);
+        color: var(--bg);
+        padding: clamp(10px, 1vw, 13px) clamp(20px, 3vw, 32px);
+        border: 1px solid transparent;
+        cursor: pointer;
+        transition: background 0.2s, color 0.2s, border-color 0.2s;
+        width: 100%;
+    }
+
+    .brief-submit:hover:not(:disabled) {
+        background: transparent;
+        color: var(--text-primary);
+        border-color: var(--border-strong);
+    }
+
+    .brief-submit:disabled {
+        background: var(--border-strong);
+        color: var(--text-muted);
+        cursor: not-allowed;
+        opacity: 0.6;
+    }
+
+    /* ── Responsive ── */
+    @media (max-width: 768px) {
+        .brief-grid {
+            grid-template-columns: 1fr !important;
+        }
+
+        .brief-field--full {
+            grid-column: 1 !important;
+        }
+
+        .project-brief-section {
+            margin-right: 0 !important;
+            padding: 60px 20px !important;
+        }
+    }
+
+    @media (max-width: 640px) {
+        .project-brief-section {
+            padding: 48px 16px !important;
+        }
+    }

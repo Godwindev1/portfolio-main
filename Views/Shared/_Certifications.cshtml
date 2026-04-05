@@ -1,0 +1,53 @@
+@model List<Portfolio.Models.Certification>
+
+<!-- ═══ CERTIFICATIONS ═══ -->
+<section id="certifications">
+  <div class="section-eyebrow">
+    <div class="section-eyebrow-line"></div>
+    <span class="section-eyebrow-text">02 // PROFESSIONAL_CERTIFICATIONS</span>
+  </div>
+  <h2 class="section-title">System Capabilities &amp;<br><em style="color: var(--accent);">Validated Authority.</em></h2>
+  <p style="font-size:14px; color: var(--text-secondary); max-width: 520px; margin-top: 16px; line-height: 1.7;">
+    A granular breakdown of technical competencies in backend engineering and cloud infrastructure, backed by industry-standard credentials.
+  </p>
+
+  <div class="cert-list">
+    @foreach (var cert in Model)
+    {
+      <div class="cert-row fade-up">
+        <div class="cert-badge">@cert.Icon</div>
+        <div class="cert-info">
+          <div class="cert-name">@cert.Name</div>
+          <div class="cert-meta">
+            <span class="cert-grade">@cert.Grade</span>
+            <span class="cert-year">@cert.Year</span>
+          </div>
+        </div>
+        <div class="cert-right">
+          <div class="cert-provider">
+            <div class="cert-provider-label">PROVIDER</div>
+            <div class="cert-provider-name">@cert.Provider</div>
+          </div>
+          <a href="@cert.BadgeUrl" class="cert-view-btn">VIEW BADGE ↗</a>
+        </div>
+      </div>
+    }
+  </div>
+
+  <div class="cert-footer">
+    <div class="cert-philosophy fade-up">
+      <p class="cert-philosophy-quote">
+        "Certifications are the baseline;<br>the architecture is the legacy.<br>I build systems that prioritise <em>resilience</em> over novelty."
+      </p>
+    </div>
+    <div class="cert-eng-philosophy fade-up">
+      <span class="cert-eng-label">ENGINEERING_PHILOSOPHY</span>
+      <p class="cert-eng-text">
+        Each credential represents thousands of hours in production environments — from handling high-concurrency job queues to managing cloud-native infrastructure via Terraform and Kubernetes. These competencies are battle-tested and refined through real delivery constraints, not just exam preparation.
+      </p>
+      <p class="cert-eng-text">
+        The goal is never the badge. The goal is the system that doesn't wake you up at 3am.
+      </p>
+    </div>
+  </div>
+</section>

@@ -1,0 +1,244 @@
+
+<!-- ═══ CONTACT ═══ -->
+<section id="contact" style="padding: 0; border-top: 1px solid var(--border);">
+
+    <!-- ── Contact Header ── -->
+    <div class="contact-section" style="margin-right: 56px; border-bottom: 1px solid var(--border);">
+        <div>
+            <div class="contact-eyebrow">SECURE_COMMUNICATION</div>
+            <a href="mailto:Gamedev740@gmail.com" class="contact-email">Gamedev740@gmail.com</a>
+            <div class="contact-pgp">PGP_KEY: 0xBF2048...</div>
+        </div>
+        <div class="footer-links">
+            <a href="#" class="footer-link">GITHUB</a>
+            <a href="#" class="footer-link">LINKEDIN</a>
+            <a href="#" class="footer-link">UPWORK</a>
+            <a href="#" class="footer-link">FIVERR</a>
+        </div>
+    </div>
+
+    <!-- ── Project Brief Form ── -->
+    <div class="project-brief-section" style="margin-right: 56px; padding: 100px 40px;">
+
+        <!-- Section Header -->
+        <div style="margin-bottom: 60px;">
+            <div class="section-eyebrow">
+                <div class="section-eyebrow-line"></div>
+                <span class="section-eyebrow-text">LET_US_BUILD_TOGETHER</span>
+            </div>
+            <h2 class="section-title">Start_Your_Project</h2>
+            <p style="font-size: clamp(13px, 2vw, 15px); color: var(--text-secondary); max-width: 520px; line-height: 1.7; margin-top: 12px;">
+                Tell me about your next initiative. Share the details, scope, and vision — I'll review and respond within 24 hours with a tailored approach.
+            </p>
+        </div>
+
+        <!-- Success State (hidden by default) -->
+        <div id="brief-success" style="display: none;
+             background: var(--bg-card);
+             border: 1px solid var(--accent);
+             padding: clamp(24px, 5vw, 48px);
+             text-align: center;
+             max-width: 600px;">
+            <div style="font-size: clamp(36px, 8vw, 48px); margin-bottom: 20px; color: var(--accent);">✓</div>
+            <h3 style="font-family: var(--font-display);
+                       font-style: italic;
+                       font-size: clamp(20px, 4vw, 28px);
+                       font-weight: 600;
+                       color: var(--accent);
+                       margin-bottom: 12px;">
+                Project Brief Received
+            </h3>
+            <p style="font-size: clamp(12px, 1.5vw, 14px); color: var(--text-secondary); line-height: 1.6;">
+                Thank you! I've received your project details and will send a personalised response to
+                <strong id="brief-success-email" style="color: var(--text-primary);"></strong> shortly.
+            </p>
+        </div>
+
+        <!-- Form -->
+        <form id="project-brief-form" novalidate>
+
+            <div class="brief-grid">
+
+                <!-- Email — full width -->
+                <div class="brief-field brief-field--full">
+                    <label class="brief-label" for="brief-email">Email Address *</label>
+                    <input class="brief-input"
+                           type="email"
+                           id="brief-email"
+                           name="email"
+                           placeholder="your@email.com"
+                           required />
+                </div>
+
+                <!-- Project Name -->
+                <div class="brief-field">
+                    <label class="brief-label" for="brief-project-name">Project Name *</label>
+                    <input class="brief-input"
+                           type="text"
+                           id="brief-project-name"
+                           name="projectName"
+                           placeholder="e.g., E-Commerce Platform"
+                           required />
+                </div>
+
+                <!-- Project Scope -->
+                <div class="brief-field">
+                    <label class="brief-label" for="brief-scope">Project Scope *</label>
+                    <select class="brief-input brief-select"
+                            id="brief-scope"
+                            name="projectScope"
+                            required>
+                        <option value="">Select scope...</option>
+                        <option value="small">Small (≤ 40 hours)</option>
+                        <option value="medium">Medium (40–160 hours)</option>
+                        <option value="large">Large (160–320 hours)</option>
+                        <option value="enterprise">Enterprise (320+ hours)</option>
+                    </select>
+                </div>
+
+                <!-- Role Needed -->
+                <div class="brief-field">
+                    <label class="brief-label" for="brief-role">Role Needed *</label>
+                    <select class="brief-input brief-select"
+                            id="brief-role"
+                            name="roleNeeded"
+                            required>
+                        <option value="">Select role...</option>
+                        <option value="backend">Backend Engineer</option>
+                        <option value="fullstack">Full Stack Developer</option>
+                        <option value="devops">DevOps Engineer</option>
+                        <option value="architecture">Systems Architect</option>
+                        <option value="consultant">Technical Consultant</option>
+                    </select>
+                </div>
+
+                <!-- Timeline -->
+                <div class="brief-field">
+                    <label class="brief-label" for="brief-timeline">Timeline *</label>
+                    <select class="brief-input brief-select"
+                            id="brief-timeline"
+                            name="timeline"
+                            required>
+                        <option value="">Select timeline...</option>
+                        <option value="asap">ASAP (this week)</option>
+                        <option value="2weeks">2 weeks</option>
+                        <option value="1month">1 month</option>
+                        <option value="flexible">Flexible</option>
+                    </select>
+                </div>
+
+                <!-- Budget -->
+                <div class="brief-field">
+                    <label class="brief-label" for="brief-budget">Budget Range</label>
+                    <input class="brief-input"
+                           type="text"
+                           id="brief-budget"
+                           name="budget"
+                           placeholder="e.g., $5,000 – $10,000" />
+                </div>
+
+                <!-- Project Description — full width -->
+                <div class="brief-field brief-field--full">
+                    <label class="brief-label" for="brief-description">Project Description *</label>
+                    <textarea class="brief-input brief-textarea"
+                              id="brief-description"
+                              name="projectDescription"
+                              placeholder="Describe your project, goals, current state, and what success looks like..."
+                              rows="5"
+                              required></textarea>
+                </div>
+
+                <!-- Additional Message — full width -->
+                <div class="brief-field brief-field--full">
+                    <label class="brief-label" for="brief-message">Additional Message</label>
+                    <textarea class="brief-input brief-textarea"
+                              id="brief-message"
+                              name="quote"
+                              placeholder="Any additional context, design references, or specifics..."
+                              rows="3"
+                              style="min-height: 80px;"></textarea>
+                </div>
+
+            </div><!-- /.brief-grid -->
+
+            <button type="submit" id="brief-submit" class="brief-submit">
+                <span id="brief-submit-label">SUBMIT_PROJECT_BRIEF</span>
+            </button>
+
+        </form>
+
+    </div><!-- /.project-brief-section -->
+
+</section>
+
+
+@{
+  
+/*
+<script>
+    (function () {
+        const form     = document.getElementById('project-brief-form');
+        const success  = document.getElementById('brief-success');
+        const emailEl  = document.getElementById('brief-success-email');
+        const submitBtn = document.getElementById('brief-submit');
+        const submitLabel = document.getElementById('brief-submit-label');
+
+        if (!form) return;
+
+        form.addEventListener('submit', async function (e) {
+            e.preventDefault();
+
+            // Basic HTML5 validation
+            if (!form.checkValidity()) {
+                form.reportValidity();
+                return;
+            }
+
+            // Loading state
+            submitBtn.disabled = true;
+            submitLabel.textContent = 'SUBMITTING...';
+
+            const data = {
+                email:              form.email.value,
+                projectName:        form.projectName.value,
+                projectScope:       form.projectScope.value,
+                roleNeeded:         form.roleNeeded.value,
+                timeline:           form.timeline.value,
+                budget:             form.budget.value,
+                projectDescription: form.projectDescription.value,
+                quote:              form.quote.value,
+            };
+
+            try {
+                // ── Replace this fetch with your actual API endpoint ──
+                await new Promise(resolve => setTimeout(resolve, 1000));
+                // await fetch('/api/contact', {
+                //     method: 'POST',
+                //     headers: { 'Content-Type': 'application/json' },
+                //     body: JSON.stringify(data),
+                // });
+
+                // Show success
+                emailEl.textContent = data.email;
+                form.style.display = 'none';
+                success.style.display = 'block';
+
+                // Reset after 4 seconds
+                setTimeout(function () {
+                    form.reset();
+                    form.style.display = 'block';
+                    success.style.display = 'none';
+                    submitBtn.disabled = false;
+                    submitLabel.textContent = 'SUBMIT_PROJECT_BRIEF';
+                }, 4000);
+
+            } catch (err) {
+                console.error('Submission failed:', err);
+                submitBtn.disabled = false;
+                submitLabel.textContent = 'SUBMIT_PROJECT_BRIEF';
+            }
+        });
+    })();
+</script>
+ */
+}

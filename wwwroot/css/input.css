@@ -1,0 +1,84 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ─── DARK MODE (default) ─── */
+:root {
+  --bg: #080808;
+  --bg-elevated: #0f0f0f;
+  --bg-card: #111111;
+  --bg-card-hover: #161616;
+  --border: rgba(255,255,255,0.07);
+  --border-strong: rgba(255,255,255,0.14);
+  --text-primary: #f0ede8;
+  --text-secondary: rgba(240,237,232,0.5);
+  --text-muted: rgba(240,237,232,0.28);
+  --accent: #00c9a7;
+  --accent-dim: rgba(0,201,167,0.12);
+  --accent-glow: rgba(0,201,167,0.06);
+  --shadow: 0 2px 20px rgba(0,0,0,0.4);
+  --nav-bg: rgba(8,8,8,0.92);
+  --sidebar-bg: rgba(8,8,8,0.9);
+  --scrollbar-thumb: rgba(255,255,255,0.14);
+  --scrollbar-thumb-hover: rgba(255,255,255,0.2);
+  --font-display: 'Cormorant Garamond', Georgia, serif;
+  --font-mono: 'JetBrains Mono', monospace;
+  --font-body: 'DM Sans', sans-serif;
+}
+
+/* ─── LIGHT MODE ─── */
+html.light {
+  --bg: #f4f1ec;
+  --bg-elevated: #ede9e2;
+  --bg-card: #eae6de;
+  --bg-card-hover: #e2ddd4;
+  --border: rgba(0,0,0,0.08);
+  --border-strong: rgba(0,0,0,0.15);
+  --text-primary: #0e0e0e;
+  --text-secondary: rgba(14,14,14,0.55);
+  --text-muted: rgba(14,14,14,0.32);
+  --accent: #007a65;
+  --accent-dim: rgba(0,122,101,0.1);
+  --accent-glow: rgba(0,122,101,0.05);
+  --shadow: 0 2px 20px rgba(0,0,0,0.08);
+  --nav-bg: rgba(244,241,236,0.94);
+  --sidebar-bg: rgba(244,241,236,0.95);
+  --scrollbar-thumb: rgba(0,0,0,0.15);
+  --scrollbar-thumb-hover: rgba(0,0,0,0.25);
+}
+
+/* Custom cursor */
+.cursor {
+  position: fixed;
+  width: 8px;
+  height: 8px;
+  background: var(--accent);
+  border-radius: 50%;
+  pointer-events: none;
+  z-index: 9999;
+  transform: translate(-50%, -50%);
+  transition: transform 0.1s ease, width 0.2s ease, height 0.2s ease, opacity 0.2s ease;
+}
+
+.cursor-ring {
+  position: fixed;
+  width: 32px;
+  height: 32px;
+  border: 1px solid rgba(0,201,167,0.4);
+  border-radius: 50%;
+  pointer-events: none;
+  z-index: 9998;
+  transform: translate(-50%, -50%);
+  transition: transform 0.15s ease, width 0.3s ease, height 0.3s ease;
+}
+
+/* Grain overlay */
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+  pointer-events: none;
+  z-index: 9997;
+  opacity: 0.4;
+}

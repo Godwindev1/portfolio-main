@@ -1,0 +1,32 @@
+@model List<Portfolio.Models.SkillDomain>
+
+<!-- ═══ TECHNICAL ARSENAL ═══ -->
+<section id="arsenal">
+  <div class="section-eyebrow">
+    <div class="section-eyebrow-line"></div>
+    <span class="section-eyebrow-text">DOMAIN_COVERAGE_MAP</span>
+  </div>
+  <h2 class="section-title">Technical_Arsenal</h2>
+
+  <div class="arsenal-grid">
+    @foreach (var domain in Model)
+    {
+      <div class="domain-card fade-up">
+        <div class="domain-header">
+          <span class="domain-num">0@domain.Number // @domain.Title.ToUpper()</span>
+          <span class="domain-icon">@domain.Icon</span>
+        </div>
+        <div class="domain-title">@domain.Title</div>
+        <div class="domain-items">
+          @foreach (var item in domain.Items)
+          {
+            <div class="domain-item">
+              <span class="domain-item-name">@item.Name</span>
+              <span class="domain-item-level level-@item.Level.ToLower()">@item.Level</span>
+            </div>
+          }
+        </div>
+      </div>
+    }
+  </div>
+</section>

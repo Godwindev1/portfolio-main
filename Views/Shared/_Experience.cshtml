@@ -1,0 +1,53 @@
+@{
+    var experiences = ((List<Portfolio.Models.Experience>, List<Portfolio.Models.Testimonial>))Model;
+    var expList = experiences.Item1;
+    var testimonialList = experiences.Item2;
+}
+
+<!-- ═══ EXPERIENCE ═══ -->
+<section id="experience">
+  <div class="section-eyebrow">
+    <div class="section-eyebrow-line"></div>
+    <span class="section-eyebrow-text">ARCHIVE_03 // EXPERIENCE_LOG</span>
+  </div>
+  <h2 class="section-title" style="margin-bottom: 52px;">Work_History</h2>
+
+  <div class="exp-layout">
+    <div class="exp-timeline">
+      @foreach (var exp in expList)
+      {
+        <div class="exp-entry fade-up">
+          <div class="exp-period">@exp.Period</div>
+          <div class="exp-content">
+            <div class="exp-role">@exp.Role</div>
+            <div class="exp-company">@exp.Company</div>
+            <p class="exp-desc">@exp.Description</p>
+            <div class="exp-tags">
+              @foreach (var tag in exp.Tags)
+              {
+                <span class="tag">@tag</span>
+              }
+            </div>
+          </div>
+        </div>
+      }
+    </div>
+
+    <div class="testimonial-stack">
+      @foreach (var testimonial in testimonialList)
+      {
+        <div class="testimonial-card fade-up">
+          <div class="quote-mark">"</div>
+          <p class="quote-text">@testimonial.Quote</p>
+          <div class="quote-author">
+            <div class="quote-avatar">@testimonial.AuthorInitials</div>
+            <div class="quote-author-info">
+              <div class="quote-name">@testimonial.AuthorName</div>
+              <div class="quote-title">@testimonial.AuthorTitle</div>
+            </div>
+          </div>
+        </div>
+      }
+    </div>
+  </div>
+</section>

@@ -1,0 +1,35 @@
+@model Portfolio.Models.HeroStatus
+
+<!-- ═══ HERO ═══ -->
+<section id="hero" style="border-top: none;">
+  <div>
+    <p class="hero-eyebrow">SYSTEM_INIT <span>//</span> BACKEND_ENGINEER</p>
+    <h1 class="hero-title">Architecting<br>Scalable<br>Backends.</h1>
+    <p class="hero-body">
+      Specializing in the intersection of <strong>C#, ASP.NET Core</strong>, and high-availability <strong>DevOps</strong> workflows. Building resilient foundations — from job scheduling engines to AI-powered RAG pipelines — for systems that perform under pressure.
+    </p>
+    <div class="hero-actions">
+      <a href="#work" class="btn-primary">EXPLORE_PROJECTS</a>
+      <a href="#arsenal" class="btn-secondary">VIEW_STACK</a>
+    </div>
+  </div>
+
+  <div class="hero-panel">
+    <div class="hero-status-card">
+      <div class="status-header">
+        <span class="status-label">SYSTEM_STATUS</span>
+        <span class="status-badge">@(Model.OpenToWork ? "OPEN_TO_WORK" : "NOT_AVAILABLE")</span>
+      </div>
+      <p class="status-desc">@Model.StatusMessage</p>
+    </div>
+    <div class="hero-metrics">
+      @foreach (var metric in Model.Metrics)
+      {
+        <div class="metric-cell">
+          <div class="metric-key">@metric.Key</div>
+          <div class="metric-value" style="@(metric.Value.Length > 8 ? "font-size:16px;" : "")">@metric.Value</div>
+        </div>
+      }
+    </div>
+  </div>
+</section>

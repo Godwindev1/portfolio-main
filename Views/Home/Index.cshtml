@@ -1,0 +1,32 @@
+@{
+    ViewData["Title"] = "GODWIN Portfolio";
+}
+
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+
+
+@model Portfolio.Models.PortfolioViewModel
+
+<!-- Hero Section -->
+<partial name="_Hero" model="Model.HeroStatus" />
+
+<!-- Case Study Section -->
+<partial name="_CaseStudy" model="Model.CaseStudies.FirstOrDefault()" />
+
+<!-- Featured Work Section -->
+<partial name="_FeaturedWork" model="Model.Projects" />
+
+<!-- Experience Section -->
+<partial name="_Experience" model="(Model.Experiences, Model.Testimonials)" />
+
+<!-- Certifications Section -->
+<partial name="_Certifications" model="Model.Certifications" />
+
+<!-- Technical Arsenal Section -->
+<partial name="_TechnicalArsenal" model="Model.SkillDomains" />
+
+<!-- Contact Section -->
+<partial name="_Contact" />
+
+<!-- Footer -->
+<partial name="_Footer" />

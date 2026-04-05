@@ -1,0 +1,16 @@
+{
+  "name": "portfolio",
+  "version": "1.0.0",
+  "description": "Portfolio website with TailwindCSS",
+  "scripts": {
+    "dev": "postcss ./wwwroot/css/input.css -o ./wwwroot/css/output.css --watch",
+    "build": "postcss ./wwwroot/css/input.css -o ./wwwroot/css/output.css --minify"
+  },
+  "devDependencies": {
+    "@tailwindcss/postcss": "^4.2.2",
+    "autoprefixer": "^10.4.20",
+    "postcss": "^8.4.40",
+    "postcss-cli": "^11.0.0",
+    "tailwindcss": "^4.2.2"
+  }
+}

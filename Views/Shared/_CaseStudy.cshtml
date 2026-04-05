@@ -1,0 +1,48 @@
+@model Portfolio.Models.CaseStudy
+
+@if (Model != null)
+{
+    <!-- ═══ CASE STUDY SPOTLIGHT ═══ -->
+    <section id="case-study">
+      <div class="case-study-label">@Model.Label</div>
+      <h2 class="case-study-title">@Html.Raw(Model.Title)</h2>
+
+      <div class="case-study-body fade-up">
+        <div class="case-visual">
+          <img src="~/images/CaseStudyImage.png" alt="@Model.Title" class="case-visual-img" />
+        </div>
+
+        <div class="case-narrative">
+          <p class="problem-statement">@Html.Raw("\"" + Model.ProblemStatement + "\"")</p>
+          <p class="case-body-text">@Model.BodyText</p>
+
+          <div class="case-metrics">
+            @foreach (var metric in Model.Metrics)
+            {
+              <div class="case-metric">
+                <div class="case-metric-key">@metric.Key</div>
+                <div class="case-metric-value">
+                  @{
+                    var parts = metric.Value.Split(' ');
+                    if (parts.Length > 1)
+                    {
+                      <text>@parts[0] <span class="case-metric-delta">@string.Join(" ", parts.Skip(1))</span></text>
+                    }
+                    else
+                    {
+                      <text>@metric.Value</text>
+                    }
+                  }
+                </div>
+              </div>
+            }
+          </div>
+
+          <a href="#" class="case-cta">
+            READ_FULL_ARCHITECTURAL_STORY
+            <span class="case-cta-arrow">→</span>
+          </a>
+        </div>
+      </div>
+    </section>
+}
