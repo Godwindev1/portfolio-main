@@ -73,7 +73,7 @@ public class HeroStatus
     {
         { "LATENCY_TARGET", "<10ms" },
         { "UPTIME_SLA", "99.9%" },
-        { "EXP_YEARS", "5+" },
+        { "EXP_YEARS", "4+" },
         { "VERSION", "v2.4.0" }
     };
 }

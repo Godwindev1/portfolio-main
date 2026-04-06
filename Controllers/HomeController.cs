@@ -4,7 +4,6 @@ using Portfolio.Models;
 
 namespace Portfolio.Controllers;
 
-[Authorize(policy: "AdminOnly")]
 public class HomeController : Controller
 {
     public IActionResult Index()
