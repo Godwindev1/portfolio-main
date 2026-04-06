@@ -7,4 +7,9 @@
     <StartupObject></StartupObject>
   </PropertyGroup>
 
+  <ItemGroup>
+    <PackageReference Include="dotenv.net" Version="4.0.1" />
+    <PackageReference Include="Pomelo.EntityFrameworkCore.MySql" Version="9.0.0" />
+  </ItemGroup>
+
 </Project>

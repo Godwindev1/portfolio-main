@@ -1,0 +1,65 @@
+@model LoginRequest
+@{
+    ViewData["Title"] = "Admin Login";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+
+<div class="login-root">
+    <div class="login-card">
+
+        <div class="login-header">
+            <div class="login-badge">RESTRICTED ACCESS</div>
+            <h1 class="login-title">ADMIN<span class="accent">_</span>OS</h1>
+            <p class="login-sub">Authorised personnel only.</p>
+        </div>
+
+        @if (!ViewData.ModelState.IsValid)
+        {
+            <div class="error-banner">
+                @foreach (var err in ViewData.ModelState.Values.SelectMany(v => v.Errors))
+                {
+                    <span>⚠ @err.ErrorMessage</span>
+                }
+            </div>
+        }
+
+        <form asp-action="Login" asp-controller="Auth" method="post" autocomplete="off">
+            @Html.AntiForgeryToken()
+            <input type="hidden" name="ReturnUrl" value="@ViewData["ReturnUrl"]" />
+
+            <div class="field">
+                <label asp-for="Username">USERNAME</label>
+                <input asp-for="Username" type="text" placeholder="godwin" autofocus spellcheck="false" />
+                <span asp-validation-for="Username" class="field-error"></span>
+            </div>
+
+            <div class="field">
+                <label asp-for="Password">PASSWORD</label>
+                <input asp-for="Password" type="password" placeholder="••••••••••••" />
+                <span asp-validation-for="Password" class="field-error"></span>
+            </div>
+
+            <div class="field-row">
+                <label class="checkbox-label">
+                    <input asp-for="RememberMe" type="checkbox" />
+                    <span>Stay signed in for 7 days</span>
+                </label>
+            </div>
+
+            <button type="submit" class="login-btn">
+                <span>AUTHENTICATE</span>
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M5 12h14M12 5l7 7-7 7"/>
+                </svg>
+            </button>
+        </form>
+
+        <div class="login-footer">
+            <span class="dot"></span>
+            <span>Session encrypted · HttpOnly cookie · CSRF protected</span>
+        </div>
+
+    </div>
+</div>
+
