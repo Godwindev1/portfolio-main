@@ -1,9 +1,8 @@
-using System.Security.Claims;
 using AdminAuth.Middleware;
-using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
-using Microsoft.AspNetCore.RateLimiting;
 using dotenv.net;
+using Microsoft.EntityFrameworkCore;
+using Portfolio.Data;
 
 DotEnv.Load();
 
@@ -11,10 +10,15 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.Configuration.AddEnvironmentVariables();
 
-// Add services to the container
-builder.Services.AddControllersWithViews();
+builder.Services.AddDbContext<PortfolioDbContext>(options =>
+    options.UseMySql(
+        builder.Configuration["CONNECTION_STRING"],  new MySqlServerVersion(new Version(8, 0, 34))
+    )
+);
 
-// Program.cs
+builder.Services.AddControllersWithViews();
+builder.Services.AddScoped<ICaseStudyRepository, CaseStudyRepository>();
+
 builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
     .AddCookie(options =>
     {
@@ -22,7 +26,6 @@ builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationSc
         options.LogoutPath       = "/auth/logout";
         options.AccessDeniedPath = "/auth/denied";
  
-        // Session expires after 8 hours of inactivity
         options.ExpireTimeSpan    = TimeSpan.FromHours(8);
         options.SlidingExpiration = true;
  
@@ -34,7 +37,6 @@ builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationSc
     });
  
 
-// ─── Authorization Policy ────────────────────────────────────────────────────
 builder.Services.AddAuthorization(options =>
 {
     options.AddPolicy("AdminOnly", policy =>
@@ -44,7 +46,15 @@ builder.Services.AddAuthorization(options =>
 
 var app = builder.Build();
 
-// Configure the HTTP request pipeline
+using (var scope = app.Services.CreateScope())
+{
+    var services = scope.ServiceProvider;
+    
+    var repo = services.GetRequiredService<ICaseStudyRepository>();
+    var seeder = new CaseStudySeedTest();
+    await seeder.GenerateCaseStudies(repo);
+}
+
 if (!app.Environment.IsDevelopment())
 {
     app.UseExceptionHandler("/Home/Error");
@@ -59,7 +69,7 @@ app.UseRouting();
 // Rate limiting middleware on /auth/login to block brute force
 app.UseMiddleware<LoginRateLimitMiddleware>();
  
-app.UseAuthentication(); // ← Must come before UseAuthorization
+app.UseAuthentication(); 
 app.UseAuthorization();
  
 app.MapControllerRoute(

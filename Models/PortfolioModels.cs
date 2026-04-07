@@ -1,24 +1,17 @@
 namespace Portfolio.Models;
 
+[Obsolete]
 public class ProjectCard
 {
     public int Id { get; set; }
     public string Category { get; set; } = string.Empty;
-    public string Title { get; set; } = string.Empty;
     public string Description { get; set; } = string.Empty;
+
+    public string Title { get; set; } = string.Empty;
     public List<string> Tags { get; set; } = [];
 }
 
-public class CaseStudy
-{
-    public int Id { get; set; }
-    public string Label { get; set; } = string.Empty;
-    public string Title { get; set; } = string.Empty;
-    public string ProblemStatement { get; set; } = string.Empty;
-    public string BodyText { get; set; } = string.Empty;
-    public Dictionary<string, string> Metrics { get; set; } = [];
-    public List<string> Tags { get; set; } = [];
-}
+
 
 public class SkillDomain
 {
