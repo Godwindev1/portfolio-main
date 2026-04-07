@@ -29,7 +29,7 @@ public class HomeController : Controller
         return View(viewModel);
     }
 
-    private async  Task<List<CaseStudy>> GetCaseStudies()
+    private async  Task<List<CaseStudyViewModel>> GetCaseStudies()
     {
         return await Model.GetAllCaseStudiesAsync();
     }

@@ -1,0 +1,149 @@
+@model List<CaseStudyViewModel>
+
+
+<div class="case-study-grid">
+    @foreach (var item in Model)
+    {
+        <div class="case-card" onclick="openModal(@item.caseStudy.Id)">
+            <img src="@item.caseStudy.CoverImageUrl" alt="cover" />
+            <h3>@item.caseStudy.Title</h3>
+            <p>@item.caseStudy.Summary</p>
+        </div>
+
+        <!-- Modal -->
+        <div id="modal-@item.caseStudy.Id" class="modal">
+            <div class="modal-content">
+
+                <span class="close" onclick="closeModal(@item.caseStudy.Id)">&times;</span>
+
+                <!-- OVERVIEW -->
+                <section class="overview">
+                    <img src="@item.caseStudy.CoverImageUrl" class="overview-image" />
+
+                    <h2>@item.caseStudy.Title</h2>
+                    <p>@item.caseStudy.Summary</p>
+                    <span class="label">@item.caseStudy.Label</span>
+                </section>
+
+                <!-- PROBLEM -->
+                <section>
+                    <h3>Problem</h3>
+                    <p>@item.Problem.Context</p>
+                    <p><strong>@item.Problem.ProblemStatement</strong></p>
+
+                    <ul>
+                        @foreach (var challenge in item.Problem.Challenges)
+                        {
+                            <li>@challenge</li>
+                        }
+                    </ul>
+                </section>
+
+                <!-- SOLUTION -->
+                <section>
+                    <h3>Solution</h3>
+                    <p>@item.Solution.Overview</p>
+
+                    <ul>
+                        @foreach (var decision in item.Solution.KeyDecisions)
+                        {
+                            <li>@decision</li>
+                        }
+                    </ul>
+
+                    <p>@item.Solution.ArchitectureSummary</p>
+                </section>
+
+                <!-- IMPLEMENTATION -->
+                <section>
+                    <h3>Implementation</h3>
+
+                    @foreach (var step in item.caseStudy.ImplementationSteps.OrderBy(s => s.Order))
+                    {
+                        <div class="step">
+                            <h4>@step.Title</h4>
+                            <p>@step.Description</p>
+                        </div>
+                    }
+                </section>
+
+                <!-- ARCHITECTURE -->
+                <section>
+                    <h3>Architecture</h3>
+
+                    <ul>
+                        @foreach (var comp in item.caseStudy.ArchitectureComponents)
+                        {
+                            <li>
+                                <strong>@comp.Name</strong> — @comp.Role (@comp.Tech)
+                            </li>
+                        }
+                    </ul>
+                </section>
+
+                <!-- METRICS -->
+                <section>
+                    <h3>Results</h3>
+
+                    <ul>
+                        @foreach (var metric in item.caseStudy.Metrics)
+                        {
+                            <li>
+                                <strong>@metric.Label:</strong> @metric.Value
+                                <span> - @metric.Description</span>
+                            </li>
+                        }
+                    </ul>
+                </section>
+
+                <!-- SKILLS -->
+                <section>
+                    <h3>Skills Used</h3>
+
+                    <div class="skills">
+                        @foreach (var skill in item.caseStudy.Skills)
+                        {
+                            <span class="skill">@skill.Name</span>
+                        }
+                    </div>
+                </section>
+
+                <!-- ARTIFACTS -->
+                <section>
+                    <h3>Artifacts</h3>
+
+                    <ul>
+                        @foreach (var artifact in item.caseStudy.Artifacts)
+                        {
+                            <li>
+                                <a href="@artifact.Url" target="_blank">
+                                    @artifact.Label (@artifact.Type)
+                                </a>
+                            </li>
+                        }
+                    </ul>
+                </section>
+
+            </div>
+        </div>
+    }
+</div>
+
+<script>
+function openModal(id) {
+    document.getElementById("modal-" + id).style.display = "block";
+}
+
+function closeModal(id) {
+    document.getElementById("modal-" + id).style.display = "none";
+}
+
+// Optional: click outside to close
+window.onclick = function (event) {
+    document.querySelectorAll(".modal").forEach(m => {
+        if (event.target === m) {
+            m.style.display = "none";
+        }
+    });
+}
+</script>

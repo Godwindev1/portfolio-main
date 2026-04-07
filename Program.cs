@@ -49,10 +49,10 @@ var app = builder.Build();
 using (var scope = app.Services.CreateScope())
 {
     var services = scope.ServiceProvider;
-    
+
     var repo = services.GetRequiredService<ICaseStudyRepository>();
     var seeder = new CaseStudySeedTest();
-    await seeder.GenerateCaseStudies(repo);
+    //await seeder.GenerateCaseStudies(repo);
 }
 
 if (!app.Environment.IsDevelopment())

@@ -6,6 +6,24 @@ public class CaseStudySeedTest
     {
         var caseStudies = new List<CaseStudy>
 {
+          /* return new List<CaseStudy>
+        {
+            new() {
+                Id = 1,
+                Label = "CASE_STUDY_01 // THE_BENCHMARK",
+                Title = "FastJobServer: The Scheduling Engine Built From Scratch.",
+                ProblemStatement = "When Hangfire's overhead was killing throughput and Quartz.NET was too rigid — what does it take to build a scheduling engine that fits the constraint exactly?",
+                BodyText = "FastJobServer was born from a real constraint: existing libraries brought too much ceremony. The solution required building a PriorityQueue-backed scheduler with DateTime triggers, DI-safe worker threading, and expression tree support for EnqueueJob — without the baggage of a framework not designed for this shape of problem.",
+                Metrics = new() {
+                    { "SCHEDULING_ACCURACY", "<5ms ±0.3ms" },
+                    { "MEMORY_OVERHEAD", "-62% vs Hangfire" },
+                    { "CONCURRENT_JOBS", "10K+ sustained" },
+                    { "THREAD_MODEL", "LongRunning" }
+                },
+                Tags = new() { "C# .NET", "BACKGROUND_JOBS", "THREADING" }
+            }
+        }; */
+
     new CaseStudy
     {
         CoverImageUrl = "/images/case-study-1.png",
@@ -13,14 +31,14 @@ public class CaseStudySeedTest
         DisplayOrder = 1,
         IsFeatured = true,
 
-        Label = "SCALABILITY",
-        Title = "High-Throughput Order Processing System",
-        Summary = "Designed a distributed backend system handling 50k+ daily transactions with low latency.",
+        Label = "CASE_STUDY_01 // THE_BENCHMARK",
+        Title = "FastJobServer: The Scheduling Engine Built From Scratch.",
+        Summary = "FastJobServer was born from a real constraint: existing libraries brought too much ceremony. The solution required building a PriorityQueue-backed scheduler with DateTime triggers, DI-safe worker threading, and expression tree support for EnqueueJob — without the baggage of a framework not designed for this shape of problem.",
 
         ProblemJson = JsonSerializer.Serialize(new ProblemSection
         {
             Context = "E-commerce backend experiencing performance degradation under load.",
-            ProblemStatement = "Order processing latency exceeded 2 seconds during peak traffic.",
+            ProblemStatement = "When Hangfire's overhead was killing throughput and Quartz.NET was too rigid — what does it take to build a scheduling engine that fits the constraint exactly?",
             Challenges = new List<string>
             {
                 "Synchronous processing bottlenecks",
@@ -51,8 +69,9 @@ public class CaseStudySeedTest
         Metrics = new List<Metric>
         {
             new Metric { Label = "Latency Reduction", Value = "2s → 120ms", Description = "Improved response time under load" },
-            new Metric { Label = "Throughput", Value = "50k+/day", Description = "Handled increased transaction volume" },
-            new Metric { Label = "Error Rate", Value = "-85%", Description = "Reduced failed transactions" }
+            new Metric { Label = "Throughput", Value = "50k+ /day", Description = "Handled increased transaction volume" },
+            new Metric { Label = "Error Rate", Value = "-85%", Description = "Reduced failed transactions" },
+            new Metric { Label = "CONCURRENT_JOBS", Value = "10K+ sustained", Description = "" }
         },
 
         Skills = new List<CaseStudySkill>
@@ -79,7 +98,7 @@ public class CaseStudySeedTest
         }
     },
 
-    new CaseStudy
+    /*new CaseStudy
     {
         CoverImageUrl = "/images/case-study-2.png",
         Category = "PERFORMANCE",
@@ -145,7 +164,7 @@ public class CaseStudySeedTest
             new ArchitectureComponent { Name = "Cache Layer", Role = "Stores computed results", Tech = "Redis" },
             new ArchitectureComponent { Name = "Database", Role = "Stores raw data", Tech = "MySQL" }
         }
-    }
+    } */
 };
         Console.WriteLine("Generating case studies:");
         foreach (var cs in caseStudies)

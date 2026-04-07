@@ -19,7 +19,7 @@ public class CaseStudyModel
 
     public async Task<List<CaseStudyViewModel>> GetAllCaseStudiesAsync()
     {
-        var caseStudies  = await _caseStudyRepository.GetAllAsync(includeDetails: false);
+        var caseStudies  = await _caseStudyRepository.GetAllAsync(includeDetails: true);
 
         List<CaseStudyViewModel> result = new List<CaseStudyViewModel>();
 
@@ -40,7 +40,7 @@ public class CaseStudyModel
 
     public async Task<List<CaseStudyViewModel>> GetFeaturedCaseStudiesAsync()
     {
-        var all = await _caseStudyRepository.GetAllAsync(includeDetails: false);
+        var all = await _caseStudyRepository.GetAllAsync(includeDetails: true);
         var Featured = all
             .Where(c => c.IsFeatured)
             .OrderBy(c => c.DisplayOrder)
