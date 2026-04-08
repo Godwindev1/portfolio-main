@@ -9,7 +9,7 @@ public class CaseStudySeedTest
 
     new CaseStudy
     {
-        CoverImageUrl = "/images/case-study-1.png",
+        CoverImageUrl = "/images/Test.webp",
         Category = "SYSTEMS_ARCHITECTURE",
         DisplayOrder = 1,
         IsFeatured = true,
@@ -67,8 +67,10 @@ public class CaseStudySeedTest
 
         Artifacts = new List<ArtifactLink>
         {
-            new ArtifactLink { Label = "GitHub Repo", Url = "https://github.com/example/order-system", Type = "Repo" },
-            new ArtifactLink { Label = "API Docs", Url = "https://postman.com/example", Type = "Docs" }
+            new ArtifactLink { Label = "GitHub Repo", Url = "https://github.com/example/order-system", Type = ArtifactTypes.Repo },
+            new ArtifactLink { Label = "API Docs", Url = "https://postman.com/example", Type = ArtifactTypes.Links },
+            new ArtifactLink { Label = "ScreenShot1", Url = "/Images/CaseStudyImage.png", Type = ArtifactTypes.ImplementationDetail },
+            new ArtifactLink { Label = "ScreenShot2", Url = "/Images/Test2.webp", Type = ArtifactTypes.ScreenShot }
         },
 
         ArchitectureComponents = new List<ArchitectureComponent>
@@ -81,9 +83,9 @@ public class CaseStudySeedTest
         }
     },
 
-    /*new CaseStudy
+    new CaseStudy
     {
-        CoverImageUrl = "/images/case-study-2.png",
+        CoverImageUrl = "/images/Test.webp",
         Category = "PERFORMANCE",
         DisplayOrder = 2,
         IsFeatured = true,
@@ -138,7 +140,9 @@ public class CaseStudySeedTest
 
         Artifacts = new List<ArtifactLink>
         {
-            new ArtifactLink { Label = "Live Demo", Url = "https://demo.example.com", Type = "Demo" }
+            new ArtifactLink { Label = "Live Demo", Url = "https://demo.example.com", Type = "Demo" },
+            new ArtifactLink { Label = "ScreenShot1", Url = "/Images/CaseStudyImage.png", Type = ArtifactTypes.ScreenShot },
+            new ArtifactLink { Label = "ScreenShot2", Url = "/Images/Test2.webp", Type = ArtifactTypes.ScreenShot }
         },
 
         ArchitectureComponents = new List<ArchitectureComponent>
@@ -147,7 +151,7 @@ public class CaseStudySeedTest
             new ArchitectureComponent { Name = "Cache Layer", Role = "Stores computed results", Tech = "Redis" },
             new ArchitectureComponent { Name = "Database", Role = "Stores raw data", Tech = "MySQL" }
         }
-    } */
+    } 
 };
         Console.WriteLine("Generating case studies:");
         foreach (var cs in caseStudies)

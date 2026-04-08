@@ -1,31 +1,40 @@
-@model List<Portfolio.Models.ProjectCard>
+@model List<CaseStudyViewModel>
+@using Portfolio.Models;
+@using Portfolio.Data;
+
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
 
 <!-- ═══ FEATURED WORK ═══ -->
 <section id="work">
   <div class="section-eyebrow">
     <div class="section-eyebrow-line"></div>
-    <span class="section-eyebrow-text">SELECT_PROJECTS_V04</span>
+    <span class="section-eyebrow-text">SELECT PROJECTS </span>
   </div>
-  <h2 class="section-title"> Featured Projects</h2>
+  <h2 class="section-title"> Other Featured Projects</h2>
 
   <div class="work-grid">
-    @foreach (var project in Model)
+    @foreach (var caseStudyView in Model)
     {
-      <div class="project-card fade-up">
+      var Project = caseStudyView.CaseStudy;
+      if (Project == null) continue; 
+
+      <div class="project-card fade-up" onclick="openModal(@Project.Id)">
         <div class="card-meta">
-          <span class="card-category">@project.Category</span>
+          <span class="card-category">@Project.Category</span>
           <span class="card-arrow">↗</span>
         </div>
-        <h3 class="card-title">@project.Title</h3>
-        <p class="card-desc">@project.Description</p>
+        <h3 class="card-title">@Project.Title</h3>
+        <p class="card-desc">@Project.Summary</p>
         <div class="card-tags">
-          @foreach (var tag in project.Tags)
+          @foreach (CaseStudySkill Skill in Project.Skills)
           {
-            <span class="tag">@tag</span>
+            <span class="tag">@Skill.Name</span>
           }
         </div>
-        <span class="card-cta">READ_CASE_STUDY</span>
+        <span class="card-cta" >READ_CASE_STUDY</span>
       </div>
+
+      <partial name="_CaseStudyModal" model="@caseStudyView" />
     }
   </div>
 </section>

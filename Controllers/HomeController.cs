@@ -18,7 +18,6 @@ public class HomeController : Controller
         var viewModel = new PortfolioViewModel
         {
             HeroStatus = new HeroStatus(),
-            Projects = GetProjects(),
             CaseStudies = await GetCaseStudies(),
             SkillDomains = GetSkillDomains(),
             Experiences = GetExperiences(),
@@ -35,40 +34,6 @@ public class HomeController : Controller
     }
 
 
-    private List<ProjectCard> GetProjects()
-    {
-        return new List<ProjectCard>
-        {
-            new() {
-                Id = 1,
-                Category = "SYSTEMS_ARCHITECTURE",
-                Title = "FastJobServer",
-                Description = "Custom .NET background job processing library with DateTime-triggered scheduling via PriorityQueue, DI thread safety, and expression-tree-based job enqueueing. Built to outlast off-the-shelf solutions.",
-                Tags = new() { "C# .NET", "CONCURRENCY", "PRIORITY_QUEUE", "DI" }
-            },
-            new() {
-                Id = 2,
-                Category = "AI_INFRASTRUCTURE",
-                Title = "RAG Exam Engine",
-                Description = "AI-powered exam revision assistant built on a full RAG pipeline. ASP.NET Core backend with pgvector semantic search, Hangfire job runner, SignalR real-time delivery, and Claude API integration.",
-                Tags = new() { "ASP.NET CORE", "POSTGRESQL", "PGVECTOR", "SIGNALR" }
-            },
-            new() {
-                Id = 3,
-                Category = "GRAPHICS_SYSTEMS",
-                Title = "Toon Shader Viewer",
-                Description = "C++/OpenGL cel-shading viewer featuring a nine-effect GLSL uber shader system — mutually exclusive base lighting, additive modifiers, and outline pass — with a ToonMaterial C++ class managing uniform state.",
-                Tags = new() { "C++", "OPENGL", "GLSL", "IMGUI" }
-            },
-            new() {
-                Id = 4,
-                Category = "DEVOPS_PIPELINE",
-                Title = "CI/CD Infrastructure",
-                Description = "End-to-end DevOps pipeline architecture for multi-service deployments. Automated build, test, and release workflows with containerisation, environment parity, and rollback strategy built in.",
-                Tags = new() { "DOCKER", "GITHUB_ACTIONS", "TERRAFORM", "K8S" }
-            }
-        };
-    }
 
 
     private List<SkillDomain> GetSkillDomains()

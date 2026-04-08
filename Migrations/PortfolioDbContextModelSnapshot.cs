@@ -285,35 +285,6 @@ namespace Portfolio.Migrations
                     b.ToTable("Metrics");
                 });
 
-            modelBuilder.Entity("Portfolio.Models.ProjectCard", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<string>("Category")
-                        .IsRequired()
-                        .HasColumnType("longtext");
-
-                    b.Property<string>("Description")
-                        .IsRequired()
-                        .HasColumnType("longtext");
-
-                    b.Property<string>("Tags")
-                        .IsRequired()
-                        .HasColumnType("longtext");
-
-                    b.Property<string>("Title")
-                        .IsRequired()
-                        .HasColumnType("longtext");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Projects");
-                });
-
             modelBuilder.Entity("Portfolio.Models.SkillDomain", b =>
                 {
                     b.Property<int>("Id")

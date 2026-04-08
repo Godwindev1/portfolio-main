@@ -11,7 +11,6 @@ public class PortfolioDbContext : DbContext
     {
     }
 
-    public DbSet<ProjectCard> Projects => Set<ProjectCard>();
     public DbSet<CaseStudy> CaseStudies => Set<CaseStudy>();
     public DbSet<SkillDomain> SkillDomains => Set<SkillDomain>();
     public DbSet<Experience> Experiences => Set<Experience>();
@@ -33,7 +32,6 @@ public class PortfolioDbContext : DbContext
         // JSON Conversions (KEEP ONLY WHAT YOU NEED)
         // -------------------------
 
-        ConfigureJsonConversion<ProjectCard, List<string>>(modelBuilder, e => e.Tags);
         ConfigureJsonConversion<Experience, List<string>>(modelBuilder, e => e.Tags);
 
         // CaseStudy JSON sections

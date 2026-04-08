@@ -11,7 +11,7 @@ using Portfolio.Data;
 namespace Portfolio.Migrations
 {
     [DbContext(typeof(PortfolioDbContext))]
-    [Migration("20260407104234_Portfolio")]
+    [Migration("20260408122141_Portfolio")]
     partial class Portfolio
     {
         /// <inheritdoc />
@@ -286,35 +286,6 @@ namespace Portfolio.Migrations
                     b.HasIndex("CaseStudyId");
 
                     b.ToTable("Metrics");
-                });
-
-            modelBuilder.Entity("Portfolio.Models.ProjectCard", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<string>("Category")
-                        .IsRequired()
-                        .HasColumnType("longtext");
-
-                    b.Property<string>("Description")
-                        .IsRequired()
-                        .HasColumnType("longtext");
-
-                    b.Property<string>("Tags")
-                        .IsRequired()
-                        .HasColumnType("longtext");
-
-                    b.Property<string>("Title")
-                        .IsRequired()
-                        .HasColumnType("longtext");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Projects");
                 });
 
             modelBuilder.Entity("Portfolio.Models.SkillDomain", b =>

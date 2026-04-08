@@ -1,4 +1,5 @@
 @model CaseStudyViewModel
+@using Portfolio.Models;
 
 @{ var item = Model; }
 
@@ -58,7 +59,7 @@
 
                     @if (!string.IsNullOrEmpty(prob.ProblemStatement))
                     {
-                        <p class="modal-problem-statement">"@prob.ProblemStatement"</p>
+                       // <p class="modal-problem-statement">"@prob.ProblemStatement"</p>
                     }
 
                     @if (!string.IsNullOrEmpty(prob.Context))
@@ -130,8 +131,7 @@
                 
                 @{
                     var screenshots = cs.Artifacts
-                        .Where(a => a.Type == "Screenshot")
-                        .Take(3)
+                        .Where(a => a.Type == ArtifactTypes.ScreenShot)
                         .ToList();
                 }
 
@@ -146,16 +146,7 @@
                                 <div class="modal-gallery-thumb-label">@shot.Label.ToUpper()</div>
                             </div>
                         }
-                        {{!-- Fill empty slots so grid stays 3-col --}}
-                        @for (int i = screenshots.Count; i < 3; i++)
-                        {
-                            <div class="modal-gallery-thumb">
-                                <div class="img-placeholder">
-                                    <div class="img-placeholder-icon" style="font-size:18px;">◈</div>
-                                    <div class="img-placeholder-label" style="font-size:7px;">Screenshot</div>
-                                </div>
-                            </div>
-                        }
+
                     </div>
                 }
             </div>
@@ -188,7 +179,7 @@
 
 
             @{
-                var midImage = cs.Artifacts.FirstOrDefault(a => a.Type == "Detail");
+                var midImage = cs.Artifacts.FirstOrDefault(a => a.Type == ArtifactTypes.ImplementationDetail);
             }
             @if (midImage != null)
             {
