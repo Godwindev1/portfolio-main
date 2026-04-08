@@ -2,7 +2,7 @@ using System.Text.Json;
 using Portfolio.Models;
 
 public class CaseStudyViewModel {
-   public   CaseStudy caseStudy { get; set; } = new CaseStudy();
+   public   CaseStudy CaseStudy { get; set; } = new CaseStudy();
     public  ProblemSection Problem { get; set; } = new ProblemSection();
     public  SolutionSection Solution { get; set; } = new SolutionSection();
 }
@@ -29,7 +29,7 @@ public class CaseStudyModel
             SolutionSection solution = JsonSerializer.Deserialize<SolutionSection>(cs.SolutionJson) ?? new SolutionSection();
 
             result.Add(new CaseStudyViewModel {
-                caseStudy = cs,
+                CaseStudy = cs,
                 Problem = problem,
                 Solution = solution
             });
@@ -55,7 +55,7 @@ public class CaseStudyModel
             SolutionSection solution = JsonSerializer.Deserialize<SolutionSection>(cs.SolutionJson) ?? new SolutionSection();
 
             result.Add(new CaseStudyViewModel {
-                caseStudy = cs,
+                CaseStudy = cs,
                 Problem = problem,
                 Solution = solution
             });
@@ -74,7 +74,7 @@ public class CaseStudyModel
 
         
         return new CaseStudyViewModel {
-            caseStudy = cs,
+            CaseStudy = cs,
             Problem = problem,
             Solution = solution
         };

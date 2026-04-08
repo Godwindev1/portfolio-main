@@ -52,7 +52,7 @@ using (var scope = app.Services.CreateScope())
 
     var repo = services.GetRequiredService<ICaseStudyRepository>();
     var seeder = new CaseStudySeedTest();
-    //await seeder.GenerateCaseStudies(repo);
+    await seeder.GenerateCaseStudies(repo);
 }
 
 if (!app.Environment.IsDevelopment())

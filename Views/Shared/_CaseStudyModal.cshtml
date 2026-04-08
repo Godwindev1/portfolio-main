@@ -1,0 +1,298 @@
+@model CaseStudyViewModel
+
+@{ var item = Model; }
+
+<div class="modal-backdrop" id="modalBackdrop" onclick="closeActiveModal()"></div>
+
+@{
+    var cs   = item.CaseStudy;
+    var prob = item.Problem;
+    var sol  = item.Solution;
+
+    <div class="modal" id="modal-@cs.Id" role="dialog" aria-modal="true" aria-label="@cs.Title">
+
+        <div class="modal-progress" id="progress-@cs.Id"></div>
+
+  
+        <div class="modal-header">
+            <div class="modal-header-left">
+                <span class="modal-label">@cs.Label.ToUpper()</span>
+                <span class="modal-category-badge">@cs.Category.ToUpper()</span>
+            </div>
+            <button class="modal-close" onclick="closeModal(@cs.Id)">
+                ESC <span style="opacity:0.4;">—</span> CLOSE
+            </button>
+        </div>
+
+
+        <div class="modal-body" id="body-@cs.Id" onscroll="updateProgress(@cs.Id)">
+
+  
+            <div class="modal-title-block">
+                <h2 class="modal-title">@cs.Title</h2>
+                <p class="modal-summary">@cs.Summary</p>
+
+                @if (cs.Skills.Any())
+                {
+                    <div class="modal-skills">
+                        @foreach (var skill in cs.Skills)
+                        {
+                            <span class="modal-skill-tag" data-cat="@skill.Category">@skill.Name</span>
+                        }
+                    </div>
+                }
+            </div>
+
+
+            <div class="modal-section-divider">
+                <div class="modal-section-divider-inner">
+                    <span class="modal-section-divider-num">01</span>
+                    <span class="modal-section-divider-label">PROBLEM &amp; SOLUTION</span>
+                </div>
+            </div>
+
+            <div class="modal-content-grid">
+
+                <div class="modal-section">
+                    <div class="modal-section-label">PROBLEM</div>
+
+                    @if (!string.IsNullOrEmpty(prob.ProblemStatement))
+                    {
+                        <p class="modal-problem-statement">"@prob.ProblemStatement"</p>
+                    }
+
+                    @if (!string.IsNullOrEmpty(prob.Context))
+                    {
+                        <p class="modal-context">@prob.Context</p>
+                    }
+
+                    @if (prob.Challenges.Any())
+                    {
+                        <div class="modal-challenges">
+                            @foreach (var challenge in prob.Challenges)
+                            {
+                                <div class="modal-challenge-item">@challenge</div>
+                            }
+                        </div>
+                    }
+                </div>
+
+             
+                <div class="modal-section">
+                    <div class="modal-section-label">SOLUTION</div>
+
+                    @if (!string.IsNullOrEmpty(sol.Overview))
+                    {
+                        <p class="modal-context">@sol.Overview</p>
+                    }
+
+                    @if (sol.KeyDecisions.Any())
+                    {
+                        <div class="modal-key-decisions">
+                            @foreach (var decision in sol.KeyDecisions)
+                            {
+                                <div class="modal-decision-item">@decision</div>
+                            }
+                        </div>
+                    }
+
+                    @if (!string.IsNullOrEmpty(sol.ArchitectureSummary))
+                    {
+                        <p class="modal-context" style="margin-top: 16px;">@sol.ArchitectureSummary</p>
+                    }
+                </div>
+            </div>
+
+            <div class="modal-gallery-section">
+                <div class="modal-section-divider" style="padding:0; margin-bottom:20px;">
+                    <div class="modal-section-divider-inner" style="padding-top:0; border-top:none;">
+                        <span class="modal-section-divider-num">02</span>
+                        <span class="modal-section-divider-label">SYSTEM_VISUAL</span>
+                    </div>
+                </div>
+
+              
+                <div class="modal-gallery-hero">
+                    @if (!string.IsNullOrEmpty(cs.CoverImageUrl))
+                    {
+                        <img src="@cs.CoverImageUrl" alt="@cs.Title cover" />
+                    }
+                    else
+                    {
+                        <div class="img-placeholder">
+                            <div class="img-placeholder-icon">⎔</div>
+                            <div class="img-placeholder-label">Architecture Diagram / Screenshot</div>
+                        </div>
+                    }
+                </div>
+                <div class="modal-gallery-caption">FIG.01 — @cs.Title system overview</div>
+
+                
+                @{
+                    var screenshots = cs.Artifacts
+                        .Where(a => a.Type == "Screenshot")
+                        .Take(3)
+                        .ToList();
+                }
+
+                @if (screenshots.Any())
+                {
+                    <div class="modal-gallery-strip">
+                        @for (int i = 0; i < screenshots.Count; i++)
+                        {
+                            var shot = screenshots[i];
+                            <div class="modal-gallery-thumb" onclick="lightbox('@shot.Url')">
+                                <img src="@shot.Url" alt="@shot.Label" />
+                                <div class="modal-gallery-thumb-label">@shot.Label.ToUpper()</div>
+                            </div>
+                        }
+                        {{!-- Fill empty slots so grid stays 3-col --}}
+                        @for (int i = screenshots.Count; i < 3; i++)
+                        {
+                            <div class="modal-gallery-thumb">
+                                <div class="img-placeholder">
+                                    <div class="img-placeholder-icon" style="font-size:18px;">◈</div>
+                                    <div class="img-placeholder-label" style="font-size:7px;">Screenshot</div>
+                                </div>
+                            </div>
+                        }
+                    </div>
+                }
+            </div>
+
+   
+            @if (cs.ImplementationSteps.Any())
+            {
+                <div class="modal-steps-section">
+                    <div class="modal-section-divider" style="padding:0; margin-bottom:0;">
+                        <div class="modal-section-divider-inner" style="padding-top:0; border-top:none;">
+                            <span class="modal-section-divider-num">03</span>
+                            <span class="modal-section-divider-label">IMPLEMENTATION_STEPS</span>
+                        </div>
+                    </div>
+
+                    <div class="modal-steps">
+                        @foreach (var step in cs.ImplementationSteps.OrderBy(s => s.Order))
+                        {
+                            <div class="modal-step">
+                                <span class="modal-step-num">@step.Order.ToString("D2")</span>
+                                <div class="modal-step-content">
+                                    <div class="modal-step-title">@step.Title</div>
+                                    <p class="modal-step-desc">@step.Description</p>
+                                </div>
+                            </div>
+                        }
+                    </div>
+                </div>
+            }
+
+
+            @{
+                var midImage = cs.Artifacts.FirstOrDefault(a => a.Type == "Detail");
+            }
+            @if (midImage != null)
+            {
+                <div class="modal-gallery-section" style="border-top: 1px solid var(--border);">
+                    <div class="modal-section-divider" style="padding:0; margin-bottom:20px;">
+                        <div class="modal-section-divider-inner" style="padding-top:0; border-top:none;">
+                            <span class="modal-section-divider-num">04</span>
+                            <span class="modal-section-divider-label">IMPLEMENTATION_DETAIL</span>
+                        </div>
+                    </div>
+                    <div class="modal-gallery-hero" style="aspect-ratio: 16/6;">
+                        <img src="@midImage.Url" alt="@midImage.Label" />
+                    </div>
+                    <div class="modal-gallery-caption">FIG.02 — @midImage.Label</div>
+                </div>
+            }
+
+      
+            @if (cs.ArchitectureComponents.Any())
+            {
+                <div class="modal-arch-section">
+                    <div class="modal-section-divider" style="padding:0; margin-bottom:20px;">
+                        <div class="modal-section-divider-inner" style="padding-top:0; border-top:none;">
+                            <span class="modal-section-divider-num">@(midImage != null ? "05" : "04")</span>
+                            <span class="modal-section-divider-label">ARCHITECTURE_COMPONENTS</span>
+                        </div>
+                    </div>
+
+                    @if (!string.IsNullOrEmpty(sol.ArchitectureSummary))
+                    {
+                        <p class="modal-context" style="margin-bottom:20px; max-width:640px;">@sol.ArchitectureSummary</p>
+                    }
+
+                    <div class="modal-arch-grid">
+                        @foreach (var comp in cs.ArchitectureComponents)
+                        {
+                            <div class="modal-arch-card">
+                                <div class="modal-arch-name">@comp.Name</div>
+                                <div class="modal-arch-role">@comp.Role</div>
+                                <div class="modal-arch-tech">@comp.Tech</div>
+                            </div>
+                        }
+                    </div>
+                </div>
+            }
+
+            @if (cs.Metrics.Any())
+            {
+                <div class="modal-metrics-section">
+                    <div class="modal-section-divider" style="padding:0; margin-bottom:20px;">
+                        <div class="modal-section-divider-inner" style="padding-top:0; border-top:none;">
+                            <span class="modal-section-divider-num">
+                                @{
+                                    int metricNum = 4;
+                                    if (midImage != null) metricNum++;
+                                    if (cs.ArchitectureComponents.Any()) metricNum++;
+                                    @metricNum.ToString("D2")
+                                }
+                            </span>
+                            <span class="modal-section-divider-label">PERFORMANCE_METRICS</span>
+                        </div>
+                    </div>
+
+                    <div class="modal-metrics-grid">
+                        @foreach (var metric in cs.Metrics)
+                        {
+                            <div class="modal-metric">
+                                <div class="modal-metric-label">@metric.Label.ToUpper()</div>
+                                <div class="modal-metric-value">@metric.Value</div>
+                                <div class="modal-metric-desc">@metric.Description</div>
+                            </div>
+                        }
+                    </div>
+                </div>
+            }
+
+            @{
+                var links = cs.Artifacts
+                    .Where(a => a.Type != "Screenshot" && a.Type != "Detail")
+                    .ToList();
+            }
+            @if (links.Any())
+            {
+                <div class="modal-artifacts-section" style="border-top: 1px solid var(--border);">
+                    <span class="modal-artifacts-label">ARTIFACTS &amp; LINKS</span>
+                    <div class="modal-artifacts-links">
+                        @foreach (var artifact in links)
+                        {
+                            <a href="@artifact.Url"
+                               target="_blank"
+                               rel="noopener noreferrer"
+                               class="modal-artifact-btn"
+                               data-type="@artifact.Type">
+                                @artifact.Label
+                            </a>
+                        }
+                    </div>
+                </div>
+            }
+
+        </div>
+    </div>
+}
+
+<script>
+
+</script>

@@ -6,23 +6,6 @@ public class CaseStudySeedTest
     {
         var caseStudies = new List<CaseStudy>
 {
-          /* return new List<CaseStudy>
-        {
-            new() {
-                Id = 1,
-                Label = "CASE_STUDY_01 // THE_BENCHMARK",
-                Title = "FastJobServer: The Scheduling Engine Built From Scratch.",
-                ProblemStatement = "When Hangfire's overhead was killing throughput and Quartz.NET was too rigid — what does it take to build a scheduling engine that fits the constraint exactly?",
-                BodyText = "FastJobServer was born from a real constraint: existing libraries brought too much ceremony. The solution required building a PriorityQueue-backed scheduler with DateTime triggers, DI-safe worker threading, and expression tree support for EnqueueJob — without the baggage of a framework not designed for this shape of problem.",
-                Metrics = new() {
-                    { "SCHEDULING_ACCURACY", "<5ms ±0.3ms" },
-                    { "MEMORY_OVERHEAD", "-62% vs Hangfire" },
-                    { "CONCURRENT_JOBS", "10K+ sustained" },
-                    { "THREAD_MODEL", "LongRunning" }
-                },
-                Tags = new() { "C# .NET", "BACKGROUND_JOBS", "THREADING" }
-            }
-        }; */
 
     new CaseStudy
     {

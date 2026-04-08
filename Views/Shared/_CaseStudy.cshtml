@@ -1,23 +1,24 @@
 @model CaseStudyViewModel
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
 
 @if (Model != null)
 {
     <!-- ═══ CASE STUDY SPOTLIGHT ═══ -->
     <section id="case-study">
-      <div class="case-study-label">@Model.caseStudy.Label</div>
-      <h2 class="case-study-title">@Html.Raw(Model.caseStudy.Title)</h2>
+      <div class="case-study-label">@Model.CaseStudy.Label</div>
+      <h2 class="case-study-title">@Html.Raw(Model.CaseStudy.Title)</h2>
 
       <div class="case-study-body fade-up">
         <div class="case-visual">
-          <img src="~/images/CaseStudyImage.png" alt="@Model.caseStudy.Title" class="case-visual-img" />
+          <img src="~/images/CaseStudyImage.png" alt="@Model.CaseStudy.Title" class="case-visual-img" />
         </div>
 
         <div class="case-narrative">
           <p class="problem-statement">@Html.Raw("\"" + Model.Problem.ProblemStatement + "\"")</p>
-          <p class="case-body-text">@Model.caseStudy.Summary</p>
+          <p class="case-body-text">@Model.CaseStudy.Summary</p>
 
           <div class="case-metrics">
-            @foreach (var metric in Model.caseStudy.Metrics)
+            @foreach (var metric in Model.CaseStudy.Metrics)
             {
               <div class="case-metric">
                 <div class="case-metric-key">@metric.Label</div>
@@ -38,11 +39,15 @@
             }
           </div>
 
-          <a href="#" class="case-cta">
+          <div onclick="openModal(@Model.CaseStudy.Id)" class="case-cta">
             READ_FULL_ARCHITECTURAL_STORY
             <span class="case-cta-arrow">→</span>
-          </a>
+          </div>
         </div>
       </div>
     </section>
+
+    <partial name="_CaseStudyModal" model="@Model" />
 }
+
+

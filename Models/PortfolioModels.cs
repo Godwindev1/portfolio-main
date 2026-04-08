@@ -74,7 +74,6 @@ public class HeroStatus
 public class PortfolioViewModel
 {
     public HeroStatus HeroStatus { get; set; } = new();
-    public List<ProjectCard> Projects { get; set; } = [];
     public List<CaseStudyViewModel> CaseStudies { get; set; } = [];
     public List<SkillDomain> SkillDomains { get; set; } = [];
     public List<Experience> Experiences { get; set; } = [];

@@ -84,7 +84,7 @@ public class ArtifactLink
 
     public string Label { get; set; } = string.Empty; // "Dataset", "GitHub", "API Docs"
     public string Url { get; set; } = string.Empty;
-    public string Type { get; set; } = string.Empty;  // Dataset | Repo | Demo | Docs
+    public string Type { get; set; } = string.Empty;  // Dataset | Repo | Demo | Docs | Images | Videos
 
     public CaseStudy CaseStudy { get; set; }
 }

@@ -10,11 +10,13 @@
 <!-- Hero Section -->
 <partial name="_Hero" model="Model.HeroStatus" />
 
-<!-- Case Study Section -->
-<partial name="_CaseStudy" model="Model.CaseStudies.FirstOrDefault()" />
+<!-- Case Study & Featured Projects Section -->
+<partial name="_caseStudy" model="Model.CaseStudies.FirstOrDefault()" />
 
-<!-- Featured Work Section -->
 <partial name="_FeaturedWork" model="Model.Projects" />
+
+
+
 
 <!-- Experience Section -->
 <partial name="_Experience" model="(Model.Experiences, Model.Testimonials)" />
@@ -30,3 +32,8 @@
 
 <!-- Footer -->
 <partial name="_Footer" />
+
+
+@section Scripts {
+    <Script src="~/js/CaseStudyModal.js"></Script>
+}
