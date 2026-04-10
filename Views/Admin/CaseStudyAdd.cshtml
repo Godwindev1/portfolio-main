@@ -1,305 +1,803 @@
-@model CaseStudyViewModel
+@model Portfolio.ViewModels.SaveCaseStudyViewModel
+@using Portfolio.Models
 @{
-    Layout = "_Layout"; // Assuming a layout with your CSS variables
-    var cs = Model.CaseStudy;
+    Layout = "_Layout";
+    bool isEdit = Model.Id.HasValue && Model.Id > 0;
 }
 @addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
 
-<div class="admin-page">
-    <form asp-action="Save" method="post" id="caseStudyForm">
-        <input type="hidden" asp-for="CaseStudy.Id" />
 
+<div class="admin-wrap">
+    <form asp-action="Save" method="post"
+          enctype="multipart/form-data"
+          id="caseStudyForm"
+          onsubmit="reindexAll()">
+
+        <input type="hidden" asp-for="Id" />
+
+        <!-- ── Header ─────────────────────────────────────────────────────── -->
         <header class="admin-header">
-            <div class="header-left">
-                <span class="admin-label">00 — CMS_EDITOR</span>
-                <h1 class="admin-title">@(cs.Id == 0 ? "CREATE_NEW" : "EDIT_PROJECT")</h1>
+            <div class="header-meta">
+                <span class="admin-eyebrow">00 — CMS_EDITOR</span>
+                <h1 class="admin-title">@(isEdit ? "EDIT_PROJECT" : "CREATE_NEW")</h1>
             </div>
-            <div class="header-right">
-                <button type="button" class="btn-secondary" onclick="location.href='/Admin'">CANCEL</button>
+            <div class="header-actions">
+                <button type="button" class="btn-ghost" onclick="location.href='/Admin'">CANCEL</button>
                 <button type="submit" class="btn-primary">SAVE_CHANGES</button>
             </div>
         </header>
 
         <div class="admin-grid">
-            <div class="admin-col">
-                <section class="admin-section">
-                    <div class="section-tag">GENERAL_INFO</div>
-                    <div class="form-group">
-                        <label>PROJECT_TITLE</label>
-                        <input asp-for="CaseStudy.Title" class="admin-input" placeholder="e.g. Fastjobs Library" />
-                    </div>
-                    <div class="form-row">
-                        <div class="form-group">
-                            <label>CATEGORY</label>
-                            <input asp-for="CaseStudy.Category" class="admin-input" placeholder="SYSTEMS_ARCHITECTURE" />
-                        </div>
-                        <div class="form-group">
-                            <label>LABEL</label>
-                            <input asp-for="CaseStudy.Label" class="admin-input" placeholder="CASE STUDY" />
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <label>COVER_IMAGE_URL</label>
-                        <input asp-for="CaseStudy.CoverImageUrl" class="admin-input" id="coverUrl" oninput="previewImage(this)" />
-                        <div class="url-preview" id="coverPreview">
-                            @if(!string.IsNullOrEmpty(cs.CoverImageUrl)) { <img src="@cs.CoverImageUrl" /> }
-                        </div>
-                    </div>
-                </section>
 
-                <section class="admin-section">
-                    <div class="section-tag">01 // PROBLEM_DEFINITION</div>
-                    <div class="form-group">
-                        <label>CONTEXT</label>
-                        <textarea name="Problem.Context" class="admin-input">@Model.Problem.Context</textarea>
+            <!-- ════════════════════ LEFT COLUMN ════════════════════════════ -->
+            <div>
+
+                <!-- 01 · General Info ───────────────────────────────────── -->
+                <div class="section">
+                    <div class="section-head">
+                        <span class="section-tag">01 // GENERAL_INFO</span>
                     </div>
-                    <div class="form-group">
-                        <label>CHALLENGES</label>
-                        <div id="challenges-container" class="dynamic-list">
-                            @for (int i = 0; i < Model.Problem.Challenges.Count; i++)
+                    <div class="section-body">
+                        <div class="form-group">
+                            <label>PROJECT_TITLE</label>
+                            <input asp-for="Title" class="f-input" placeholder="e.g. FastJobs Library" />
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label>CATEGORY</label>
+                                <input asp-for="Category" class="f-input" placeholder="SYSTEMS_ARCHITECTURE" />
+                            </div>
+                            <div class="form-group">
+                                <label>LABEL</label>
+                                <input asp-for="Label" class="f-input" placeholder="CASE STUDY" />
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label>DISPLAY_ORDER</label>
+                                <input asp-for="DisplayOrder" type="number" class="f-input" placeholder="1" />
+                            </div>
+                            <div class="form-group" style="justify-content:flex-end;">
+                                <div class="check-row">
+                                    <input asp-for="IsFeatured" type="checkbox" id="featuredCheck" />
+                                    <label for="featuredCheck">IS_FEATURED</label>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label>SUMMARY</label>
+                            <textarea asp-for="Summary" class="f-textarea" placeholder="One-paragraph summary of the project..."></textarea>
+                        </div>
+
+                        <!-- Cover image -->
+                        <div class="form-group">
+                            <label>COVER_IMAGE  (high-res upload)</label>
+                            @if (!string.IsNullOrEmpty(Model.ExistingCoverImageUrl))
                             {
-                                <div class="list-item">
-                                    <input name="Problem.Challenges[@i]" value="@Model.Problem.Challenges[i]" class="admin-input" />
-                                    <button type="button" class="remove-btn" onclick="this.parentElement.remove()">×</button>
+                                <div class="existing-file">
+                                    <span class="existing-label">CURRENT:</span>
+                                    <img src="@Model.ExistingCoverImageUrl" class="img-thumb" />
+                                    <a href="@Model.ExistingCoverImageUrl" target="_blank">@Model.ExistingCoverImageUrl</a>
+                                </div>
+                                <input type="hidden" asp-for="ExistingCoverImageUrl" />
+                            }
+                            <input asp-for="CoverImageFile" type="file" class="f-file"
+                                   accept="image/*"
+                                   onchange="previewLocal(this,'cover-preview')" />
+                            <div id="cover-preview"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 02 · Problem Definition ────────────────────────────── -->
+                <div class="section">
+                    <div class="section-head">
+                        <span class="section-tag">02 // PROBLEM_DEFINITION</span>
+                    </div>
+                    <div class="section-body">
+                        <div class="form-group">
+                            <label>CONTEXT</label>
+                            <textarea name="Problem.Context" class="f-textarea"
+                                      placeholder="Background and context...">@Model.Problem.Context</textarea>
+                        </div>
+                        <div class="form-group">
+                            <label>PROBLEM_STATEMENT</label>
+                            <textarea name="Problem.ProblemStatement" class="f-textarea"
+                                      placeholder="Core problem being solved...">@Model.Problem.ProblemStatement</textarea>
+                        </div>
+                        <div class="form-group">
+                            <label>CHALLENGES</label>
+                            <div id="challenges-container" class="card-list" data-prefix="Problem.Challenges" data-counter="@Model.Problem.Challenges.Count">
+                                @for (int i = 0; i < Model.Problem.Challenges.Count; i++)
+                                {
+                                    <div class="card" data-idx="@i">
+                                        <div class="card-header">
+                                            <span class="card-index">CHALLENGE_@i</span>
+                                            <button type="button" class="btn-remove" onclick="removeCard(this)">× REMOVE</button>
+                                        </div>
+                                        <input name="Problem.Challenges[@i]"
+                                               value="@Model.Problem.Challenges[i]"
+                                               class="f-input" placeholder="Describe challenge..." />
+                                    </div>
+                                }
+                            </div>
+                            <button type="button" class="btn-add"
+                                    onclick="addChallenge()">+ ADD_CHALLENGE</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 03 · Solution Strategy ─────────────────────────────── -->
+                <div class="section">
+                    <div class="section-head">
+                        <span class="section-tag">03 // SOLUTION_STRATEGY</span>
+                    </div>
+                    <div class="section-body">
+                        <div class="form-group">
+                            <label>OVERVIEW</label>
+                            <textarea name="Solution.Overview" class="f-textarea"
+                                      placeholder="High-level solution overview...">@Model.Solution.Overview</textarea>
+                        </div>
+                        <div class="form-group">
+                            <label>ARCHITECTURE_SUMMARY</label>
+                            <textarea name="Solution.ArchitectureSummary" class="f-textarea"
+                                      placeholder="Architecture summary...">@Model.Solution.ArchitectureSummary</textarea>
+                        </div>
+                        <div class="form-group">
+                            <label>KEY_DECISIONS</label>
+                            <div id="decisions-container" class="card-list" data-prefix="Solution.KeyDecisions" data-counter="@Model.Solution.KeyDecisions.Count">
+                                @for (int i = 0; i < Model.Solution.KeyDecisions.Count; i++)
+                                {
+                                    <div class="card" data-idx="@i">
+                                        <div class="card-header">
+                                            <span class="card-index">DECISION_@i</span>
+                                            <button type="button" class="btn-remove" onclick="removeCard(this)">× REMOVE</button>
+                                        </div>
+                                        <input name="Solution.KeyDecisions[@i]"
+                                               value="@Model.Solution.KeyDecisions[i]"
+                                               class="f-input" placeholder="e.g. Chose pgvector over Pinecone for cost reasons" />
+                                    </div>
+                                }
+                            </div>
+                            <button type="button" class="btn-add"
+                                    onclick="addDecision()">+ ADD_DECISION</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 04 · Implementation Steps ──────────────────────────── -->
+                <div class="section">
+                    <div class="section-head">
+                        <span class="section-tag">04 // IMPLEMENTATION_STEPS</span>
+                    </div>
+                    <div class="section-body">
+                        <div id="steps-container" class="card-list"
+                             data-prefix="ImplementationSteps"
+                             data-counter="@Model.ImplementationSteps.Count">
+                            @for (int i = 0; i < Model.ImplementationSteps.Count; i++)
+                            {
+                                var step = Model.ImplementationSteps[i];
+                                <div class="card" data-idx="@i">
+                                    <div class="card-header">
+                                        <span class="card-index">STEP_@i</span>
+                                        <button type="button" class="btn-remove" onclick="removeCard(this)">× REMOVE</button>
+                                    </div>
+                                    <input type="hidden" name="ImplementationSteps[@i].Id" value="@step.Id" />
+                                    <div class="form-row">
+                                        <div class="form-group" style="flex:0 0 90px;">
+                                            <label>ORDER</label>
+                                            <input type="number" name="ImplementationSteps[@i].Order"
+                                                   value="@step.Order" class="f-input" placeholder="1" />
+                                        </div>
+                                        <div class="form-group">
+                                            <label>TITLE</label>
+                                            <input name="ImplementationSteps[@i].Title"
+                                                   value="@step.Title" class="f-input" placeholder="STEP_TITLE" />
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label>DESCRIPTION</label>
+                                        <textarea name="ImplementationSteps[@i].Description"
+                                                  class="f-textarea" placeholder="What was done...">@step.Description</textarea>
+                                    </div>
                                 </div>
                             }
                         </div>
-                        <button type="button" class="add-btn" onclick="addItem('challenges-container', 'Problem.Challenges')">+ ADD_CHALLENGE</button>
+                        <button type="button" class="btn-add" onclick="addStep()">+ ADD_STEP</button>
                     </div>
-                </section>
-
-                <section class="admin-section"></section>
-    <div class="section-tag">02 // SOLUTION_STRATEGY</div>
-    <div class="form-group">
-        <label>OVERVIEW</label>
-        <textarea name="Solution.Overview" class="admin-input">@Model.Solution.Overview</textarea>
-    </div>
-    <div class="form-group">
-        <label>ARCHITECTURE_SUMMARY</label>
-        <textarea name="Solution.ArchitectureSummary" class="admin-input">@Model.Solution.ArchitectureSummary</textarea>
-    </div>
-    <div class="form-group">
-        <label>KEY_DECISIONS</label>
-        <div id="decisions-container" class="dynamic-list">
-            @for (int i = 0; i < Model.Solution.KeyDecisions.Count; i++)
-            {
-                <div class="list-item">
-                    <input name="Solution.KeyDecisions[@i]" value="@Model.Solution.KeyDecisions[i]" class="admin-input" />
-                    <button type="button" class="remove-btn" onclick="this.parentElement.remove()">×</button>
                 </div>
-            }
-        </div>
-        <button type="button" class="add-btn" onclick="addStringItem('decisions-container', 'Solution.KeyDecisions')">+ ADD_DECISION</button>
-    </div>
-</section>
 
-<section class="admin-section">
-    <div class="section-tag">03 // IMPLEMENTATION_STEPS</div>
-    <div id="steps-container" class="card-list">
-        @for (int i = 0; i < cs.ImplementationSteps.Count; i++)
-        {
-            <div class="admin-card">
-                <input type="hidden" name="CaseStudy.ImplementationSteps[@i].Id" value="@cs.ImplementationSteps[i].Id" />
-                <div class="form-row">
-                    <input type="number" name="CaseStudy.ImplementationSteps[@i].Order" value="@cs.ImplementationSteps[i].Order" class="admin-input" style="width: 80px;" placeholder="01" />
-                    <input name="CaseStudy.ImplementationSteps[@i].Title" value="@cs.ImplementationSteps[i].Title" class="admin-input" placeholder="STEP_TITLE" />
-                </div>
-                <textarea name="CaseStudy.ImplementationSteps[@i].Description" class="admin-input mt-2" placeholder="Description...">@cs.ImplementationSteps[i].Description</textarea>
-                <button type="button" class="card-remove" onclick="this.parentElement.remove()">REMOVE</button>
-            </div>
-        }
-    </div>
-    <button type="button" class="add-btn-outline" onclick="addComplexItem('steps')">+ ADD_STEP</button>
-</section>
-            </div>
+            </div><!-- / left col -->
 
-            <div class="admin-col">
-                <section class="admin-section">
-                    <div class="section-tag">04 // ARCHITECTURE_COMPONENTS</div>
-                    <div id="arch-container" class="card-list">
-                        @for (int i = 0; i < cs.ArchitectureComponents.Count; i++)
-                        {
-                            <div class="admin-card">
-                                <input type="hidden" name="CaseStudy.ArchitectureComponents[@i].Id" value="@cs.ArchitectureComponents[i].Id" />
-                                <input name="CaseStudy.ArchitectureComponents[@i].Name" value="@cs.ArchitectureComponents[i].Name" placeholder="COMPONENT_NAME" />
-                                <input name="CaseStudy.ArchitectureComponents[@i].Role" value="@cs.ArchitectureComponents[i].Role" placeholder="ROLE" />
-                                <input name="CaseStudy.ArchitectureComponents[@i].Tech" value="@cs.ArchitectureComponents[i].Tech" placeholder="TECH_STACK" />
-                                <button type="button" class="card-remove" onclick="this.parentElement.remove()">REMOVE</button>
-                            </div>
-                        }
+            <!-- ════════════════════ RIGHT COLUMN ═══════════════════════════ -->
+            <div>
+
+                <!-- 05 · Architecture Components ───────────────────────── -->
+                <div class="section">
+                    <div class="section-head">
+                        <span class="section-tag">05 // ARCHITECTURE_COMPONENTS</span>
                     </div>
-                    <button type="button" class="add-btn-outline" onclick="addArchCard()">+ NEW_COMPONENT</button>
-                </section>
-            </div>
-
-            <section class="admin-section"></section>
-    <div class="section-tag">SKILLS_&_TECH</div>
-    <div id="skills-container" class="card-list">
-        @for (int i = 0; i < cs.Skills.Count; i++)
-        {
-            <div class="list-item">
-                <input type="hidden" name="CaseStudy.Skills[@i].Id" value="@cs.Skills[i].Id" />
-                <input name="CaseStudy.Skills[@i].Name" value="@cs.Skills[i].Name" class="admin-input" placeholder="e.g. C++" />
-                <input name="CaseStudy.Skills[@i].Category" value="@cs.Skills[i].Category" class="admin-input" placeholder="e.g. Backend" />
-                <button type="button" class="remove-btn" onclick="this.parentElement.remove()">×</button>
-            </div>
-        }
-    </div>
-    <button type="button" class="add-btn" onclick="addComplexItem('skills')">+ ADD_SKILL</button>
-</section>
-
-<section class="admin-section">
-    <div class="section-tag">05 // PERFORMANCE_METRICS</div>
-    <div id="metrics-container" class="card-list">
-        @for (int i = 0; i < cs.Metrics.Count; i++)
-        {
-            <div class="admin-card">
-                <input type="hidden" name="CaseStudy.Metrics[@i].Id" value="@cs.Metrics[i].Id" />
-                <div class="form-row">
-                    <input name="CaseStudy.Metrics[@i].Value" value="@cs.Metrics[i].Value" class="admin-input" placeholder="e.g. 99.9%" />
-                    <input name="CaseStudy.Metrics[@i].Label" value="@cs.Metrics[i].Label" class="admin-input" placeholder="UPTIME" />
+                    <div class="section-body">
+                        <div id="arch-container" class="card-list"
+                             data-prefix="ArchitectureComponents"
+                             data-counter="@Model.ArchitectureComponents.Count">
+                            @for (int i = 0; i < Model.ArchitectureComponents.Count; i++)
+                            {
+                                var comp = Model.ArchitectureComponents[i];
+                                <div class="card" data-idx="@i">
+                                    <div class="card-header">
+                                        <span class="card-index">COMPONENT_@i</span>
+                                        <button type="button" class="btn-remove" onclick="removeCard(this)">× REMOVE</button>
+                                    </div>
+                                    <input type="hidden" name="ArchitectureComponents[@i].Id" value="@comp.Id" />
+                                    <div class="form-group">
+                                        <label>NAME</label>
+                                        <input name="ArchitectureComponents[@i].Name"
+                                               value="@comp.Name" class="f-input" placeholder="e.g. API Gateway" />
+                                    </div>
+                                    <div class="form-row">
+                                        <div class="form-group">
+                                            <label>ROLE</label>
+                                            <input name="ArchitectureComponents[@i].Role"
+                                                   value="@comp.Role" class="f-input" placeholder="What it does" />
+                                        </div>
+                                        <div class="form-group">
+                                            <label>TECH</label>
+                                            <input name="ArchitectureComponents[@i].Tech"
+                                                   value="@comp.Tech" class="f-input" placeholder="ASP.NET Core, Redis..." />
+                                        </div>
+                                    </div>
+                                </div>
+                            }
+                        </div>
+                        <button type="button" class="btn-add" onclick="addArch()">+ ADD_COMPONENT</button>
+                    </div>
                 </div>
-                <input name="CaseStudy.Metrics[@i].Description" value="@cs.Metrics[i].Description" class="admin-input mt-2" placeholder="Metric context..." />
-                <button type="button" class="card-remove" onclick="this.parentElement.remove()">REMOVE</button>
-            </div>
-        }
-    </div>
-    <button type="button" class="add-btn-outline" onclick="addComplexItem('metrics')">+ ADD_METRIC</button>
-</section>
 
-<section class="admin-section">
-    <div class="section-tag">ARTIFACTS_&_MEDIA</div>
-    <div id="artifacts-container" class="card-list">
-        @for (int i = 0; i < cs.Artifacts.Count; i++)
-        {
-            <div class="admin-card">
-                <input type="hidden" name="CaseStudy.Artifacts[@i].Id" value="@cs.Artifacts[i].Id" />
-                <div class="form-row">
-                    <input name="CaseStudy.Artifacts[@i].Label" value="@cs.Artifacts[i].Label" class="admin-input" placeholder="Label (e.g. GitHub Repo)" />
-                    <select name="CaseStudy.Artifacts[@i].Type" class="admin-input">
-                        <option value="Repo" selected="@(cs.Artifacts[i].Type == "Repo")">Repo</option>
-                        <option value="Live" selected="@(cs.Artifacts[i].Type == "Live")">Live</option>
-                        <option value="Screenshot" selected="@(cs.Artifacts[i].Type == "Screenshot")">Screenshot</option>
-                        <option value="ImplementationDetail" selected="@(cs.Artifacts[i].Type == "ImplementationDetail")">ImplementationDetail</option>
-                    </select>
+                <!-- 06 · Skills & Tech ──────────────────────────────────── -->
+                <div class="section">
+                    <div class="section-head">
+                        <span class="section-tag">06 // SKILLS_&_TECH</span>
+                    </div>
+                    <div class="section-body">
+                        <div id="skills-container" class="card-list"
+                             data-prefix="Skills"
+                             data-counter="@Model.Skills.Count">
+                            @for (int i = 0; i < Model.Skills.Count; i++)
+                            {
+                                var sk = Model.Skills[i];
+                                <div class="card" data-idx="@i">
+                                    <input type="hidden" name="Skills[@i].Id" value="@sk.Id" />
+                                    <div class="card-header">
+                                        <div class="form-row" style="flex:1">
+                                            <input name="Skills[@i].Name"
+                                                   value="@sk.Name" class="f-input" placeholder="e.g. C#" />
+                                            <input name="Skills[@i].Category"
+                                                   value="@sk.Category" class="f-input" placeholder="Backend / DevOps / DB" />
+                                        </div>
+                                        <button type="button" class="btn-remove" onclick="removeCard(this)">×</button>
+                                    </div>
+                                </div>
+                            }
+                        </div>
+                        <button type="button" class="btn-add" onclick="addSkill()">+ ADD_SKILL</button>
+                    </div>
                 </div>
-                <input name="CaseStudy.Artifacts[@i].Url" value="@cs.Artifacts[i].Url" class="admin-input mt-2" placeholder="https://..." />
-                <button type="button" class="card-remove" onclick="this.parentElement.remove()">REMOVE</button>
-            </div>
-        }
-    </div>
-    <button type="button" class="add-btn-outline" onclick="addComplexItem('artifacts')">+ ADD_ARTIFACT</button>
-</section>
-        </div>
+
+                <!-- 07 · Performance Metrics ────────────────────────────── -->
+                <div class="section">
+                    <div class="section-head">
+                        <span class="section-tag">07 // PERFORMANCE_METRICS</span>
+                    </div>
+                    <div class="section-body">
+                        <div id="metrics-container" class="card-list"
+                             data-prefix="Metrics"
+                             data-counter="@Model.Metrics.Count">
+                            @for (int i = 0; i < Model.Metrics.Count; i++)
+                            {
+                                var m = Model.Metrics[i];
+                                <div class="card" data-idx="@i">
+                                    <div class="card-header">
+                                        <span class="card-index">METRIC_@i</span>
+                                        <button type="button" class="btn-remove" onclick="removeCard(this)">× REMOVE</button>
+                                    </div>
+                                    <input type="hidden" name="Metrics[@i].Id" value="@m.Id" />
+                                    <div class="form-row">
+                                        <div class="form-group">
+                                            <label>VALUE</label>
+                                            <input name="Metrics[@i].Value"
+                                                   value="@m.Value" class="f-input" placeholder="e.g. 99.9%" />
+                                        </div>
+                                        <div class="form-group">
+                                            <label>LABEL</label>
+                                            <input name="Metrics[@i].Label"
+                                                   value="@m.Label" class="f-input" placeholder="UPTIME" />
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label>DESCRIPTION</label>
+                                        <input name="Metrics[@i].Description"
+                                               value="@m.Description" class="f-input" placeholder="Metric context..." />
+                                    </div>
+                                </div>
+                            }
+                        </div>
+                        <button type="button" class="btn-add" onclick="addMetric()">+ ADD_METRIC</button>
+                    </div>
+                </div>
+
+            </div><!-- / right col -->
+
+            <!-- ════════════════════ FULL WIDTH — ARTIFACTS ══════════════ -->
+            <div class="full-width">
+                <div class="section">
+                    <div class="section-head">
+                        <span class="section-tag">08 // ARTIFACTS_&_MEDIA</span>
+                        <div class="artifact-tabs">
+                            <span class="artifact-tab upload-tag">↑ UPLOAD: Documents · Videos · Screenshots</span>
+                            <span class="artifact-tab link-tag">⇗ LINK: Repos · Live Demos · External Links</span>
+                        </div>
+                    </div>
+                    <div class="section-body">
+
+                        <!-- ── UPLOAD ARTIFACTS ────────────────────────── -->
+
+                        <!-- Documents -->
+                        <div class="sub-head">DOCUMENTS  (PDF, DOCX...)</div>
+                        <div id="docs-container" class="card-list"
+                             data-prefix="Documents"
+                             data-counter="@Model.Documents.Count">
+                            @for (int i = 0; i < Model.Documents.Count; i++)
+                            {
+                                var doc = Model.Documents[i];
+                                <div class="card upload" data-idx="@i">
+                                    <div class="card-header">
+                                        <span class="card-index">DOC_@i</span>
+                                        <button type="button" class="btn-remove" onclick="removeCard(this)">× REMOVE</button>
+                                    </div>
+                                    <input type="hidden" name="Documents[@i].Id" value="@doc.Id" />
+                                    <div class="form-group">
+                                        <label>LABEL</label>
+                                        <input name="Documents[@i].Label" value="@doc.Label"
+                                               class="f-input" placeholder="e.g. Architecture Spec" />
+                                    </div>
+                                    @if (!string.IsNullOrEmpty(doc.ExistingUrl))
+                                    {
+                                        <div class="existing-file">
+                                            <span class="existing-label">STORED:</span>
+                                            <a href="@doc.ExistingUrl" target="_blank">@doc.ExistingUrl</a>
+                                        </div>
+                                        <input type="hidden" name="Documents[@i].ExistingUrl" value="@doc.ExistingUrl" />
+                                    }
+                                    <div class="form-group">
+                                        <label>@(string.IsNullOrEmpty(doc.ExistingUrl) ? "FILE" : "REPLACE_FILE")</label>
+                                        <input type="file" name="Documents[@i].File" class="f-file"
+                                               accept=".pdf,.doc,.docx,.txt,.md" />
+                                    </div>
+                                </div>
+                            }
+                        </div>
+                        <button type="button" class="btn-add" onclick="addUploadCard('docs-container','Documents','DOC','.pdf,.doc,.docx,.txt,.md')">+ ADD_DOCUMENT</button>
+
+                        <!-- Videos -->
+                        <div class="sub-head" style="margin-top:16px;">VIDEOS</div>
+                        <div id="videos-container" class="card-list"
+                             data-prefix="Videos"
+                             data-counter="@Model.Videos.Count">
+                            @for (int i = 0; i < Model.Videos.Count; i++)
+                            {
+                                var vid = Model.Videos[i];
+                                <div class="card upload" data-idx="@i">
+                                    <div class="card-header">
+                                        <span class="card-index">VID_@i</span>
+                                        <button type="button" class="btn-remove" onclick="removeCard(this)">× REMOVE</button>
+                                    </div>
+                                    <input type="hidden" name="Videos[@i].Id" value="@vid.Id" />
+                                    <div class="form-group">
+                                        <label>LABEL</label>
+                                        <input name="Videos[@i].Label" value="@vid.Label"
+                                               class="f-input" placeholder="e.g. Demo Walkthrough" />
+                                    </div>
+                                    @if (!string.IsNullOrEmpty(vid.ExistingUrl))
+                                    {
+                                        <div class="existing-file">
+                                            <span class="existing-label">STORED:</span>
+                                            <a href="@vid.ExistingUrl" target="_blank">@vid.ExistingUrl</a>
+                                        </div>
+                                        <input type="hidden" name="Videos[@i].ExistingUrl" value="@vid.ExistingUrl" />
+                                    }
+                                    <div class="form-group">
+                                        <label>@(string.IsNullOrEmpty(vid.ExistingUrl) ? "FILE" : "REPLACE_FILE")</label>
+                                        <input type="file" name="Videos[@i].File" class="f-file"
+                                               accept="video/*" />
+                                    </div>
+                                </div>
+                            }
+                        </div>
+                        <button type="button" class="btn-add" onclick="addUploadCard('videos-container','Videos','VID','video/*')">+ ADD_VIDEO</button>
+
+                        <!-- Screenshots -->
+                        <div class="sub-head" style="margin-top:16px;">SCREENSHOTS  (hi-res images)</div>
+                        <div id="ss-container" class="card-list"
+                             data-prefix="Screenshots"
+                             data-counter="@Model.Screenshots.Count">
+                            @for (int i = 0; i < Model.Screenshots.Count; i++)
+                            {
+                                var ss = Model.Screenshots[i];
+                                <div class="card upload" data-idx="@i">
+                                    <div class="card-header">
+                                        <span class="card-index">SS_@i</span>
+                                        <button type="button" class="btn-remove" onclick="removeCard(this)">× REMOVE</button>
+                                    </div>
+                                    <input type="hidden" name="Screenshots[@i].Id" value="@ss.Id" />
+                                    <div class="form-group">
+                                        <label>LABEL</label>
+                                        <input name="Screenshots[@i].Label" value="@ss.Label"
+                                               class="f-input" placeholder="e.g. Dashboard UI" />
+                                    </div>
+                                    @if (!string.IsNullOrEmpty(ss.ExistingUrl))
+                                    {
+                                        <div class="existing-file">
+                                            <span class="existing-label">STORED:</span>
+                                            <img src="@ss.ExistingUrl" class="img-thumb" />
+                                            <a href="@ss.ExistingUrl" target="_blank">@ss.ExistingUrl</a>
+                                        </div>
+                                        <input type="hidden" name="Screenshots[@i].ExistingUrl" value="@ss.ExistingUrl" />
+                                    }
+                                    <div class="form-group">
+                                        <label>@(string.IsNullOrEmpty(ss.ExistingUrl) ? "FILE" : "REPLACE_FILE")</label>
+                                        <input type="file" name="Screenshots[@i].File" class="f-file"
+                                               accept="image/*"
+                                               onchange="previewLocal(this, null, this.closest('.card'))" />
+                                    </div>
+                                </div>
+                            }
+                        </div>
+                        <button type="button" class="btn-add" onclick="addUploadCard('ss-container','Screenshots','SS','image/*', true)">+ ADD_SCREENSHOT</button>
+
+                        <!-- ── LINK ARTIFACTS ──────────────────────────── -->
+
+                        <!-- Repos -->
+                        <div class="sub-head" style="margin-top:24px;">REPOSITORIES</div>
+                        <div id="repos-container" class="card-list"
+                             data-prefix="Repos"
+                             data-counter="@Model.Repos.Count">
+                            @for (int i = 0; i < Model.Repos.Count; i++)
+                            {
+                                var repo = Model.Repos[i];
+                                <div class="card link" data-idx="@i">
+                                    <input type="hidden" name="Repos[@i].Id" value="@repo.Id" />
+                                    <div class="card-header">
+                                        <div class="form-row" style="flex:1">
+                                            <div class="form-group">
+                                                <label>LABEL</label>
+                                                <input name="Repos[@i].Label" value="@repo.Label"
+                                                       class="f-input" placeholder="e.g. Source Code" />
+                                            </div>
+                                            <div class="form-group">
+                                                <label>URL</label>
+                                                <input name="Repos[@i].Url" value="@repo.Url"
+                                                       class="f-input" placeholder="https://github.com/..." />
+                                            </div>
+                                        </div>
+                                        <button type="button" class="btn-remove" onclick="removeCard(this)">×</button>
+                                    </div>
+                                </div>
+                            }
+                        </div>
+                        <button type="button" class="btn-add" onclick="addLinkCard('repos-container','Repos','REPO')">+ ADD_REPO</button>
+
+                        <!-- Live Demos -->
+                        <div class="sub-head" style="margin-top:16px;">LIVE_DEMOS</div>
+                        <div id="demos-container" class="card-list"
+                             data-prefix="LiveDemos"
+                             data-counter="@Model.LiveDemos.Count">
+                            @for (int i = 0; i < Model.LiveDemos.Count; i++)
+                            {
+                                var demo = Model.LiveDemos[i];
+                                <div class="card link" data-idx="@i">
+                                    <input type="hidden" name="LiveDemos[@i].Id" value="@demo.Id" />
+                                    <div class="card-header">
+                                        <div class="form-row" style="flex:1">
+                                            <div class="form-group">
+                                                <label>LABEL</label>
+                                                <input name="LiveDemos[@i].Label" value="@demo.Label"
+                                                       class="f-input" placeholder="e.g. Live API" />
+                                            </div>
+                                            <div class="form-group">
+                                                <label>URL</label>
+                                                <input name="LiveDemos[@i].Url" value="@demo.Url"
+                                                       class="f-input" placeholder="https://..." />
+                                            </div>
+                                        </div>
+                                        <button type="button" class="btn-remove" onclick="removeCard(this)">×</button>
+                                    </div>
+                                </div>
+                            }
+                        </div>
+                        <button type="button" class="btn-add" onclick="addLinkCard('demos-container','LiveDemos','DEMO')">+ ADD_LIVE_DEMO</button>
+
+                        <!-- External Links -->
+                        <div class="sub-head" style="margin-top:16px;">EXTERNAL_LINKS</div>
+                        <div id="links-container" class="card-list"
+                             data-prefix="Links"
+                             data-counter="@Model.Links.Count">
+                            @for (int i = 0; i < Model.Links.Count; i++)
+                            {
+                                var lnk = Model.Links[i];
+                                <div class="card link" data-idx="@i">
+                                    <input type="hidden" name="Links[@i].Id" value="@lnk.Id" />
+                                    <div class="card-header">
+                                        <div class="form-row" style="flex:1">
+                                            <div class="form-group">
+                                                <label>LABEL</label>
+                                                <input name="Links[@i].Label" value="@lnk.Label"
+                                                       class="f-input" placeholder="e.g. API Docs" />
+                                            </div>
+                                            <div class="form-group">
+                                                <label>URL</label>
+                                                <input name="Links[@i].Url" value="@lnk.Url"
+                                                       class="f-input" placeholder="https://..." />
+                                            </div>
+                                        </div>
+                                        <button type="button" class="btn-remove" onclick="removeCard(this)">×</button>
+                                    </div>
+                                </div>
+                            }
+                        </div>
+                        <button type="button" class="btn-add" onclick="addLinkCard('links-container','Links','LINK')">+ ADD_LINK</button>
+
+                    </div>
+                </div>
+            </div><!-- / full width -->
+
+        </div><!-- / admin-grid -->
     </form>
 </div>
 
-
-
 <script>
-    function addItem(containerId, inputName) {
-    const container = document.getElementById(containerId);
-    const index = container.children.length;
-    const div = document.createElement('div');
-    div.className = 'list-item';
-    div.innerHTML = `
-        <input name="${inputName}[${index}]" class="admin-input" placeholder="..." />
-        <button type="button" class="remove-btn" onclick="this.parentElement.remove()">×</button>
-    `;
-    container.appendChild(div);
+// ── Helpers ─────────────────────────────────────────────────────────────────
+
+function removeCard(btn) {
+    btn.closest('.card, .list-item').remove();
 }
 
-function previewImage(input) {
-    const preview = document.getElementById('coverPreview');
-    if (input.value) {
-        preview.innerHTML = `<img src="${input.value}" style="max-height:100px; border: 1px solid var(--border);" />`;
+/** Preview a local file selection (cover image or screenshot) */
+function previewLocal(input, previewId, cardEl) {
+    if (!input.files || !input.files[0]) return;
+    const url = URL.createObjectURL(input.files[0]);
+    const img = `<img src="${url}" class="img-thumb" style="margin-top:6px;" />`;
+    if (previewId) {
+        document.getElementById(previewId).innerHTML = img;
+    } else if (cardEl) {
+        // Remove any previous local preview inside the card
+        const prev = cardEl.querySelector('.local-preview');
+        if (prev) prev.remove();
+        const div = document.createElement('div');
+        div.className = 'local-preview';
+        div.innerHTML = img;
+        input.closest('.form-group').appendChild(div);
     }
 }
 
-// Handles simple arrays of strings (Challenges, Key Decisions)
-function addStringItem(containerId, inputName) {
-    const container = document.getElementById(containerId);
-    const index = container.children.length;
-    const div = document.createElement('div');
-    div.className = 'list-item';
-    div.innerHTML = `
-        <input name="${inputName}[${index}]" class="admin-input" placeholder="..." />
-        <button type="button" class="remove-btn" onclick="this.parentElement.remove()">×</button>
-    `;
-    container.appendChild(div);
+/** Get and increment the counter for a container (prevents index gaps on add) */
+function nextIdx(container) {
+    const n = parseInt(container.dataset.counter || '0', 10);
+    container.dataset.counter = n + 1;
+    return n;
 }
 
-// Handles complex objects (Metrics, Steps, Skills, Artifacts)
-function addComplexItem(type) {
-    let container, html, index;
+// ── Re-index all containers before submit ────────────────────────────────────
+// Fixes gaps caused by removals so ASP.NET model binding gets contiguous arrays.
+function reindexAll() {
+    document.querySelectorAll('[data-prefix]').forEach(container => {
+        const prefix = container.dataset.prefix;
+        const cards  = container.querySelectorAll(':scope > .card, :scope > .list-item');
 
-    switch(type) {
-        case 'steps':
-            container = document.getElementById('steps-container');
-            index = container.children.length;
-            html = `
-                <div class="admin-card">
-                    <input type="hidden" name="CaseStudy.ImplementationSteps[${index}].Id" value="0" />
-                    <div class="form-row">
-                        <input type="number" name="CaseStudy.ImplementationSteps[${index}].Order" class="admin-input" style="width: 80px;" placeholder="${index + 1}" />
-                        <input name="CaseStudy.ImplementationSteps[${index}].Title" class="admin-input" placeholder="STEP_TITLE" />
+        cards.forEach((card, newIdx) => {
+            card.dataset.idx = newIdx;
+            card.querySelectorAll('[name]').forEach(el => {
+                // Replace old index in name: e.g. Metrics[3].Value → Metrics[1].Value
+                el.name = el.name.replace(/\[(\d+)\]/, `[${newIdx}]`);
+            });
+            // Update visible index labels
+            const label = card.querySelector('.card-index');
+            if (label) label.textContent = `${prefix.toUpperCase().replace(/([A-Z])/g,' $1').trim()}_${newIdx}`;
+        });
+
+        // Reset counter to actual count so next add appends correctly
+        container.dataset.counter = cards.length;
+    });
+}
+
+// ── String list items (Challenges, Key Decisions) ────────────────────────────
+
+function addChallenge() {
+    const c = document.getElementById('challenges-container');
+    const i = nextIdx(c);
+    c.insertAdjacentHTML('beforeend', `
+        <div class="card" data-idx="${i}">
+            <div class="card-header">
+                <span class="card-index">CHALLENGE_${i}</span>
+                <button type="button" class="btn-remove" onclick="removeCard(this)">× REMOVE</button>
+            </div>
+            <input name="Problem.Challenges[${i}]" class="f-input" placeholder="Describe challenge..." />
+        </div>`);
+}
+
+function addDecision() {
+    const c = document.getElementById('decisions-container');
+    const i = nextIdx(c);
+    c.insertAdjacentHTML('beforeend', `
+        <div class="card" data-idx="${i}">
+            <div class="card-header">
+                <span class="card-index">DECISION_${i}</span>
+                <button type="button" class="btn-remove" onclick="removeCard(this)">× REMOVE</button>
+            </div>
+            <input name="Solution.KeyDecisions[${i}]" class="f-input"
+                   placeholder="e.g. Chose X over Y because..." />
+        </div>`);
+}
+
+// ── Complex relational entities ──────────────────────────────────────────────
+
+function addStep() {
+    const c = document.getElementById('steps-container');
+    const i = nextIdx(c);
+    c.insertAdjacentHTML('beforeend', `
+        <div class="card" data-idx="${i}">
+            <div class="card-header">
+                <span class="card-index">STEP_${i}</span>
+                <button type="button" class="btn-remove" onclick="removeCard(this)">× REMOVE</button>
+            </div>
+            <input type="hidden" name="ImplementationSteps[${i}].Id" value="" />
+            <div class="form-row">
+                <div class="form-group" style="flex:0 0 90px;">
+                    <label>ORDER</label>
+                    <input type="number" name="ImplementationSteps[${i}].Order"
+                           value="${i + 1}" class="f-input" />
+                </div>
+                <div class="form-group">
+                    <label>TITLE</label>
+                    <input name="ImplementationSteps[${i}].Title" class="f-input" placeholder="STEP_TITLE" />
+                </div>
+            </div>
+            <div class="form-group">
+                <label>DESCRIPTION</label>
+                <textarea name="ImplementationSteps[${i}].Description"
+                          class="f-textarea" placeholder="What was done..."></textarea>
+            </div>
+        </div>`);
+}
+
+function addArch() {
+    const c = document.getElementById('arch-container');
+    const i = nextIdx(c);
+    c.insertAdjacentHTML('beforeend', `
+        <div class="card" data-idx="${i}">
+            <div class="card-header">
+                <span class="card-index">COMPONENT_${i}</span>
+                <button type="button" class="btn-remove" onclick="removeCard(this)">× REMOVE</button>
+            </div>
+            <input type="hidden" name="ArchitectureComponents[${i}].Id" value="" />
+            <div class="form-group">
+                <label>NAME</label>
+                <input name="ArchitectureComponents[${i}].Name" class="f-input" placeholder="e.g. API Gateway" />
+            </div>
+            <div class="form-row">
+                <div class="form-group">
+                    <label>ROLE</label>
+                    <input name="ArchitectureComponents[${i}].Role" class="f-input" placeholder="What it does" />
+                </div>
+                <div class="form-group">
+                    <label>TECH</label>
+                    <input name="ArchitectureComponents[${i}].Tech" class="f-input" placeholder="ASP.NET Core..." />
+                </div>
+            </div>
+        </div>`);
+}
+
+function addSkill() {
+    const c = document.getElementById('skills-container');
+    const i = nextIdx(c);
+    c.insertAdjacentHTML('beforeend', `
+        <div class="card" data-idx="${i}">
+            <input type="hidden" name="Skills[${i}].Id" value="" />
+            <div class="card-header">
+                <div class="form-row" style="flex:1">
+                    <input name="Skills[${i}].Name" class="f-input" placeholder="e.g. C#" />
+                    <input name="Skills[${i}].Category" class="f-input" placeholder="Backend / DevOps / DB" />
+                </div>
+                <button type="button" class="btn-remove" onclick="removeCard(this)">×</button>
+            </div>
+        </div>`);
+}
+
+function addMetric() {
+    const c = document.getElementById('metrics-container');
+    const i = nextIdx(c);
+    c.insertAdjacentHTML('beforeend', `
+        <div class="card" data-idx="${i}">
+            <div class="card-header">
+                <span class="card-index">METRIC_${i}</span>
+                <button type="button" class="btn-remove" onclick="removeCard(this)">× REMOVE</button>
+            </div>
+            <input type="hidden" name="Metrics[${i}].Id" value="" />
+            <div class="form-row">
+                <div class="form-group">
+                    <label>VALUE</label>
+                    <input name="Metrics[${i}].Value" class="f-input" placeholder="e.g. 10x" />
+                </div>
+                <div class="form-group">
+                    <label>LABEL</label>
+                    <input name="Metrics[${i}].Label" class="f-input" placeholder="THROUGHPUT" />
+                </div>
+            </div>
+            <div class="form-group">
+                <label>DESCRIPTION</label>
+                <input name="Metrics[${i}].Description" class="f-input" placeholder="Metric context..." />
+            </div>
+        </div>`);
+}
+
+// ── Artifact helpers ─────────────────────────────────────────────────────────
+
+/**
+ * param {string} containerId
+ * param {string} prefix       - e.g. "Documents", "Videos", "Screenshots"
+ * param {string} tag          - display label prefix e.g. "DOC"
+ * param {string} accept       - file input accept string
+ * param {boolean} isImage     - whether to wire up local image preview
+ */
+function addUploadCard(containerId, prefix, tag, accept, isImage = false) {
+    const c = document.getElementById(containerId);
+    const i = nextIdx(c);
+    const previewAttr = isImage
+        ? `onchange="previewLocal(this, null, this.closest('.card'))"`
+        : '';
+    c.insertAdjacentHTML('beforeend', `
+        <div class="card upload" data-idx="${i}">
+            <div class="card-header">
+                <span class="card-index">${tag}_${i}</span>
+                <button type="button" class="btn-remove" onclick="removeCard(this)">× REMOVE</button>
+            </div>
+            <input type="hidden" name="${prefix}[${i}].Id" value="" />
+            <div class="form-group">
+                <label>LABEL</label>
+                <input name="${prefix}[${i}].Label" class="f-input" placeholder="Descriptive label..." />
+            </div>
+            <div class="form-group">
+                <label>FILE</label>
+                <input type="file" name="${prefix}[${i}].File"
+                       class="f-file" accept="${accept}" ${previewAttr} />
+            </div>
+        </div>`);
+}
+
+/**
+ * param {string} containerId
+ * param {string} prefix  - e.g. "Repos", "LiveDemos", "Links"
+ * param {string} tag
+ */
+function addLinkCard(containerId, prefix, tag) {
+    const c = document.getElementById(containerId);
+    const i = nextIdx(c);
+    c.insertAdjacentHTML('beforeend', `
+        <div class="card link" data-idx="${i}">
+            <input type="hidden" name="${prefix}[${i}].Id" value="" />
+            <div class="card-header">
+                <div class="form-row" style="flex:1">
+                    <div class="form-group">
+                        <label>LABEL</label>
+                        <input name="${prefix}[${i}].Label" class="f-input" placeholder="Descriptive label..." />
                     </div>
-                    <textarea name="CaseStudy.ImplementationSteps[${index}].Description" class="admin-input mt-2" placeholder="Description..."></textarea>
-                    <button type="button" class="card-remove" onclick="this.parentElement.remove()">REMOVE</button>
-                </div>`;
-            break;
-
-        case 'skills':
-            container = document.getElementById('skills-container');
-            index = container.children.length;
-            html = `
-                <div class="list-item">
-                    <input type="hidden" name="CaseStudy.Skills[${index}].Id" value="0" />
-                    <input name="CaseStudy.Skills[${index}].Name" class="admin-input" placeholder="Skill Name" />
-                    <input name="CaseStudy.Skills[${index}].Category" class="admin-input" placeholder="Category" />
-                    <button type="button" class="remove-btn" onclick="this.parentElement.remove()">×</button>
-                </div>`;
-            break;
-
-        case 'metrics':
-            container = document.getElementById('metrics-container');
-            index = container.children.length;
-            html = `
-                <div class="admin-card">
-                    <input type="hidden" name="CaseStudy.Metrics[${index}].Id" value="0" />
-                    <div class="form-row">
-                        <input name="CaseStudy.Metrics[${index}].Value" class="admin-input" placeholder="Value (e.g. 10x)" />
-                        <input name="CaseStudy.Metrics[${index}].Label" class="admin-input" placeholder="LABEL" />
+                    <div class="form-group">
+                        <label>URL</label>
+                        <input name="${prefix}[${i}].Url" class="f-input" placeholder="https://..." />
                     </div>
-                    <input name="CaseStudy.Metrics[${index}].Description" class="admin-input mt-2" placeholder="Description..." />
-                    <button type="button" class="card-remove" onclick="this.parentElement.remove()">REMOVE</button>
-                </div>`;
-            break;
-
-        case 'artifacts':
-            container = document.getElementById('artifacts-container');
-            index = container.children.length;
-            html = `
-                <div class="admin-card">
-                    <input type="hidden" name="CaseStudy.Artifacts[${index}].Id" value="0" />
-                    <div class="form-row">
-                        <input name="CaseStudy.Artifacts[${index}].Label" class="admin-input" placeholder="Label" />
-                        <select name="CaseStudy.Artifacts[${index}].Type" class="admin-input">
-                            <option value="Repo">Repo</option>
-                            <option value="Live">Live</option>
-                            <option value="Screenshot">Screenshot</option>
-                            <option value="ImplementationDetail">ImplementationDetail</option>
-                        </select>
-                    </div>
-                    <input name="CaseStudy.Artifacts[${index}].Url" class="admin-input mt-2" placeholder="URL..." />
-                    <button type="button" class="card-remove" onclick="this.parentElement.remove()">REMOVE</button>
-                </div>`;
-            break;
-    }
-
-    if (container && html) {
-        container.insertAdjacentHTML('beforeend', html);
-    }
+                </div>
+                <button type="button" class="btn-remove" onclick="removeCard(this)">×</button>
+            </div>
+        </div>`);
 }
 </script>
-

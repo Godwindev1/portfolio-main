@@ -3,6 +3,7 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Portfolio.Models;
+using Portfolio.ViewModels;
 
 
 public class AdminController : Controller
@@ -11,7 +12,7 @@ public class AdminController : Controller
     public ViewResult CaseStudy()
     {
         Console.WriteLine("Reached AdminController.CaseStudy");
-        return View("Views/Admin/CaseStudyAdd.cshtml", new CaseStudyViewModel { CaseStudy = new CaseStudy() });
+        return View("Views/Admin/CaseStudyAdd.cshtml", new SaveCaseStudyViewModel ());
     }
 
     [HttpPost("admin/CaseStudy/Save")]
