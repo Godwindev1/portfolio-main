@@ -1,7 +1,7 @@
  @import url("ContactSection.css");
  @import url("Login.css");
  @import url("CaseStudyModal.css");
-
+@import url("Admin/CaseStudy.css");
 /* ─── DARK MODE (default) ─── */
 :root {
   --bg: #080808;

@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Authentication.Cookies;
 using dotenv.net;
 using Microsoft.EntityFrameworkCore;
 using Portfolio.Data;
+using Amazon.S3;
 
 DotEnv.Load();
 
@@ -15,6 +16,18 @@ builder.Services.AddDbContext<PortfolioDbContext>(options =>
         builder.Configuration["CONNECTION_STRING"],  new MySqlServerVersion(new Version(8, 0, 34))
     )
 );
+
+builder.Services.AddAuthorization(options =>
+{
+    options.AddPolicy("AdminOnly", policy =>
+        policy.RequireRole("Admin"));
+});
+ 
+ var s3Config = new AmazonS3Config
+{
+    ServiceURL = "http://ppmpdb:9000",
+    ForcePathStyle = true // Essential for MinIO
+};
 
 builder.Services.AddControllersWithViews();
 builder.Services.AddScoped<ICaseStudyRepository, CaseStudyRepository>();
@@ -37,12 +50,9 @@ builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationSc
     });
  
 
-builder.Services.AddAuthorization(options =>
-{
-    options.AddPolicy("AdminOnly", policy =>
-        policy.RequireRole("Admin"));
-});
- 
+
+builder.Services.AddSingleton<IAmazonS3>(sp => 
+    new AmazonS3Client("admin", "password123", s3Config));
 
 var app = builder.Build();
 
@@ -52,7 +62,7 @@ using (var scope = app.Services.CreateScope())
 
     var repo = services.GetRequiredService<ICaseStudyRepository>();
     var seeder = new CaseStudySeedTest();
-    await seeder.GenerateCaseStudies(repo);
+    //await seeder.GenerateCaseStudies(repo);
 }
 
 if (!app.Environment.IsDevelopment())

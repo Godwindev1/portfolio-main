@@ -258,7 +258,7 @@
 
             @{
                 var links = cs.Artifacts
-                    .Where(a => a.Type != "Screenshot" && a.Type != "Detail")
+                    .Where(a => a.Type != ArtifactTypes.ScreenShot && a.Type != ArtifactTypes.ImplementationDetail)
                     .ToList();
             }
             @if (links.Any())

@@ -5,10 +5,11 @@ public static class ArtifactTypes
 {
     public const string Links = "Links";
     public const string Repo = "Repo";
-    public const string Live = "Demo";
+    public const string Live = "Live";
     public const string ScreenShot = "Screenshot";
     public const string ImplementationDetail = "ImplementationDetail";
     public const string Videos = "Videos";
+    public const string Document = "Document";
 }
 public class CaseStudy
 {

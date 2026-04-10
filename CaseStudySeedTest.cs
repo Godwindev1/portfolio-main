@@ -70,6 +70,9 @@ public class CaseStudySeedTest
             new ArtifactLink { Label = "GitHub Repo", Url = "https://github.com/example/order-system", Type = ArtifactTypes.Repo },
             new ArtifactLink { Label = "API Docs", Url = "https://postman.com/example", Type = ArtifactTypes.Links },
             new ArtifactLink { Label = "ScreenShot1", Url = "/Images/CaseStudyImage.png", Type = ArtifactTypes.ImplementationDetail },
+            new ArtifactLink { Label = "ScreenShot2", Url = "/Images/Test2.webp", Type = ArtifactTypes.ScreenShot },
+            new ArtifactLink { Label = "ScreenShot2", Url = "/Images/Test2.webp", Type = ArtifactTypes.ScreenShot },
+            new ArtifactLink { Label = "ScreenShot2", Url = "/Images/Test2.webp", Type = ArtifactTypes.ScreenShot },
             new ArtifactLink { Label = "ScreenShot2", Url = "/Images/Test2.webp", Type = ArtifactTypes.ScreenShot }
         },
 
