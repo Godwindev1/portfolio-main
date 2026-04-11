@@ -21,7 +21,7 @@ public class UploadArtifactInput
 /// <summary>
 /// For artifact types that are plain hyperlinks: Links, Repo, Live.
 /// No file involved – the user just provides a label and a URL.
-/// </summary>
+/// </summary>d
 public class LinkArtifactInput
 {
     public int? Id { get; set; }
@@ -100,6 +100,9 @@ public class SaveCaseStudyViewModel
 
     // ArtifactTypes.ScreenShot
     public List<UploadArtifactInput> Screenshots { get; set; } = [];
+    
+    //ArtifactTypes.implementationDetails
+    public List<UploadArtifactInput> implementationDetails { get; set; } = [];
 
     // ── Link-based artifacts (label + URL only, no upload) ─────────────────────
     // ArtifactTypes.Links
@@ -110,4 +113,6 @@ public class SaveCaseStudyViewModel
 
     // ArtifactTypes.Live
     public List<LinkArtifactInput> LiveDemos { get; set; } = [];
+
+
 }
