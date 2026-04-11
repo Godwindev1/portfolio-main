@@ -80,5 +80,32 @@ public class CaseStudyModel
         };
     }
 
+    public async Task SaveCaseStudyAsync(CaseStudy caseStudy)
+    {
+        if (caseStudy.Id == 0)
+        {
+            await _caseStudyRepository.AddAsync(caseStudy);
+        }
+        else
+        {
+            await _caseStudyRepository.UpdateAsync(caseStudy);
+        }
+    }
+
+    public async Task CreateCaseStudyAsync(CaseStudy caseStudy)
+    {
+        await _caseStudyRepository.AddAsync(caseStudy);
+    }
+
+    public async Task UpdateAsync(CaseStudy caseStudy)
+    {
+        await _caseStudyRepository.UpdateAsync(caseStudy);
+    }
+
+    public async Task DeleteAsync(int id)
+    {
+        await _caseStudyRepository.DeleteAsync(id);
+    }
+
 
 }
