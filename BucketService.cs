@@ -17,9 +17,10 @@ public class BucketService
     private readonly string _bucketName = "portfolio-bucket";
 
     private Dictionary<string, string> _FileNameToProgressMapping = new Dictionary<string, string>();
-    public BucketService(IAmazonS3 s3Client)
+    public BucketService(IAmazonS3 s3Client, AmazonS3Config s3Config)
     {
         _s3Client = s3Client;
+        _s3Config = s3Config;
     }
 
     public async Task MakeBucketPublicAsync(string bucketName)
@@ -66,7 +67,7 @@ public class BucketService
             Console.WriteLine($"Creating bucket '{_bucketName}'...");
             await _s3Client.PutBucketAsync(request);
         }
-        
+
         await MakeBucketPublicAsync(_bucketName);
     }
 
@@ -144,7 +145,7 @@ public class BucketService
             }
 
             // Example Construction
-            string FileUrl = $"{_s3Config.ServiceURL}/{_bucketName}/{ObjectKey}";
+            string FileUrl = $"{_s3Config.ServiceURL}{_bucketName}/{ObjectKey}";
 
             return FileUrl;
         }

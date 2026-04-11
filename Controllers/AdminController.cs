@@ -69,7 +69,7 @@ public class AdminController : Controller
                 new() { Id = null, Label = "Latency Reduction", Value = "2s → 120ms",    Description = "Improved response time under load"    },
                 new() { Id = null, Label = "Throughput",        Value = "50k+ /day",     Description = "Handled increased transaction volume"  },
                 new() { Id = null, Label = "Error Rate",        Value = "-85%",          Description = "Reduced failed transactions"           },
-                new() { Id = null, Label = "CONCURRENT_JOBS",  Value = "10K+ sustained", Description = ""                                     }
+                new() { Id = null, Label = "CONCURRENT_JOBS",  Value = "10K+ sustained", Description = " Empty String"                                     }
             ],
 
             Skills =
@@ -148,7 +148,7 @@ public class AdminController : Controller
         }
 
         var Isteps = SaveCaseStudy.ImplementationSteps.Select((ImplementationStepInput input) => {
-            return new ImplementationStep { Order = input.Order, Title = input.Title, Description = input.Description };
+            return new ImplementationStep { Order = input.Order, Title = input.Title, Description = input.Description ?? "" };
         });
 
         var ArchComps = SaveCaseStudy.ArchitectureComponents.Select((ArchitectureComponentInput input) => {
@@ -156,7 +156,7 @@ public class AdminController : Controller
         });
 
         var MetricsList = SaveCaseStudy.Metrics.Select((MetricInput input) => {
-            return new Metric { Value = input.Value, Description = input.Description, Label = input.Label };
+            return new Metric { Value = input.Value, Description = input.Description ?? "", Label = input.Label };
         });
 
         var Skills = SaveCaseStudy.Skills.Select((SkillInput input) => { 
@@ -180,7 +180,16 @@ public class AdminController : Controller
         //MAP IMPLEMENTATION DETAILS
         foreach(UploadArtifactInput implDetail in SaveCaseStudy.implementationDetails)
         {
-            if(implDetail.File == null) continue;
+            
+            if(implDetail.File == null) 
+            {   
+                artifacts.Add(new ArtifactLink {
+                    Label = implDetail.Label,
+                    Url = implDetail.ExistingUrl ?? "",
+                    Type = ArtifactTypes.ImplementationDetail
+                });
+                continue;
+            }
 
             var ResolvedUrl = await  _bucketService.UploadFile(
                 implDetail.File.OpenReadStream(),
@@ -199,7 +208,16 @@ public class AdminController : Controller
         //MAP VIDEOS
         foreach(UploadArtifactInput video in SaveCaseStudy.Videos)
         {
-            if(video.File == null) continue;
+            if(video.File == null) 
+            {   
+                artifacts.Add(new ArtifactLink {
+                    Label = video.Label,
+                    Url = video.ExistingUrl ?? "",
+                    Type = ArtifactTypes.ScreenShot
+                });
+                continue;
+            }
+
 
             var ResolvedUrl = await  _bucketService.UploadVideo(
                 video.File.OpenReadStream(),
@@ -217,7 +235,15 @@ public class AdminController : Controller
         //MAP SCREENSHOTS
         foreach(UploadArtifactInput screenshot in SaveCaseStudy.Screenshots)
         {
-            if(screenshot.File == null) continue;
+            if(screenshot.File == null) 
+            {   
+                artifacts.Add(new ArtifactLink {
+                    Label = screenshot.Label,
+                    Url = screenshot.ExistingUrl ?? "",
+                    Type = ArtifactTypes.ScreenShot
+                });
+                continue;
+            }
 
             var ResolvedUrl = await  _bucketService.UploadScreenShot(
                 screenshot.File.OpenReadStream(),

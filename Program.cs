@@ -26,6 +26,8 @@ builder.Services.AddDbContext<PortfolioDbContext>(options =>
     ForcePathStyle = true // Essential for MinIO
 };
 
+builder.Services.AddSingleton(s3Config);
+
 builder.Services.AddSingleton<IAmazonS3>(sp => 
     new AmazonS3Client(BucketRootUser, BucketRootPassword, s3Config));
 
