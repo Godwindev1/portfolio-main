@@ -6,6 +6,7 @@ using Portfolio.Models;
 using Portfolio.ViewModels;
 
 
+[Authorize(policy: "AdminOnly")]
 public class AdminController : Controller
 {
     private readonly BucketService _bucketService;
