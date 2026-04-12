@@ -22,6 +22,21 @@
             <div class="exp-role">@exp.Role</div>
             <div class="exp-company">@exp.Company</div>
             <p class="exp-desc">@exp.Description</p>
+
+        @if(exp.Responsibilities != null && exp.Responsibilities.Count > 0)
+        {
+          <span >Key Responsibilities:</span>
+          <ul class="exp-responsibilities">
+            @foreach (var responsibility in exp.Responsibilities)
+            {
+              <li class="exp-responsibility-item">
+                <span class="exp-responsibility-bullet"></span>
+                <span class="exp-responsibility-text">@responsibility</span>
+              </li>
+            }
+          </ul>
+        }
+
             <div class="exp-tags">
               @foreach (var tag in exp.Tags)
               {
@@ -29,14 +44,7 @@
               }
             </div>
 
-            <ul class="">
-              @foreach (var Responsibility in exp.Responsibilities)
-              {
-                <li>
-                  <span >@Responsibility</span>
-                </li>
-              }
-            </ul>
+         
           </div>
         </div>
       }
