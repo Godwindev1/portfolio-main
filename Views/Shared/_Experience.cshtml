@@ -28,6 +28,15 @@
                 <span class="tag">@tag</span>
               }
             </div>
+
+            <ul class="">
+              @foreach (var Responsibility in exp.Responsibilities)
+              {
+                <li>
+                  <span >@Responsibility</span>
+                </li>
+              }
+            </ul>
           </div>
         </div>
       }

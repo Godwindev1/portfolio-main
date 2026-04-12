@@ -17,16 +17,6 @@ public class SkillItem
     public string Level { get; set; } = string.Empty;
 }
 
-public class Experience
-{
-    public int Id { get; set; }
-    public string Period { get; set; } = string.Empty;
-    public string Role { get; set; } = string.Empty;
-    public string Company { get; set; } = string.Empty;
-    public string Description { get; set; } = string.Empty;
-    public List<string> Tags { get; set; } = [];
-}
-
 public class Testimonial
 {
     public int Id { get; set; }

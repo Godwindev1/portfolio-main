@@ -4,6 +4,7 @@ using dotenv.net;
 using Microsoft.EntityFrameworkCore;
 using Portfolio.Data;
 using Amazon.S3;
+using Portfolio.Models;
 
 DotEnv.Load();
 
@@ -35,6 +36,7 @@ builder.Services.AddSingleton<BucketService>();
 
 builder.Services.AddControllersWithViews();
 builder.Services.AddScoped<ICaseStudyRepository, CaseStudyRepository>();
+builder.Services.AddScoped<IExperienceRepository, ExperienceRepository>();
 
 builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
     .AddCookie(options =>
@@ -66,12 +68,19 @@ using (var scope = app.Services.CreateScope())
 {
     var services = scope.ServiceProvider;
 
+    //BUCKET SETUP 
     var bucketService = services.GetRequiredService<BucketService>();
     await bucketService.CreateBucketAsync();
 
+    //CASE STUDY SEEDING
     var repo = services.GetRequiredService<ICaseStudyRepository>();
     var seeder = new CaseStudySeedTest();
     //await seeder.GenerateCaseStudies(repo);
+
+    //EXPERIENCE SEEDING
+    var ExperienceRepo = services.GetRequiredService<IExperienceRepository>();
+    var ExperienceSeeder = new ExperienceSeedTest();
+    //await ExperienceSeeder.GenerateExperiences(ExperienceRepo);
 }
 
 if (!app.Environment.IsDevelopment())

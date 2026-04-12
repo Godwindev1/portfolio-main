@@ -33,6 +33,7 @@ public class PortfolioDbContext : DbContext
         // -------------------------
 
         ConfigureJsonConversion<Experience, List<string>>(modelBuilder, e => e.Tags);
+        ConfigureJsonConversion<Experience, List<string>>(modelBuilder, e => e.Responsibilities);
 
         // CaseStudy JSON sections
         modelBuilder.Entity<CaseStudy>()
