@@ -8,10 +8,16 @@ public class HomeController : Controller
 {
 
     private readonly CaseStudyModel Model; 
+    private readonly IExperienceRepository _experienceRepo;
 
-    public HomeController(ICaseStudyRepository repository)
+    private readonly ITestimonialRepository _testimonialRepo;
+
+
+    public HomeController(ICaseStudyRepository repository, IExperienceRepository experienceRepository, ITestimonialRepository testimonialRepository)
     {
         Model = new CaseStudyModel(repository);
+        _experienceRepo = experienceRepository;
+        _testimonialRepo = testimonialRepository;
     }
     public async Task<IActionResult> Index()
     {
@@ -20,8 +26,8 @@ public class HomeController : Controller
             HeroStatus = new HeroStatus(),
             CaseStudies = await GetCaseStudies(),
             SkillDomains = GetSkillDomains(),
-            Experiences = GetExperiences(),
-            Testimonials = GetTestimonials(),
+            Experiences = await GetWorkHistory(),
+            Testimonials = await GetTestimonials(),
             Certifications = GetCertifications()
         };
 
@@ -33,6 +39,15 @@ public class HomeController : Controller
         return await Model.GetAllCaseStudiesAsync();
     }
 
+    private async Task<List<Experience>> GetWorkHistory()
+    {
+        return await _experienceRepo.GetAllAsync();
+    }
+
+        private async Task<List<Testimonial>> GetTestimonials()
+    {
+        return await _testimonialRepo.GetAllAsync();
+    }
 
 
 
@@ -115,68 +130,6 @@ public class HomeController : Controller
         };
     }
 
-    private List<Experience> GetExperiences()
-    {
-        return new List<Experience>
-        {
-            new() {
-                Id = 1,
-                Period = "2023 — PRESENT",
-                Role = "Senior Backend Engineer",
-                Company = "FREELANCE // REMOTE",
-                Description = "Building production backend systems across C++/OpenGL graphics, .NET backend infrastructure, and AI-powered web applications. Delivered a structured 3D graphics build with weekly milestones, a custom job scheduling library, and a RAG pipeline for an AI exam assistant.",
-                Tags = new() { "C# .NET", "ASP.NET CORE", "POSTGRESQL", "DEVOPS" },
-                Responsibilities = new() {
-                    "Designed and implemented a custom job scheduling library in C# to manage complex task dependencies and optimize resource utilization, resulting in a 30% improvement in processing efficiency.",
-                    "Developed a RAG (Retrieval-Augmented Generation) pipeline for an AI exam assistant, integrating vector search with PostgreSQL to enable real-time retrieval of relevant information, enhancing response accuracy by 25%.",
-                    "Led the backend development of an AI-powered web application, utilizing ASP.NET Core to create scalable APIs and PostgreSQL for data management, achieving seamless integration with frontend components and third-party services."
-                }
-            },
-            new() {
-                Id = 2,
-                Period = "2021 — 2023",
-                Role = "Backend Developer",
-                Company = "CONTRACT ROLES // VARIOUS",
-                Description = "Designed and deployed high-throughput API layers for data-intensive applications. Specialized in PostgreSQL optimization, concurrent processing architecture, and deployment pipeline design for containerized services.",
-                Tags = new() { "REST APIS", "DOCKER", "MYSQL", "CI/CD" },
-                Responsibilities = new() {
-                    "Architected and implemented high-throughput REST APIs for data-intensive applications, utilizing ASP.NET Core to ensure scalability and maintainability while adhering to best practices in API design.",
-                    "Optimized PostgreSQL databases through indexing strategies, query optimization, and schema design improvements, resulting in a 40% reduction in query response times for critical endpoints.",
-                    "Designed and implemented deployment pipelines for containerized services using Docker and CI/CD tools, enabling seamless integration and continuous delivery across multiple environments."
-                }
-            },
-
-            new() {
-                Id = 3,
-                Period = "2019 — 2021",
-                Role = "DevOps Engineer",
-                Company = "PRIOR_ROLE // INFRASTRUCTURE",
-                Description = "Implemented automated CI/CD pipelines, container orchestration, and infrastructure-as-code workflows. Built real-time monitoring and alerting systems using Prometheus and Grafana for production environments.",
-                Tags = new() { "TERRAFORM", "KUBERNETES", "PROMETHEUS", "GITHUB_ACTIONS" }
-            }
-        };
-    }
-
-    private List<Testimonial> GetTestimonials()
-    {
-        return new List<Testimonial>
-        {
-            new() {
-                Id = 1,
-                Quote = "His ability to design systems that don't just work today but hold up under load tomorrow is rare. The job scheduler alone saved us weeks of integration pain.",
-                AuthorInitials = "MK",
-                AuthorName = "CLIENT // BACKEND_PROJECT",
-                AuthorTitle = "VIA FIVERR // VERIFIED"
-            },
-            new() {
-                Id = 2,
-                Quote = "Documentation as disciplined as the code itself. Every architectural decision was explained. We didn't just get a system — we got a foundation we understand.",
-                AuthorInitials = "AO",
-                AuthorName = "CLIENT // RAG_PIPELINE",
-                AuthorTitle = "ASP.NET CORE PROJECT // VERIFIED"
-            }
-        };
-    }
 
     private List<Certification> GetCertifications()
     {

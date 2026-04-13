@@ -37,6 +37,7 @@ builder.Services.AddSingleton<BucketService>();
 builder.Services.AddControllersWithViews();
 builder.Services.AddScoped<ICaseStudyRepository, CaseStudyRepository>();
 builder.Services.AddScoped<IExperienceRepository, ExperienceRepository>();
+builder.Services.AddScoped<ITestimonialRepository, TestimonialRepository>();
 
 builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
     .AddCookie(options =>

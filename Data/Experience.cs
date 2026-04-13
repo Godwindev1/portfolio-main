@@ -8,7 +8,7 @@ namespace Portfolio.Models;
 public class Experience
 {
     [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-    public int Id { get; set; }
+    public int? Id { get; set; }
     public string Period { get; set; } = string.Empty;
     public string Role { get; set; } = string.Empty;
     public string Company { get; set; } = string.Empty;

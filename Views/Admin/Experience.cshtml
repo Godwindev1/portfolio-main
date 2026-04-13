@@ -4,6 +4,8 @@
     ViewData["Title"] = "Experience // CMS";
 }
 
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+
 <div class="acms-shell">
 
   <!-- ── HEADER ── -->
@@ -11,6 +13,7 @@
     <div class="acms-header-left">
       <span class="acms-breadcrumb">ADMIN // ARCHIVE_03</span>
       <h1 class="acms-page-title">Experience_Log</h1>
+      <p> No of Items: @Model.Count</p>
     </div>
     <button class="acms-btn-primary" onclick="openPanel(null)">
       <span class="btn-icon">+</span> NEW_ENTRY
@@ -78,7 +81,8 @@
           <button class="acms-btn-icon" onclick='openPanel(@Html.Raw(System.Text.Json.JsonSerializer.Serialize(exp)))'>
             ✦ EDIT
           </button>
-          <form asp-action="Delete" asp-controller="Experience" asp-area="Admin"
+          @{/* unimplemented At the Moment in controllers*/ }
+          <form asp-action="DeleteExperience" asp-controller="Admin" asp-area="Admin"
                 method="post" style="display:inline;"
                 onsubmit="return confirm('Delete this entry?')">
             @Html.AntiForgeryToken()
@@ -103,9 +107,10 @@
     <button class="panel-close" onclick="closePanel()">✕</button>
   </div>
 
-  <form method="post" id="expForm" class="panel-form">
+
+  <form asp-route="SaveExperience" method="post" class="panel-form">
     @Html.AntiForgeryToken()
-    <input type="hidden" name="Id" id="f-id" />
+    <input type="hidden" name="Id" id="f-id"  />
 
     <div class="form-row form-row--2col">
       <div class="form-group">
@@ -173,9 +178,6 @@
 <script>
   const state = { resp: [], tags: [] };
 
-  const areaBase = '@Url.Action("Index", "Experience", new { area = "Admin" })';
-  const createUrl = '@Url.Action("Create", "Experience", new { area = "Admin" })';
-  const updateUrl = '@Url.Action("Update", "Experience", new { area = "Admin" })';
 
   function openPanel(data) {
     const isEdit = data && data.Id;
@@ -183,7 +185,6 @@
     document.getElementById('panelMode').textContent  = isEdit ? 'EDIT_ENTRY'       : 'NEW_ENTRY';
     document.getElementById('panelTitle').textContent = isEdit ? 'Edit Experience'   : 'Add Experience';
     document.getElementById('submitBtn').textContent  = isEdit ? 'UPDATE_ENTRY'      : 'SAVE_ENTRY';
-    document.getElementById('expForm').action         = isEdit ? updateUrl           : createUrl;
 
     ['f-id','f-period','f-company','f-role','f-desc'].forEach(id =>
       document.getElementById(id).value = '');
@@ -199,6 +200,11 @@
       state.resp = [...(data.Responsibilities || [])];
       state.tags = [...(data.Tags || [])];
       renderChips('resp'); renderChips('tags');
+    }
+    else
+    {
+      document.getElementById('f-id').value      = null;
+
     }
 
     document.getElementById('overlay').classList.add('open');

@@ -59,7 +59,20 @@
           <div class="quote-author">
             <div class="quote-avatar">@testimonial.AuthorInitials</div>
             <div class="quote-author-info">
-              <div class="quote-name">@testimonial.AuthorName</div>
+              <div class="quote-name">
+                @if (!string.IsNullOrWhiteSpace(testimonial.TestimonialLink))
+                {
+                  <a href="@testimonial.TestimonialLink" target="_blank" rel="noopener noreferrer"
+                     class="quote-name-link">
+                    @testimonial.AuthorName
+                    <span class="quote-link-icon" aria-hidden="true">↗</span>
+                  </a>
+                }
+                else
+                {
+                  @testimonial.AuthorName
+                }
+              </div>
               <div class="quote-title">@testimonial.AuthorTitle</div>
             </div>
           </div>

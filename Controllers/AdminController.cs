@@ -11,22 +11,82 @@ public class AdminController : Controller
 {
     private readonly BucketService _bucketService;
     private readonly CaseStudyModel _caseStudyModel;
+    private readonly IExperienceRepository _experienceRepo;
+    private readonly ITestimonialRepository _testimonialRepo;
 
-    public AdminController(BucketService bucketService, ICaseStudyRepository caseStudyRepository)
+    public AdminController(BucketService bucketService, ICaseStudyRepository caseStudyRepository, IExperienceRepository experienceRepository, ITestimonialRepository testimonialRepository)
     {
         _bucketService = bucketService;
         _caseStudyModel = new CaseStudyModel(caseStudyRepository);
+        _experienceRepo = experienceRepository;
+        _testimonialRepo = testimonialRepository;
+    }
+
+    //TESTIMONIALS
+    [HttpGet("admin/Testimonial")]
+    public async Task<ViewResult> Testimonial()
+    {
+        Console.WriteLine("Reached AdminController.Testimonial");
+
+        var Dtos = await _testimonialRepo.GetAllAsync();
+   
+        return View("Views/Admin/Testimonials.cshtml", Dtos);
     }
 
 
+    [HttpPost("admin/Testimonial/Save", Name = "SaveTestimonial")]
+    public  async  Task<IActionResult> Experience(Testimonial SaveTestimonial)
+    {
+        bool isEdit = SaveTestimonial != null && SaveTestimonial.Id != null;
+
+        if(isEdit)
+        {
+            await _testimonialRepo.UpdateAsync(SaveTestimonial);
+        }
+        else
+        await _testimonialRepo.AddAsync(SaveTestimonial);
+
+        return LocalRedirect("~/admin/Testimonial");
+    }
+
+    public async Task<IActionResult> DeleteTestimonial([FromForm]int id)
+    {
+        await _testimonialRepo.DeleteAsync(id);
+        return LocalRedirect("~/admin/Testimonial");
+    }
+
+
+    //EXPERIENC AND WORKHISTORY
     [HttpGet("admin/Experience")]
-    public ViewResult Experience()
+    public async Task<ViewResult> Experience()
     {
         Console.WriteLine("Reached AdminController.Experience");
+
+        var Dtos = await _experienceRepo.GetAllAsync();
    
-        return View("Views/Admin/Experience.cshtml", new List<Experience> { ExperienceReturnDto.Get() });
+        return View("Views/Admin/Experience.cshtml", Dtos);
     }
 
+
+    [HttpPost("admin/Experience/Save", Name = "SaveExperience")]
+    public  async  Task<IActionResult> Experience(Experience SaveExperience)
+    {
+        bool isEdit = SaveExperience != null && SaveExperience.Id != null;
+        if(isEdit)
+        {
+            await _experienceRepo.UpdateAsync(SaveExperience);
+        }
+        else
+        await _experienceRepo.AddAsync(SaveExperience);
+
+        return LocalRedirect("~/admin/Experience");
+    }
+
+    public async Task<IActionResult> DeleteExperience([FromForm]int id)
+    {
+        await _experienceRepo.DeleteAsync(id);
+        return LocalRedirect("~/admin/Experience");
+    }
 
 
     [HttpGet("admin/CaseStudy")]
@@ -210,6 +270,6 @@ public class AdminController : Controller
 
         await _caseStudyModel.SaveCaseStudyAsync(CaseStudyDbStore);
     
-        return Ok();
+        return LocalRedirect("~/admin/CaseStudy");
     }
 }

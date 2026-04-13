@@ -1,0 +1,188 @@
+@model List<Portfolio.Models.Testimonial>
+@{
+    Layout = "_Layout";
+    ViewData["Title"] = "Testimonials // CMS";
+}
+
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+
+@{
+  var At = "@";
+}
+
+<div class="acms-shell">
+
+  <!-- ── HEADER ── -->
+  <div class="acms-header">
+    <div class="acms-header-left">
+      <span class="acms-breadcrumb">ADMIN // ARCHIVE_04</span>
+      <h1 class="acms-page-title">Testimonial_Log</h1>
+      <p>No of Items: @Model.Count</p>
+    </div>
+    <button class="acms-btn-primary" onclick="openPanel(null)">
+      <span class="btn-icon">+</span> NEW_ENTRY
+    </button>
+  </div>
+
+  <!-- ── ALERTS ── -->
+  @if (TempData["Success"] != null)
+  {
+    <div class="acms-alert acms-alert--ok">
+      <span class="alert-dot"></span> @TempData["Success"]
+    </div>
+  }
+  @if (TempData["Error"] != null)
+  {
+    <div class="acms-alert acms-alert--err">
+      <span class="alert-dot"></span> @TempData["Error"]
+    </div>
+  }
+
+  <!-- ── ENTRY LIST ── -->
+  <div class="exp-admin-list">
+    @if (!Model.Any())
+    {
+      <div class="acms-empty">
+        <span class="empty-code">[ NULL ]</span>
+        <p>No testimonial entries found. Add your first entry.</p>
+      </div>
+    }
+
+    @foreach (var t in Model)
+    {
+      <div class="exp-admin-card">
+        <div class="exp-admin-card__period">
+          @t.AuthorInitials
+        </div>
+
+        <div class="exp-admin-card__main">
+          <div class="exp-admin-card__role">@t.AuthorName</div>
+          <div class="exp-admin-card__company">@t.AuthorTitle</div>
+          <p class="exp-admin-card__desc">"@t.Quote"</p>
+
+          <div class="exp-admin-card__meta">
+            @if (!string.IsNullOrWhiteSpace(t.TestimonialLink))
+            {
+              <span class="meta-pill">
+                <span class="meta-label">LINK</span>
+                <span class="meta-count">✓</span>
+              </span>
+            }
+            else
+            {
+              <span class="meta-pill">
+                <span class="meta-label">LINK</span>
+                <span class="meta-count" style="opacity:.4">—</span>
+              </span>
+            }
+          </div>
+        </div>
+
+        <div class="exp-admin-card__actions">
+          <button class="acms-btn-icon"
+                  onclick='openPanel(@Html.Raw(System.Text.Json.JsonSerializer.Serialize(t)))'>
+            ✦ EDIT
+          </button>
+          <form asp-action="DeleteTestimonial" asp-controller="Admin" asp-area="Admin"
+                method="post" style="display:inline;"
+                onsubmit="return confirm('Delete this testimonial?')">
+            @Html.AntiForgeryToken()
+            <input type="hidden" name="id" value="@t.Id" />
+            <button type="submit" class="acms-btn-icon acms-btn-icon--danger">⊗ DELETE</button>
+          </form>
+        </div>
+      </div>
+    }
+  </div>
+</div>
+
+<!-- ══ SLIDE-IN PANEL ══ -->
+<div class="acms-overlay" id="overlay" onclick="closePanel()"></div>
+
+<aside class="acms-panel" id="editPanel">
+  <div class="panel-header">
+    <div>
+      <span class="panel-eyebrow" id="panelMode">NEW_ENTRY</span>
+      <h2 class="panel-title" id="panelTitle">Add Testimonial</h2>
+    </div>
+    <button class="panel-close" onclick="closePanel()">✕</button>
+  </div>
+
+  <form asp-route="SaveTestimonial" 
+        method="post" class="panel-form">
+    @Html.AntiForgeryToken()
+    <input type="hidden" name="Id" id="f-id" />
+
+    <!-- QUOTE -->
+    <div class="form-group">
+      <label class="form-label">QUOTE</label>
+      <textarea class="form-input form-textarea" name="Quote" id="f-quote"
+                placeholder="What did they say…" rows="4"></textarea>
+    </div>
+
+    <!-- AUTHOR ROW -->
+    <div class="form-row form-row--2col">
+      <div class="form-group">
+        <label class="form-label">AUTHOR NAME</label>
+        <input class="form-input" name="AuthorName" id="f-authorName"
+               placeholder="e.g. Jane Doe" />
+      </div>
+      <div class="form-group">
+        <label class="form-label">INITIALS</label>
+        <input class="form-input" name="AuthorInitials" id="f-authorInitials"
+               placeholder="e.g. JD" maxlength="3" />
+      </div>
+    </div>
+
+    <!-- TITLE -->
+    <div class="form-group">
+      <label class="form-label">AUTHOR TITLE</label>
+      <input class="form-input" name="AuthorTitle" id="f-authorTitle"
+             placeholder="e.g. CTO @At Acme Corp" />
+    </div>
+
+    <!-- LINK -->
+    <div class="form-group">
+      <label class="form-label">TESTIMONIAL LINK <span style="opacity:.5;font-size:.75em">(optional)</span></label>
+      <input class="form-input" name="TestimonialLink" id="f-link"
+             placeholder="https://…" type="url" />
+    </div>
+
+    <div class="panel-actions">
+      <button type="button" class="acms-btn-ghost" onclick="closePanel()">CANCEL</button>
+      <button type="submit" class="acms-btn-primary" id="submitBtn">SAVE_ENTRY</button>
+    </div>
+  </form>
+</aside>
+
+@section Scripts {
+<script>
+  function openPanel(data) {
+    const isEdit = data && data.Id;
+
+    document.getElementById('panelMode').textContent  = isEdit ? 'EDIT_ENTRY'       : 'NEW_ENTRY';
+    document.getElementById('panelTitle').textContent = isEdit ? 'Edit Testimonial'  : 'Add Testimonial';
+    document.getElementById('submitBtn').textContent  = isEdit ? 'UPDATE_ENTRY'      : 'SAVE_ENTRY';
+
+    ['f-id','f-quote','f-authorName','f-authorInitials','f-authorTitle','f-link']
+      .forEach(id => document.getElementById(id).value = '');
+
+    if (isEdit) {
+      document.getElementById('f-id').value             = data.Id;
+      document.getElementById('f-quote').value          = data.Quote;
+      document.getElementById('f-authorName').value     = data.AuthorName;
+      document.getElementById('f-authorInitials').value = data.AuthorInitials;
+      document.getElementById('f-authorTitle').value    = data.AuthorTitle;
+      document.getElementById('f-link').value           = data.TestimonialLink ?? '';
+    }
+
+    document.getElementById('overlay').classList.add('open');
+    document.getElementById('editPanel').classList.add('open');
+  }
+
+  function closePanel() {
+    document.getElementById('overlay').classList.remove('open');
+    document.getElementById('editPanel').classList.remove('open');
+  }
+</script>
+}

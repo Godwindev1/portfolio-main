@@ -225,3 +225,17 @@
   .exp-admin-card__actions { flex-direction: row; }
   .form-row--2col { grid-template-columns: 1fr; }
 }
+
+/*Testimonials specifics part*/
+.quote-name-link {
+    text-decoration: underline;
+    text-underline-offset: 3px;
+    cursor: none;
+    color: var(--text-primary);
+}
+.quote-name-link:hover 
+{
+  color: var(--accent);
+}
+ .quote-link-icon { opacity: 1; color: var(--accent);}
+.quote-link-icon { opacity: 0.5; transition: opacity .2s; color: var(--text-primary);}
