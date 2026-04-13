@@ -7,6 +7,7 @@ public static class ArtifactTypes
     public const string Repo = "Repo";
     public const string Live = "Live";
     public const string ScreenShot = "Screenshot";
+    //used to Store image For implementation Details Section
     public const string ImplementationDetail = "ImplementationDetail";
     public const string Videos = "Videos";
     public const string Document = "Document";

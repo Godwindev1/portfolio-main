@@ -45,7 +45,7 @@ public class AdminController : Controller
         Console.WriteLine($"Summary: {SaveCaseStudy.Summary}");
         Console.WriteLine($"Category: {SaveCaseStudy.Category}");
 
-        string CoverImageUrl = "";
+        string CoverImageUrl = SaveCaseStudy.ExistingCoverImageUrl ?? "";
         if(SaveCaseStudy.CoverImageFile != null)
         {
             CoverImageUrl = await  _bucketService.UploadScreenShot(
@@ -73,8 +73,13 @@ public class AdminController : Controller
 
         List<ArtifactLink> artifacts = new List<ArtifactLink>();
 
+        var TotalLinks  = new List<LinkArtifactInput> ();
+        TotalLinks.AddRange(SaveCaseStudy.Links);
+        TotalLinks.AddRange(SaveCaseStudy.Repos);
+        TotalLinks.AddRange(SaveCaseStudy.LiveDemos);
+        
         //Map LINKS 
-        foreach(LinkArtifactInput link in SaveCaseStudy.Links)
+        foreach(LinkArtifactInput link in TotalLinks)
         {
             if(string.IsNullOrWhiteSpace(link.Url)) continue;
 
@@ -85,7 +90,8 @@ public class AdminController : Controller
             });
         }
 
-        //MAP IMPLEMENTATION DETAILS
+
+        //MAP IMPLEMENTATION DETAILS Should Ideally Be Just One
         foreach(UploadArtifactInput implDetail in SaveCaseStudy.implementationDetails)
         {
             

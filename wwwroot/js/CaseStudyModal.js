@@ -58,7 +58,7 @@
         if (e.key === 'Escape' && activeModalId !== null) closeActiveModal();
     });
 
-    // ─── LIGHTBOX (optional — swap with your preferred lib) ───
+    // ─── LIGHTBOX ───
     function lightbox(url) {
         if (!url) return;
         const overlay = document.createElement('div');

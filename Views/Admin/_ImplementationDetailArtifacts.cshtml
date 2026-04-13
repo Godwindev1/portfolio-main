@@ -1,0 +1,77 @@
+@* ──────────────────────────────────────────────────────────────────────────
+   Partial: _ImplementationDetailArtifacts.cshtml
+   Purpose: Section 09 — upload & manage ImplementationDetail artifact images.
+            Each card carries a Label (e.g. "Step 2 — Queue diagram"),
+            an optional step-index hint, and the image file / existing URL.
+   Usage  : <partial name="_ImplementationDetailArtifacts" model="Model" />
+   ────────────────────────────────────────────────────────────────────────── *@
+@model Portfolio.ViewModels.SaveCaseStudyViewModel
+@using Portfolio.Models
+
+<div class="section">
+    <div class="section-head">
+        <span class="section-tag">09 // IMPLEMENTATION_DETAIL_IMAGES</span>
+        <div class="artifact-tabs">
+            <span class="artifact-tab upload-tag">↑ UPLOAD: Step diagrams · Flow charts · Annotated screenshots</span>
+        </div>
+    </div>
+    <div class="section-body">
+
+        <div class="sub-head">DETAIL_IMAGES  (PNG · JPG · SVG · WEBP)</div>
+
+        <div id="impl-detail-container"
+             class="card-list"
+             data-prefix="ImplementationDetails"
+             data-counter="@Model.implementationDetails.Count">
+
+            @for (int i = 0; i < Model.implementationDetails.Count; i++)
+            {
+                var detail = Model.implementationDetails[i];
+                <div class="card upload" data-idx="@i">
+
+
+                    <!-- Preserve DB id for edit round-trips -->
+                    <input type="hidden" name="ImplementationDetails[@i].Id"    value="@detail.Id" />
+
+                    <div class="form-row">
+
+                        <div class="form-group">
+                            <label>LABEL</label>
+                            <input name="ImplementationDetails[@i].Label"
+                                   value="@detail.Label"
+                                   class="f-input"
+                                   placeholder="e.g. Worker thread lifecycle diagram" />
+                        </div>
+                    </div>
+
+                    @if (!string.IsNullOrEmpty(detail.ExistingUrl))
+                    {
+                        <div class="existing-file">
+                            <span class="existing-label">STORED:</span>
+                            <img src="@detail.ExistingUrl" class="img-thumb" />
+                            <a href="@detail.ExistingUrl" target="_blank">@detail.ExistingUrl</a>
+                        </div>
+                        <input type="hidden"
+                               name="ImplementationDetails[@i].ExistingUrl"
+                               value="@detail.ExistingUrl" />
+                    }
+
+                    <div class="form-group">
+                        <label>@(string.IsNullOrEmpty(detail.ExistingUrl) ? "FILE" : "REPLACE_FILE")</label>
+                        <input type="file"
+                               name="ImplementationDetails[@i].File"
+                               class="f-file"
+                               accept="image/*,.svg"
+                               onchange="previewLocal(this, null, this.closest('.card'))" />
+                    </div>
+
+                </div>
+            }
+
+        </div><!-- /#impl-detail-container -->
+
+
+    </div>
+</div>
+
+
