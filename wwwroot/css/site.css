@@ -3,6 +3,7 @@
  @import url("CaseStudyModal.css");
 @import url("Admin/CaseStudy.css");
 @import url("Admin/Exerience.css");
+@import url("Admin/Certifications.css");
 /* ─── DARK MODE (default) ─── */
 :root {
   --bg: #080808;

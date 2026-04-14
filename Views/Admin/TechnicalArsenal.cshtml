@@ -1,0 +1,336 @@
+@model List<Portfolio.Models.SkillDomain>
+@{
+    Layout = "_Layout";
+    ViewData["Title"] = "Skills // CMS";
+}
+
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+
+<div class="acms-shell">
+
+  <!-- ── HEADER ── -->
+  <div class="acms-header">
+    <div class="acms-header-left">
+      <span class="acms-breadcrumb">ADMIN // ARCHIVE_06</span>
+      <h1 class="acms-page-title">Arsenal_Domains</h1>
+      <p>No of Items: @Model.Count</p>
+    </div>
+    <button class="acms-btn-primary" onclick="openPanel(null)">
+      <span class="btn-icon">+</span> NEW_DOMAIN
+    </button>
+  </div>
+
+  <!-- ── ALERTS ── -->
+  @if (TempData["Success"] != null)
+  {
+    <div class="acms-alert acms-alert--ok">
+      <span class="alert-dot"></span> @TempData["Success"]
+    </div>
+  }
+  @if (TempData["Error"] != null)
+  {
+    <div class="acms-alert acms-alert--err">
+      <span class="alert-dot"></span> @TempData["Error"]
+    </div>
+  }
+
+  <!-- ── ENTRY LIST ── -->
+  <div class="exp-admin-list">
+    @if (!Model.Any())
+    {
+      <div class="acms-empty">
+        <span class="empty-code">[ NULL ]</span>
+        <p>No skill domains found. Add your first domain.</p>
+      </div>
+    }
+
+    @foreach (var domain in Model.OrderBy(d => d.Number))
+    {
+      <div class="exp-admin-card">
+
+        <div class="exp-admin-card__period cert-icon-glyph">
+          @domain.Icon
+        </div>
+
+        <div class="exp-admin-card__main">
+          <div class="exp-admin-card__role">
+            <span style="opacity:.45; font-size:.75em; margin-right:8px;">
+              0@domain.Number
+            </span>@domain.Title
+          </div>
+
+          <div class="exp-admin-card__meta">
+            <span class="meta-pill">
+              <span class="meta-label">SKILLS</span>
+              <span class="meta-count">@domain.Items.Count</span>
+            </span>
+            @foreach (var item in domain.Items.Take(4))
+            {
+              <span class="meta-pill">
+                <span class="meta-label level-@item.Level.ToLower()">@item.Level</span>
+                <span class="meta-count">@item.Name</span>
+              </span>
+            }
+            @if (domain.Items.Count > 4)
+            {
+              <span class="meta-pill">
+                <span class="meta-count" style="opacity:.45">+@(domain.Items.Count - 4) more</span>
+              </span>
+            }
+          </div>
+        </div>
+
+        <div class="exp-admin-card__actions">
+          <button class="acms-btn-icon"
+                  onclick='openPanel(@Html.Raw(System.Text.Json.JsonSerializer.Serialize(domain)))'>
+            ✦ EDIT
+          </button>
+          <form asp-action="DeleteSkillDomain" asp-controller="Admin" asp-area="Admin"
+                method="post" style="display:inline;"
+                onsubmit="return confirm('Delete this domain and all its skills?')">
+            @Html.AntiForgeryToken()
+            <input type="hidden" name="id" value="@domain.Id" />
+            <button type="submit" class="acms-btn-icon acms-btn-icon--danger">⊗ DELETE</button>
+          </form>
+        </div>
+
+      </div>
+    }
+  </div>
+</div>
+
+<!-- ══ SLIDE-IN PANEL ══ -->
+<div class="acms-overlay" id="overlay" onclick="closePanel()"></div>
+
+<aside class="acms-panel acms-panel--wide" id="editPanel">
+  <div class="panel-header">
+    <div>
+      <span class="panel-eyebrow" id="panelMode">NEW_DOMAIN</span>
+      <h2 class="panel-title" id="panelTitle">Add Skill Domain</h2>
+    </div>
+    <button class="panel-close" onclick="closePanel()">✕</button>
+  </div>
+
+  <form asp-action="SaveSkillDomain" asp-controller="Admin" asp-area="Admin"
+        method="post" class="panel-form" id="domainForm">
+    @Html.AntiForgeryToken()
+    <input type="hidden" name="Id" id="f-id" />
+
+    <!-- NUMBER + ICON -->
+    <div class="form-row form-row--2col">
+      <div class="form-group">
+        <label class="form-label">NUMBER</label>
+        <input class="form-input" name="Number" id="f-number"
+               type="number" min="1" placeholder="e.g. 1" />
+      </div>
+      <div class="form-group">
+        <label class="form-label">
+          ICON_GLYPH
+          <span class="form-label-hint">— unicode e.g. ⚙ ☁ ✦</span>
+        </label>
+        <input class="form-input cert-icon-preview-input" name="Icon" id="f-icon"
+               placeholder="⚙" maxlength="4" />
+      </div>
+    </div>
+
+    <!-- TITLE -->
+    <div class="form-group">
+      <label class="form-label">DOMAIN TITLE</label>
+      <input class="form-input" name="Title" id="f-title"
+             placeholder="e.g. Backend Engineering" />
+    </div>
+
+    <!-- ── SKILL ITEMS ── -->
+    <div class="form-group">
+      <div class="skill-items-header">
+        <label class="form-label" style="margin-bottom:0">SKILL_ITEMS</label>
+        <button type="button" class="acms-btn-ghost acms-btn-ghost--sm" onclick="addSkillRow()">
+          + ADD SKILL
+        </button>
+      </div>
+
+      <div class="skill-items-legend">
+        <span>NAME</span>
+        <span>LEVEL</span>
+        <span></span>
+      </div>
+
+      <div id="skillItemsContainer">
+        <!-- rows injected by JS -->
+      </div>
+
+      <p class="skill-items-empty" id="skillItemsEmpty">
+        No skills added yet — hit ADD SKILL to begin.
+      </p>
+    </div>
+
+    <div class="panel-actions">
+      <button type="button" class="acms-btn-ghost" onclick="closePanel()">CANCEL</button>
+      <button type="submit" class="acms-btn-primary" id="submitBtn">SAVE_ENTRY</button>
+    </div>
+  </form>
+</aside>
+
+@section Scripts {
+<style>
+  /* ── panel width override for the skills form ── */
+  .acms-panel--wide { width: min(640px, 96vw); }
+
+  /* ── skill items sub-form ── */
+  .skill-items-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 8px;
+  }
+  .acms-btn-ghost--sm {
+    padding: 4px 12px;
+    font-size: .7rem;
+  }
+  .skill-items-legend {
+    display: grid;
+    grid-template-columns: 1fr 140px 32px;
+    gap: 8px;
+    font-size: .65rem;
+    letter-spacing: .1em;
+    opacity: .4;
+    margin-bottom: 4px;
+    padding: 0 2px;
+  }
+  .skill-item-row {
+    display: grid;
+    grid-template-columns: 1fr 140px 32px;
+    gap: 8px;
+    align-items: center;
+    margin-bottom: 6px;
+  }
+  .skill-item-row select.form-input {
+    padding-right: 8px;
+  }
+  .skill-item-remove {
+    background: transparent;
+    border: 1px solid color-mix(in srgb, var(--danger, #e05252) 40%, transparent);
+    color: var(--danger, #e05252);
+    border-radius: 4px;
+    width: 32px;
+    height: 32px;
+    cursor: pointer;
+    font-size: .85rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background .15s;
+  }
+  .skill-item-remove:hover {
+    background: color-mix(in srgb, var(--danger, #e05252) 15%, transparent);
+  }
+  .skill-items-empty {
+    font-size: .75rem;
+    opacity: .35;
+    text-align: center;
+    padding: 16px 0 8px;
+    letter-spacing: .05em;
+  }
+</style>
+
+<script>
+  let _itemIndex = 0;
+
+  const LEVELS = ['Core', 'Proficient', 'Familiar', 'Learning'];
+
+  function buildLevelOptions(selected) {
+    return LEVELS.map(l =>
+      `<option value="${l}" ${l === selected ? 'selected' : ''}>${l.toUpperCase()}</option>`
+    ).join('');
+  }
+
+  function addSkillRow(name = '', level = 'Proficient') {
+    const i = _itemIndex++;
+    const container = document.getElementById('skillItemsContainer');
+    const row = document.createElement('div');
+    row.className = 'skill-item-row';
+    row.innerHTML = `
+      <input class="form-input"
+             name="Items[${i}].Name"
+             placeholder="e.g. ASP.NET Core"
+             value="${escHtml(name)}" required />
+      <select class="form-input" name="Items[${i}].Level">
+        ${buildLevelOptions(level)}
+      </select>
+      <button type="button" class="skill-item-remove"
+              onclick="removeRow(this)" title="Remove">✕</button>
+    `;
+    container.appendChild(row);
+    syncEmpty();
+  }
+
+  function removeRow(btn) {
+    btn.closest('.skill-item-row').remove();
+    reindex();
+    syncEmpty();
+  }
+
+  function reindex() {
+    const rows = document.querySelectorAll('#skillItemsContainer .skill-item-row');
+    rows.forEach((row, i) => {
+      row.querySelector('input[name]').name  = `Items[${i}].Name`;
+      row.querySelector('select[name]').name = `Items[${i}].Level`;
+    });
+    _itemIndex = rows.length;
+  }
+
+  function syncEmpty() {
+    const empty = document.getElementById('skillItemsEmpty');
+    const hasRows = document.querySelectorAll('#skillItemsContainer .skill-item-row').length > 0;
+    empty.style.display = hasRows ? 'none' : 'block';
+  }
+
+  function escHtml(s) {
+    return String(s)
+      .replace(/&/g,'&amp;')
+      .replace(/"/g,'&quot;')
+      .replace(/</g,'&lt;')
+      .replace(/>/g,'&gt;');
+  }
+
+  function clearItems() {
+    document.getElementById('skillItemsContainer').innerHTML = '';
+    _itemIndex = 0;
+    syncEmpty();
+  }
+
+  // ── panel open/close ──────────────────────────────────────────────────────
+  function openPanel(data) {
+    const isEdit = data && data.Id;
+
+    document.getElementById('panelMode').textContent  = isEdit ? 'EDIT_DOMAIN'      : 'NEW_DOMAIN';
+    document.getElementById('panelTitle').textContent = isEdit ? 'Edit Skill Domain' : 'Add Skill Domain';
+    document.getElementById('submitBtn').textContent  = isEdit ? 'UPDATE_ENTRY'      : 'SAVE_ENTRY';
+
+    ['f-id','f-number','f-icon','f-title'].forEach(id => {
+      document.getElementById(id).value = '';
+    });
+    clearItems();
+
+    if (isEdit) {
+      document.getElementById('f-id').value     = data.Id;
+      document.getElementById('f-number').value = data.Number;
+      document.getElementById('f-icon').value   = data.Icon;
+      document.getElementById('f-title').value  = data.Title;
+
+      (data.Items || []).forEach(item => addSkillRow(item.Name, item.Level));
+    }
+
+    document.getElementById('overlay').classList.add('open');
+    document.getElementById('editPanel').classList.add('open');
+  }
+
+  function closePanel() {
+    document.getElementById('overlay').classList.remove('open');
+    document.getElementById('editPanel').classList.remove('open');
+  }
+
+  // init empty state on load
+  syncEmpty();
+</script>
+}

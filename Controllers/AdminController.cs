@@ -13,13 +13,85 @@ public class AdminController : Controller
     private readonly CaseStudyModel _caseStudyModel;
     private readonly IExperienceRepository _experienceRepo;
     private readonly ITestimonialRepository _testimonialRepo;
+    private readonly ICertificationRepository _CertificationRepo;
+    private readonly ISkillDomainReposirtory _skilldomainRepository;
 
-    public AdminController(BucketService bucketService, ICaseStudyRepository caseStudyRepository, IExperienceRepository experienceRepository, ITestimonialRepository testimonialRepository)
+
+    public AdminController(BucketService bucketService, ICaseStudyRepository caseStudyRepository, IExperienceRepository experienceRepository, ITestimonialRepository testimonialRepository, ICertificationRepository certificationRepository, ISkillDomainReposirtory skillDomainReposirtory)
     {
         _bucketService = bucketService;
         _caseStudyModel = new CaseStudyModel(caseStudyRepository);
         _experienceRepo = experienceRepository;
         _testimonialRepo = testimonialRepository;
+        _CertificationRepo = certificationRepository;
+        _skilldomainRepository = skillDomainReposirtory;
+    }
+
+    //SKILL DOMAINS (Technical Arsenal )
+    [HttpGet("admin/TechnicalArsenal")]
+    public async Task<ViewResult> TechnicalArsenal()
+    {
+        Console.WriteLine("Reached AdminController.SkillDomain");
+
+        var Dtos = await _skilldomainRepository.GetAllAsync();
+   
+        return View("Views/Admin/TechnicalArsenal.cshtml", Dtos);
+    }
+
+
+    [HttpPost("admin/TechnicalArsenal/Save", Name = "SaveSkill")]
+    public  async  Task<IActionResult> TechnicalArsenal(SkillDomain domain)
+    {
+        bool isEdit = domain != null && domain.Id != null;
+
+        if(isEdit)
+        {
+            await _skilldomainRepository.UpdateAsync(domain);
+        }
+        else
+        await _skilldomainRepository.AddAsync(domain);
+
+        return LocalRedirect("~/admin/TechnicalArsenal");
+    }
+
+    public async Task<IActionResult> DeleteSkillDomain([FromForm]int id)
+    {
+        await _skilldomainRepository.DeleteAsync(id);
+        return LocalRedirect("~/admin/TechnicalArsenal");
+    }
+
+
+    //CERTIFICATIONS 
+    [HttpGet("admin/Certifications")]
+    public async Task<ViewResult> Certification()
+    {
+        Console.WriteLine("Reached AdminController.Certifications");
+
+        var Dtos = await _CertificationRepo.GetAllAsync();
+   
+        return View("Views/Admin/Certifications.cshtml", Dtos);
+    }
+
+
+    [HttpPost("admin/Certifications/Save", Name = "SaveCertifications")]
+    public  async  Task<IActionResult> Certification(Certification SaveCertifications)
+    {
+        bool isEdit = SaveCertifications != null && SaveCertifications.Id != null;
+
+        if(isEdit)
+        {
+            await _CertificationRepo.UpdateAsync(SaveCertifications);
+        }
+        else
+        await _CertificationRepo.AddAsync(SaveCertifications);
+
+        return LocalRedirect("~/admin/Certifications");
+    }
+
+    public async Task<IActionResult> DeleteCertification([FromForm]int id)
+    {
+        await _CertificationRepo.DeleteAsync(id);
+        return LocalRedirect("~/admin/Certifications");
     }
 
     //TESTIMONIALS

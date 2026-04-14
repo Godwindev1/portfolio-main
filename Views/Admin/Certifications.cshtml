@@ -1,0 +1,208 @@
+@model List<Portfolio.Models.Certification>
+@{
+    Layout = "_Layout";
+    ViewData["Title"] = "Certifications // CMS";
+}
+
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+
+<div class="acms-shell">
+
+  <!-- ── HEADER ── -->
+  <div class="acms-header">
+    <div class="acms-header-left">
+      <span class="acms-breadcrumb">ADMIN // ARCHIVE_05</span>
+      <h1 class="acms-page-title">Certification_Registry</h1>
+      <p>No of Items: @Model.Count</p>
+    </div>
+    <button class="acms-btn-primary" onclick="openPanel(null)">
+      <span class="btn-icon">+</span> NEW_CREDENTIAL
+    </button>
+  </div>
+
+  <!-- ── ALERTS ── -->
+  @if (TempData["Success"] != null)
+  {
+    <div class="acms-alert acms-alert--ok">
+      <span class="alert-dot"></span> @TempData["Success"]
+    </div>
+  }
+  @if (TempData["Error"] != null)
+  {
+    <div class="acms-alert acms-alert--err">
+      <span class="alert-dot"></span> @TempData["Error"]
+    </div>
+  }
+
+  <!-- ── ENTRY LIST ── -->
+  <div class="exp-admin-list">
+    @if (!Model.Any())
+    {
+      <div class="acms-empty">
+        <span class="empty-code">[ NULL ]</span>
+        <p>No certification entries found. Add your first credential.</p>
+      </div>
+    }
+
+    @foreach (var cert in Model)
+    {
+      <div class="exp-admin-card">
+
+        <!-- Icon glyph replaces the period bubble -->
+        <div class="exp-admin-card__period cert-icon-glyph">
+          @cert.Icon
+        </div>
+
+        <div class="exp-admin-card__main">
+          <div class="exp-admin-card__role">@cert.Name</div>
+          <div class="exp-admin-card__company">@cert.Provider</div>
+
+          <div class="exp-admin-card__meta">
+            <span class="meta-pill">
+              <span class="meta-label">GRADE</span>
+              <span class="meta-count">@cert.Grade</span>
+            </span>
+            <span class="meta-pill">
+              <span class="meta-label">YEAR</span>
+              <span class="meta-count">@cert.Year</span>
+            </span>
+            @if (!string.IsNullOrWhiteSpace(cert.BadgeUrl))
+            {
+              <span class="meta-pill">
+                <span class="meta-label">BADGE</span>
+                <span class="meta-count">✓</span>
+              </span>
+            }
+            else
+            {
+              <span class="meta-pill">
+                <span class="meta-label">BADGE</span>
+                <span class="meta-count" style="opacity:.4">—</span>
+              </span>
+            }
+          </div>
+        </div>
+
+        <div class="exp-admin-card__actions">
+          <button class="acms-btn-icon"
+                  onclick='openPanel(@Html.Raw(System.Text.Json.JsonSerializer.Serialize(cert)))'>
+            ✦ EDIT
+          </button>
+          <form asp-action="DeleteCertification" asp-controller="Admin"
+                method="post" style="display:inline;"
+                onsubmit="return confirm('Delete this certification?')">
+            @Html.AntiForgeryToken()
+            <input type="hidden" name="id" value="@cert.Id" />
+            <button type="submit" class="acms-btn-icon acms-btn-icon--danger">⊗ DELETE</button>
+          </form>
+        </div>
+
+      </div>
+    }
+  </div>
+</div>
+
+<!-- ══ SLIDE-IN PANEL ══ -->
+<div class="acms-overlay" id="overlay" onclick="closePanel()"></div>
+
+<aside class="acms-panel" id="editPanel">
+  <div class="panel-header">
+    <div>
+      <span class="panel-eyebrow" id="panelMode">NEW_CREDENTIAL</span>
+      <h2 class="panel-title" id="panelTitle">Add Certification</h2>
+    </div>
+    <button class="panel-close" onclick="closePanel()">✕</button>
+  </div>
+
+  <form asp-route="SaveCertifications" 
+        method="post" class="panel-form">
+    @Html.AntiForgeryToken()
+    <input type="hidden" name="Id" id="f-id" />
+
+    <!-- ICON -->
+    <div class="form-group">
+      <label class="form-label">
+        ICON_GLYPH
+        <span class="form-label-hint">— paste a unicode symbol e.g. ☁ ⚙ ✦ ⬡</span>
+      </label>
+      <input class="form-input cert-icon-preview-input" name="Icon" id="f-icon"
+             placeholder="e.g. ☁" maxlength="4" />
+    </div>
+
+    <!-- NAME -->
+    <div class="form-group">
+      <label class="form-label">CERTIFICATION NAME</label>
+      <input class="form-input" name="Name" id="f-name"
+             placeholder="e.g. AWS Certified Solutions Architect" />
+    </div>
+
+    <!-- GRADE + YEAR -->
+    <div class="form-row form-row--2col">
+      <div class="form-group">
+        <label class="form-label">GRADE</label>
+        <input class="form-input" name="Grade" id="f-grade"
+               placeholder="e.g. Associate" />
+      </div>
+      <div class="form-group">
+        <label class="form-label">YEAR</label>
+        <input class="form-input" name="Year" id="f-year"
+               placeholder="e.g. 2024" maxlength="4" />
+      </div>
+    </div>
+
+    <!-- PROVIDER -->
+    <div class="form-group">
+      <label class="form-label">PROVIDER</label>
+      <input class="form-input" name="Provider" id="f-provider"
+             placeholder="e.g. Amazon Web Services" />
+    </div>
+
+    <!-- BADGE URL -->
+    <div class="form-group">
+      <label class="form-label">
+        BADGE_URL
+        <span class="form-label-hint">— optional</span>
+      </label>
+      <input class="form-input" name="BadgeUrl" id="f-badgeUrl"
+             placeholder="https://…" type="url" />
+    </div>
+
+    <div class="panel-actions">
+      <button type="button" class="acms-btn-ghost" onclick="closePanel()">CANCEL</button>
+      <button type="submit" class="acms-btn-primary" id="submitBtn">SAVE_ENTRY</button>
+    </div>
+  </form>
+</aside>
+
+@section Scripts {
+<script>
+  function openPanel(data) {
+    const isEdit = data && data.Id;
+
+    document.getElementById('panelMode').textContent  = isEdit ? 'EDIT_CREDENTIAL'   : 'NEW_CREDENTIAL';
+    document.getElementById('panelTitle').textContent = isEdit ? 'Edit Certification' : 'Add Certification';
+    document.getElementById('submitBtn').textContent  = isEdit ? 'UPDATE_ENTRY'       : 'SAVE_ENTRY';
+
+    ['f-id', 'f-icon', 'f-name', 'f-grade', 'f-year', 'f-provider', 'f-badgeUrl']
+      .forEach(id => document.getElementById(id).value = '');
+
+    if (isEdit) {
+      document.getElementById('f-id').value       = data.Id;
+      document.getElementById('f-icon').value     = data.Icon;
+      document.getElementById('f-name').value     = data.Name;
+      document.getElementById('f-grade').value    = data.Grade;
+      document.getElementById('f-year').value     = data.Year;
+      document.getElementById('f-provider').value = data.Provider;
+      document.getElementById('f-badgeUrl').value = data.BadgeUrl ?? '';
+    }
+
+    document.getElementById('overlay').classList.add('open');
+    document.getElementById('editPanel').classList.add('open');
+  }
+
+  function closePanel() {
+    document.getElementById('overlay').classList.remove('open');
+    document.getElementById('editPanel').classList.remove('open');
+  }
+</script>
+}
