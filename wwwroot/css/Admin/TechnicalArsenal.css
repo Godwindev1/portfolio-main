@@ -1,0 +1,58 @@
+  /* ── panel width override for the skills form ── */
+  .acms-panel--wide { width: min(640px, 96vw); }
+
+  /* ── skill items sub-form ── */
+  .skill-items-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 8px;
+  }
+  .acms-btn-ghost--sm {
+    padding: 4px 12px;
+    font-size: .7rem;
+  }
+  .skill-items-legend {
+    display: grid;
+    grid-template-columns: 1fr 140px 32px;
+    gap: 8px;
+    font-size: .65rem;
+    letter-spacing: .1em;
+    opacity: .4;
+    margin-bottom: 4px;
+    padding: 0 2px;
+  }
+  .skill-item-row {
+    display: grid;
+    grid-template-columns: 1fr 140px 32px;
+    gap: 8px;
+    align-items: center;
+    margin-bottom: 6px;
+  }
+  .skill-item-row select.form-input {
+    padding-right: 8px;
+  }
+  .skill-item-remove {
+    background: transparent;
+    border: 1px solid color-mix(in srgb, var(--danger, #e05252) 40%, transparent);
+    color: var(--danger, #e05252);
+    border-radius: 4px;
+    width: 32px;
+    height: 32px;
+    cursor: pointer;
+    font-size: .85rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background .15s;
+  }
+  .skill-item-remove:hover {
+    background: color-mix(in srgb, var(--danger, #e05252) 15%, transparent);
+  }
+  .skill-items-empty {
+    font-size: .75rem;
+    opacity: .35;
+    text-align: center;
+    padding: 16px 0 8px;
+    letter-spacing: .05em;
+  }

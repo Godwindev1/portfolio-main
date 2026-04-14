@@ -4,6 +4,7 @@
 @import url("Admin/CaseStudy.css");
 @import url("Admin/Exerience.css");
 @import url("Admin/Certifications.css");
+@import url("Admin/TechnicalArsenal.css");
 /* ─── DARK MODE (default) ─── */
 :root {
   --bg: #080808;

@@ -4,7 +4,6 @@ using dotenv.net;
 using Microsoft.EntityFrameworkCore;
 using Portfolio.Data;
 using Amazon.S3;
-using Portfolio.Models;
 
 DotEnv.Load();
 
@@ -32,7 +31,8 @@ builder.Services.AddSingleton(s3Config);
 builder.Services.AddSingleton<IAmazonS3>(sp => 
     new AmazonS3Client(BucketRootUser, BucketRootPassword, s3Config));
 
-builder.Services.AddSingleton<BucketService>();
+builder.Services.AddSingleton<BucketService>()
+;
 
 builder.Services.AddControllersWithViews();
 builder.Services.AddScoped<ICaseStudyRepository, CaseStudyRepository>();
@@ -40,6 +40,7 @@ builder.Services.AddScoped<IExperienceRepository, ExperienceRepository>();
 builder.Services.AddScoped<ITestimonialRepository, TestimonialRepository>();
 builder.Services.AddScoped<ICertificationRepository, CertificationRepository>();
 builder.Services.AddScoped<ISkillDomainReposirtory, SkillDomainRepository>();
+
 
 builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
     .AddCookie(options =>
@@ -80,10 +81,13 @@ using (var scope = app.Services.CreateScope())
     var seeder = new CaseStudySeedTest();
     //await seeder.GenerateCaseStudies(repo);
 
-    //EXPERIENCE SEEDING
-    var ExperienceRepo = services.GetRequiredService<IExperienceRepository>();
-    var ExperienceSeeder = new ExperienceSeedTest();
-    //await ExperienceSeeder.GenerateExperiences(ExperienceRepo);
+    var  technical = services.GetRequiredService<ISkillDomainReposirtory>();
+    
+    /*var list = TechArsDto.Get();
+    foreach(var item in list)
+    {
+        await technical.AddAsync(item);
+    }*/
 }
 
 if (!app.Environment.IsDevelopment())

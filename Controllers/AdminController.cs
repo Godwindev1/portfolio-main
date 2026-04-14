@@ -161,8 +161,20 @@ public class AdminController : Controller
     }
 
 
+    //CASESTUDIES
+    [Obsolete]
+    [HttpGet("admin/CaseStudy/List")]
+    public ViewResult CaseStudyList()
+    {
+        Console.WriteLine("Reached AdminController.CaseStudyList");
+   
+        return View("Views/Admin/CasestudyList.cshtml");
+    }
+
+
+
     [HttpGet("admin/CaseStudy")]
-    public ViewResult CaseStudy()
+    public ViewResult CaseStudy(int? id = null)
     {
         Console.WriteLine("Reached AdminController.CaseStudy");
    
@@ -205,20 +217,42 @@ public class AdminController : Controller
 
         List<ArtifactLink> artifacts = new List<ArtifactLink>();
 
-        var TotalLinks  = new List<LinkArtifactInput> ();
-        TotalLinks.AddRange(SaveCaseStudy.Links);
-        TotalLinks.AddRange(SaveCaseStudy.Repos);
-        TotalLinks.AddRange(SaveCaseStudy.LiveDemos);
-        
+ 
         //Map LINKS 
-        foreach(LinkArtifactInput link in TotalLinks)
+
+        // LINKS
+        foreach (var link in SaveCaseStudy.Links)
         {
-            if(string.IsNullOrWhiteSpace(link.Url)) continue;
+            if (string.IsNullOrWhiteSpace(link.Url)) continue;
 
             artifacts.Add(new ArtifactLink {
                 Label = link.Label,
                 Url = link.Url,
                 Type = ArtifactTypes.Links
+            });
+        }
+
+        // REPOS
+        foreach (var repo in SaveCaseStudy.Repos)
+        {
+            if (string.IsNullOrWhiteSpace(repo.Url)) continue;
+
+            artifacts.Add(new ArtifactLink {
+                Label = repo.Label,
+                Url = repo.Url,
+                Type = ArtifactTypes.Repo
+            });
+        }
+
+        // LIVE DEMOS
+        foreach (var live in SaveCaseStudy.LiveDemos)
+        {
+            if (string.IsNullOrWhiteSpace(live.Url)) continue;
+
+            artifacts.Add(new ArtifactLink {
+                Label = live.Label,
+                Url = live.Url,
+                Type = ArtifactTypes.Live
             });
         }
 
@@ -259,7 +293,7 @@ public class AdminController : Controller
                 artifacts.Add(new ArtifactLink {
                     Label = video.Label,
                     Url = video.ExistingUrl ?? "",
-                    Type = ArtifactTypes.ScreenShot
+                    Type = ArtifactTypes.Videos
                 });
                 continue;
             }
@@ -307,7 +341,17 @@ public class AdminController : Controller
         //MAP DOCUMENTS
         foreach(UploadArtifactInput doc in SaveCaseStudy.Documents)
         {
-            if(doc.File == null) continue;
+
+            if(doc.File == null) 
+            {   
+                artifacts.Add(new ArtifactLink {
+                    Label = doc.Label,
+                    Url = doc.ExistingUrl ?? "",
+                    Type = ArtifactTypes.Document
+                });
+
+                continue;
+            }
 
             var ResolvedUrl = await  _bucketService.UploadFile(
                 doc.File.OpenReadStream(),

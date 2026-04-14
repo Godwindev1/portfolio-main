@@ -1,7 +1,10 @@
+using System.ComponentModel.DataAnnotations.Schema;
+
 namespace Portfolio.Models;
 
 public class SkillDomain
 {
+    [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
     public int? Id { get; set; }
     public int Number { get; set; }
     public string Icon { get; set; } = string.Empty;
