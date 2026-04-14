@@ -27,6 +27,12 @@ public class AdminController : Controller
         _skilldomainRepository = skillDomainReposirtory;
     }
 
+        [HttpGet("admin")]
+    public IActionResult Dashboard()
+    {
+        return View("Views/Admin/AdminDashboard.cshtml");
+    }
+
     //SKILL DOMAINS (Technical Arsenal )
     [HttpGet("admin/TechnicalArsenal")]
     public async Task<ViewResult> TechnicalArsenal()

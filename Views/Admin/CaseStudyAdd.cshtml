@@ -1,7 +1,7 @@
 @model Portfolio.ViewModels.SaveCaseStudyViewModel
 @using Portfolio.Models
 @{
-    Layout = "_Layout";
+    Layout = "_AdminLayout";
     bool isEdit = Model.Id.HasValue && Model.Id > 0;
 }
 @addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers

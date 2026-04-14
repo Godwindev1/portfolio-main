@@ -1,0 +1,91 @@
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <title>Admin Panel</title>
+    <meta name="viewport" content="width=device-width" />
+    
+</head>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400;1,600;1,700&family=JetBrains+Mono:wght@300;400;500&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true">
+
+<body>
+    <div class="admin-container">
+
+```
+    <!-- Sidebar -->
+    <aside class="sidebar">
+        <h3>Admin</h3>
+
+        <a href="/admin">Dashboard</a>
+        <a href="/admin/TechnicalArsenal">Technical Arsenal</a>
+        <a href="/admin/Certifications">Certifications</a>
+        <a href="/admin/Testimonial">Testimonials</a>
+        <a href="/admin/Experience">Experience</a>
+        <a href="/admin/CaseStudy">Add Case Study</a>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="content">
+        @RenderBody()
+    </main>
+
+    <script src="~/js/site.js" asp-append-version="true"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.0/Sortable.min.js"></script>
+    @RenderSection("Scripts", required: false)
+    @RenderSection("Styles", required: false)
+
+</div>
+
+<style>
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    background: #121212;
+    color: white;
+}
+
+.admin-container {
+    display: flex;
+    min-height: 100vh;
+}
+
+.sidebar {
+    width: 220px;
+    background: #1e1e2f;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+}
+
+.sidebar h3 {
+    margin-bottom: 20px;
+}
+
+.sidebar a {
+    color: #ccc;
+    text-decoration: none;
+    margin-bottom: 12px;
+    padding: 8px;
+    border-radius: 6px;
+}
+
+.sidebar a:hover {
+    background: #2a2a40;
+    color: white;
+}
+
+.content {
+    flex: 1;
+    padding: 30px;
+}
+</style>
+```
+
+</body>
+</html>

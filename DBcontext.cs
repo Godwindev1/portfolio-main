@@ -24,6 +24,7 @@ public class PortfolioDbContext : DbContext
     public DbSet<ArtifactLink> ArtifactLinks => Set<ArtifactLink>();
     public DbSet<ArchitectureComponent> ArchitectureComponents => Set<ArchitectureComponent>();
 
+
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         base.OnModelCreating(modelBuilder);
