@@ -5,7 +5,7 @@ on:
 
 env:
   REGISTRY: ghcr.io
-  IMAGE_NAME: ${{ github.repository_owner }}/portfolio-app
+  IMAGE_NAME: godwindev1/portfolio-app
 
 jobs:
   build-and-push:
@@ -48,7 +48,7 @@ jobs:
           script: |
             cd /home/Devops-tools
             # Pull the latest image
-            docker compose pull ${{ github.repository_owner }}/portfolio-app
+            docker compose pull godwindev1/portfolio-app
             # Restart only the app container without dropping the DB
             docker compose -f Portfolio.yml up -d 
             # Optional: Clean up old unused images to save space on VPS
