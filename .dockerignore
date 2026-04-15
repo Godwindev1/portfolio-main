@@ -1,0 +1,12 @@
+**/.git
+**/.vs
+**/bin
+**/obj
+**/*.user
+**/node_modules
+*.rsuser
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
+*.env

@@ -13,6 +13,7 @@ builder.Configuration.AddEnvironmentVariables();
 
 var BucketRootUser = builder.Configuration["MINIO_ROOT_USER"];
 var BucketRootPassword = builder.Configuration["MINIO_ROOT_PASSWORD"];
+var BucketLocation = builder.Configuration["DROPLET_PIP"];
 
 builder.Services.AddDbContext<PortfolioDbContext>(options =>
     options.UseMySql(
@@ -22,7 +23,7 @@ builder.Services.AddDbContext<PortfolioDbContext>(options =>
 
  var s3Config = new AmazonS3Config
 {
-    ServiceURL = "http://ppmpdb:9000",
+    ServiceURL = $"http://{BucketLocation}:9000",
     ForcePathStyle = true // Essential for MinIO
 };
 
@@ -53,9 +54,9 @@ builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationSc
         options.SlidingExpiration = true;
  
         // Harden the cookie
-        //options.Cookie.HttpOnly   = true;
-        //options.Cookie.SecurePolicy = CookieSecurePolicy.Always;
-        //options.Cookie.SameSite   = SameSiteMode.Strict;
+        options.Cookie.HttpOnly   = true;
+        options.Cookie.SecurePolicy = CookieSecurePolicy.Always;
+        options.Cookie.SameSite   = SameSiteMode.Strict;
         options.Cookie.Name       = "__admin_session";
     });
 

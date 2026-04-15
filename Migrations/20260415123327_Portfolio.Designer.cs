@@ -11,7 +11,7 @@ using Portfolio.Data;
 namespace Portfolio.Migrations
 {
     [DbContext(typeof(PortfolioDbContext))]
-    [Migration("20260408122141_Portfolio")]
+    [Migration("20260415123327_Portfolio")]
     partial class Portfolio
     {
         /// <inheritdoc />
@@ -168,7 +168,6 @@ namespace Portfolio.Migrations
                     MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<string>("BadgeUrl")
-                        .IsRequired()
                         .HasColumnType("longtext");
 
                     b.Property<string>("Grade")
@@ -213,6 +212,10 @@ namespace Portfolio.Migrations
                         .HasColumnType("longtext");
 
                     b.Property<string>("Period")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
+                    b.Property<string>("Responsibilities")
                         .IsRequired()
                         .HasColumnType("longtext");
 
@@ -334,6 +337,9 @@ namespace Portfolio.Migrations
 
                     b.Property<string>("Quote")
                         .IsRequired()
+                        .HasColumnType("longtext");
+
+                    b.Property<string>("TestimonialLink")
                         .HasColumnType("longtext");
 
                     b.HasKey("Id");
