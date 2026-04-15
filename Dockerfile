@@ -1,5 +1,5 @@
 # Stage 1: Base Runtime (Lightweight)
-FROM mcr.microsoft.com/dotnet/aspnet:9.0 AS base
+FROM mcr.microsoft.com/dotnet/aspnet:9.0-noble AS base
 WORKDIR /app
 EXPOSE 8080
 EXPOSE 8081
