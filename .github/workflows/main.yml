@@ -49,8 +49,8 @@ jobs:
           script: |
             cd /home/Devops-tools
             # Pull the latest image
-            docker compose --env-file prod.env pull godwindev1/portfolio-app
+            docker image  pull godwindev1/portfolio-app
             # Restart only the app container without dropping the DB
-            docker compose -f --env-file prod.env Portfolio.yml up -d 
+            docker compose  --env-file prod.env -f Portfolio.yml up -d 
             # Optional: Clean up old unused images to save space on VPS
             docker image prune -f
