@@ -7,7 +7,7 @@ EXPOSE 8081
 # Stage 2: SDK for Building (Heavyweight)
 FROM mcr.microsoft.com/dotnet/sdk:9.0 AS build
 WORKDIR /src
-COPY ["Portfolio.csproj", "/"]
+COPY ["Portfolio.csproj", ""]
 
 RUN ls
 RUN dotnet restore "Portfolio.csproj"
