@@ -69,6 +69,18 @@ builder.Services.AddAuthorization(options =>
 
 var app = builder.Build();
 
+if (args.Contains("--apply-migrations"))
+{
+    using var scope = app.Services.CreateScope();
+    var db = scope.ServiceProvider.GetRequiredService<PortfolioDbContext>();
+    // This applies any pending migrations to the MariaDB instance
+    db.Database.Migrate();
+    Console.WriteLine("✅ Migrations applied successfully.");
+}
+// ------------------------
+
+app.UseForwardedHeaders(); // Essential for Nginx proxying
+
 using (var scope = app.Services.CreateScope())
 {
     var services = scope.ServiceProvider;
