@@ -55,7 +55,6 @@ builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationSc
  
         // Harden the cookie
         options.Cookie.HttpOnly   = true;
-        options.Cookie.SecurePolicy = CookieSecurePolicy.Always;
         options.Cookie.SameSite   = SameSiteMode.Strict;
         options.Cookie.Name       = "__admin_session";
     });
@@ -75,7 +74,7 @@ if (args.Contains("--apply-migrations"))
     var db = scope.ServiceProvider.GetRequiredService<PortfolioDbContext>();
     // This applies any pending migrations to the MariaDB instance
     db.Database.Migrate();
-    Console.WriteLine("✅ Migrations applied successfully.");
+    Console.WriteLine("Migrations applied successfully.");
 }
 // ------------------------
 
