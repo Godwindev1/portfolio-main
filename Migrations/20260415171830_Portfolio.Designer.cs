@@ -11,7 +11,7 @@ using Portfolio.Data;
 namespace Portfolio.Migrations
 {
     [DbContext(typeof(PortfolioDbContext))]
-    [Migration("20260415123327_Portfolio")]
+    [Migration("20260415171830_Portfolio")]
     partial class Portfolio
     {
         /// <inheritdoc />
