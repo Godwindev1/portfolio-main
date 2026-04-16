@@ -10,6 +10,7 @@ public partial class BucketService
     {
         var request = new GetPreSignedUrlRequest
         {
+            Protocol = Amazon.S3.Protocol.HTTP,
             BucketName = _bucketName,
             Key        = objectKey,
             Expires    = DateTime.UtcNow.AddMinutes(expiryMinutes)
@@ -19,13 +20,13 @@ public partial class BucketService
     }
 
     public string GetVideoUrl(string fileName, int expiryMinutes = 60)
-        => GetPresignedUrl($"Videos/{fileName}", expiryMinutes);
+        => GetPresignedUrl($"{fileName}", expiryMinutes);
 
     public string GetScreenshotUrl(string fileName, int expiryMinutes = 60)
-        => GetPresignedUrl($"Screenshots/{fileName}", expiryMinutes);
+        => GetPresignedUrl($"{fileName}", expiryMinutes);
 
     public string GetFileUrl(string fileName, int expiryMinutes = 60)
-        => GetPresignedUrl($"Files/{fileName}", expiryMinutes);
+        => GetPresignedUrl($"{fileName}", expiryMinutes);
 
 
 

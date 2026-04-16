@@ -1,0 +1,244 @@
+
+/* ─── CERTIFICATIONS ─── */
+.cert-list {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+  background: var(--border);
+  border: 1px solid var(--border);
+  margin-top: 48px;
+}
+
+.cert-row {
+  display: grid;
+  grid-template-columns: 72px 1fr auto;
+  align-items: center;
+  gap: 28px;
+  background: var(--bg-card);
+  padding: 24px 28px;
+  transition: background 0.2s;
+}
+.cert-row:hover { background: var(--bg-card-hover); }
+
+.cert-badge {
+  width: 52px;
+  height: 52px;
+  border: 1px solid var(--border-strong);
+  background: var(--bg-elevated);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  font-family: var(--font-mono);
+  font-size: 18px;
+  transition: border-color 0.2s;
+}
+.cert-row:hover .cert-badge { border-color: var(--accent); }
+
+.cert-name {
+  font-family: var(--font-display);
+  font-style: italic;
+  font-size: 20px;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin-bottom: 4px;
+  line-height: 1.2;
+}
+.cert-meta {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  flex-wrap: wrap;
+}
+.cert-grade {
+  font-family: var(--font-mono);
+  font-size: 9px;
+  color: var(--text-muted);
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+.cert-year {
+  font-family: var(--font-mono);
+  font-size: 9px;
+  color: var(--text-muted);
+  letter-spacing: 0.1em;
+}
+
+.cert-right {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+  flex-shrink: 0;
+}
+.cert-provider {
+  text-align: right;
+}
+.cert-provider-label {
+  font-family: var(--font-mono);
+  font-size: 8px;
+  color: var(--text-muted);
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  margin-bottom: 3px;
+}
+.cert-provider-name {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--text-secondary);
+  letter-spacing: 0.06em;
+}
+.cert-view-btn {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  border: 1px solid var(--border-strong);
+  padding: 8px 16px;
+  text-decoration: none;
+  white-space: nowrap;
+  transition: color 0.2s, border-color 0.2s;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.cert-view-btn:hover {
+  color: var(--accent);
+  border-color: var(--accent);
+}
+
+/* Philosophy block */
+.cert-footer {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1px;
+  background: var(--border);
+  border: 1px solid var(--border);
+  margin-top: 1px;
+}
+.cert-philosophy {
+  background: var(--bg-card);
+  padding: 36px;
+}
+.cert-philosophy-quote {
+  font-family: var(--font-display);
+  font-style: italic;
+  font-size: clamp(18px, 2.5vw, 26px);
+  color: var(--text-primary);
+  line-height: 1.3;
+}
+.cert-philosophy-quote em {
+  font-style: normal;
+  color: var(--accent);
+}
+.cert-eng-philosophy {
+  background: var(--bg-card);
+  padding: 36px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+.cert-eng-label {
+  font-family: var(--font-mono);
+  font-size: 9px;
+  color: var(--text-secondary);
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+.cert-eng-text {
+  font-size: 13px;
+  color: var(--text-secondary);
+  line-height: 1.75;
+}
+
+
+
+
+
+
+@media (max-width: 768px) {
+
+  /* ── cert row collapses from 3-col grid to stacked ── */
+  .cert-row {
+    grid-template-columns: 52px 1fr; /* badge + info side by side */
+    grid-template-rows: auto auto;
+    gap: 16px 14px;
+    padding: 20px 16px;
+  }
+
+  /* cert-right drops to its own full-width row */
+  .cert-right {
+    grid-column: 1 / -1;      /* span full width */
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    padding-top: 12px;
+    border-top: 1px solid var(--border);
+    gap: 12px;
+  }
+
+  .cert-provider { text-align: left; }
+
+  .cert-badge {
+    width: 44px;
+    height: 44px;
+    font-size: 16px;
+  }
+
+  .cert-name {
+    font-size: 16px;
+  }
+
+  .cert-view-btn {
+    padding: 7px 12px;
+    font-size: 9px;
+    flex-shrink: 0;
+  }
+
+  /* ── footer stacks vertically ── */
+  .cert-footer {
+    grid-template-columns: 1fr;
+  }
+
+  .cert-philosophy,
+  .cert-eng-philosophy {
+    padding: 24px 20px;
+  }
+
+  .cert-philosophy-quote {
+    font-size: clamp(16px, 5vw, 22px);
+  }
+
+  /* divider between stacked footer cells */
+  .cert-eng-philosophy {
+    border-top: 1px solid var(--border);
+  }
+}
+
+@media (max-width: 480px) {
+  .cert-row {
+    padding: 16px 12px;
+  }
+
+  /* On very small screens, badge + info also stack */
+  .cert-row {
+    grid-template-columns: 1fr;
+  }
+
+  .cert-badge {
+    width: 40px;
+    height: 40px;
+    font-size: 15px;
+  }
+
+  .cert-right {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+  }
+
+  .cert-view-btn {
+    width: 100%;
+    justify-content: center;
+  }
+}

@@ -64,6 +64,8 @@ const observer = new IntersectionObserver((entries) => {
 
 document.querySelectorAll('.fade-up').forEach(el => observer.observe(el));
 
+
+
 // ─── ACTIVE NAV ON SCROLL ───
 const sections = document.querySelectorAll('section[id]');
 const navLinks = document.querySelectorAll('.nav-links a');
@@ -78,3 +80,5 @@ window.addEventListener('scroll', () => {
     if (a.getAttribute('href') === '#' + current) a.classList.add('active');
   });
 });
+
+

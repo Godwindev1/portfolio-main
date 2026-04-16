@@ -22,11 +22,11 @@ public class MediaController : Controller
     [HttpGet("stream")]
     public async Task<IActionResult> Stream([FromQuery]string ObjectKey, [FromQuery]MediaType type, [FromServices]IConfiguration configuration)
     {
-        var referer = Request.Headers["Referer"].ToString();
+        /*var referer = Request.Headers["Referer"].ToString();
         if (string.IsNullOrEmpty(referer) || !referer.StartsWith($"https://{configuration["DOMAIN_NAME"]}"))
         {
             return Forbid(); 
-        }
+        }*/ 
 
         var resultStream =  type switch  
         {

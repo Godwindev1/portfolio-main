@@ -1,0 +1,145 @@
+/* ─── NAV ─── */
+.navigation {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 100;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 40px;
+  height: 60px;
+  border-bottom: 1px solid var(--border);
+  background: var(--nav-bg);
+  backdrop-filter: blur(12px);
+}
+
+.nav-logo {
+  font-family: var(--font-mono);
+  font-size: 13px;
+  font-weight: 500;
+  letter-spacing: 0.12em;
+  color: var(--text-primary);
+  text-decoration: none;
+}
+
+.nav-links {
+  display: flex;
+  gap: 36px;
+  list-style: none;
+}
+
+.nav-links a {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.1em;
+  color: var(--text-secondary);
+  text-decoration: none;
+  text-transform: uppercase;
+  transition: color 0.2s;
+  position: relative;
+}
+
+.nav-links a.active { color: var(--text-primary); }
+.nav-links a.active::after {
+  content: '';
+  position: absolute;
+  bottom: -4px;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: var(--accent);
+}
+
+.nav-links a:hover { color: var(--text-primary); }
+
+.nav-cta {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--accent);
+  border: 1px solid var(--accent);
+  padding: 8px 18px;
+  text-decoration: none;
+  transition: background 0.2s, color 0.2s;
+}
+.nav-cta:hover {
+  background: var(--accent);
+  color: var(--bg);
+}
+
+/* nav-right always visible, holds controls + hamburger */
+.nav-right {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+
+
+
+/* ─── HAMBURGER ─── */
+.nav-hamburger {
+  display: none;          /* hidden on desktop */
+  flex-direction: column;
+  justify-content: center;
+  gap: 5px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 4px;
+}
+
+.nav-hamburger span {
+  display: block;
+  width: 22px;
+  height: 1px;
+  background: var(--text-primary);
+  transition: transform 0.25s, opacity 0.25s;
+}
+
+.nav-hamburger.open span:nth-child(1) { transform: translateY(6px) rotate(45deg); }
+.nav-hamburger.open span:nth-child(2) { opacity: 0; }
+.nav-hamburger.open span:nth-child(3) { transform: translateY(-6px) rotate(-45deg); }
+
+/* ─── MOBILE ─── */
+@media (max-width: 768px) {
+  .navigation {
+    padding: 0 20px;
+    flex-wrap: wrap;
+    height: auto;
+    min-height: 60px;
+  }
+
+  .nav-hamburger {
+    display: flex;  /* show only on mobile */
+  }
+
+  /* Links collapse into drawer */
+  .nav-links {
+    display: none;
+    order: 3;           /* pushes below logo + nav-right row */
+    flex-direction: column;
+    gap: 0;
+    width: 100%;
+    border-top: 1px solid var(--border);
+    padding: 8px 0 16px;
+  }
+
+  .nav-links.open {
+    display: flex;
+  }
+
+  .nav-links li a {
+    display: block;
+    padding: 11px 0;
+    font-size: 12px;
+  }
+
+  /* Kill the underline active indicator — doesn't work vertically */
+  .nav-links a.active::after {
+    display: none;
+  }
+}
