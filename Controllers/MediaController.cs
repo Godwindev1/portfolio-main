@@ -18,7 +18,7 @@ public class MediaController : Controller
         _bucketService = bucket;
     }
 
-    [LocalOnlyFilter]
+    //[LocalOnlyFilter]
     [HttpGet("stream")]
     public async Task<IActionResult> Stream([FromQuery]string ObjectKey, [FromQuery]MediaType type, [FromServices]IConfiguration configuration)
     {
