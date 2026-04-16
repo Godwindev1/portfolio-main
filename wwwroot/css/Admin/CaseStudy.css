@@ -198,8 +198,6 @@ textarea.admin-input {
         --border-hi: #3d3d3d;
         --text:      #e8e8e8;
         --text-muted:#666;
-        --accent:    #c8f53a;       /* electric lime — the one thing to remember */
-        --accent-dim:#8aaa1a;
         --danger:    #ff4444;
         --upload-bg: #0e1a00;
         --link-bg:   #00101a;

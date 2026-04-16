@@ -72,13 +72,12 @@ if (args.Contains("--apply-migrations"))
 {
     using var scope = app.Services.CreateScope();
     var db = scope.ServiceProvider.GetRequiredService<PortfolioDbContext>();
-    // This applies any pending migrations to the MariaDB instance
+
     db.Database.Migrate();
     Console.WriteLine("Migrations applied successfully.");
 }
-// ------------------------
 
-app.UseForwardedHeaders(); // Essential for Nginx proxying
+app.UseForwardedHeaders(); 
 
 using (var scope = app.Services.CreateScope())
 {
@@ -88,18 +87,6 @@ using (var scope = app.Services.CreateScope())
     var bucketService = services.GetRequiredService<BucketService>();
     await bucketService.CreateBucketAsync();
 
-    //CASE STUDY SEEDING
-    var repo = services.GetRequiredService<ICaseStudyRepository>();
-    var seeder = new CaseStudySeedTest();
-    //await seeder.GenerateCaseStudies(repo);
-
-    var  technical = services.GetRequiredService<ISkillDomainReposirtory>();
-    
-    /*var list = TechArsDto.Get();
-    foreach(var item in list)
-    {
-        await technical.AddAsync(item);
-    }*/
 }
 
 if (!app.Environment.IsDevelopment())

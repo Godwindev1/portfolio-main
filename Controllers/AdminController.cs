@@ -191,9 +191,7 @@ public class AdminController : Controller
     public  async  Task<IActionResult> CaseStudy(SaveCaseStudyViewModel SaveCaseStudy)
     {
         Console.WriteLine("Received CaseStudy data:");
-        Console.WriteLine($"Title: {SaveCaseStudy.Title}");
-        Console.WriteLine($"Summary: {SaveCaseStudy.Summary}");
-        Console.WriteLine($"Category: {SaveCaseStudy.Category}");
+
 
         string CoverImageUrl = SaveCaseStudy.ExistingCoverImageUrl ?? "";
         if(SaveCaseStudy.CoverImageFile != null)
@@ -262,7 +260,8 @@ public class AdminController : Controller
             });
         }
 
-
+        //NOTE FOR ALL BUCKET STORED FILES THE URL IS THE OBJECT KEY WITHIN THE NAMED BUCKET THIS PORTFOLIO USES
+        //ResolvedUrl = ObjectKey
         //MAP IMPLEMENTATION DETAILS Should Ideally Be Just One
         foreach(UploadArtifactInput implDetail in SaveCaseStudy.implementationDetails)
         {

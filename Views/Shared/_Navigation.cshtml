@@ -1,17 +1,54 @@
 <nav class="navigation">
+
+  <!-- Row 1: Logo + hamburger -->
   <a href="#hero" class="nav-logo">GODWIN OLUOWHO</a>
-  <ul class="nav-links">
+
+  <button class="nav-hamburger" id="navHamburger" aria-label="Toggle menu" aria-expanded="false">
+    <span></span>
+    <span></span>
+    <span></span>
+  </button>
+
+  <!-- Row 2: Links (collapses on mobile) -->
+  <ul class="nav-links" id="navLinks">
     <li><a href="#work" class="active">PROJECTS</a></li>
     <li><a href="#experience">EXPERIENCE</a></li>
     <li><a href="#certifications">CERTIFICATIONS</a></li>
     <li><a href="#arsenal">STACK</a></li>
     <li><a href="#contact">CONTACT</a></li>
   </ul>
-  <div style="display:flex; align-items:center;">
+
+  <!-- Row 3: Controls (collapses on mobile) -->
+  <div class="nav-controls" id="navControls">
     <button class="theme-toggle" id="themeToggle" aria-label="Toggle light/dark mode">
       <div class="toggle-track"><div class="toggle-thumb"></div></div>
       <span class="toggle-label" id="toggleLabel">LIGHT</span>
     </button>
     <a href="#" class="nav-cta">DOWNLOAD_CV</a>
   </div>
+
 </nav>
+
+<script>
+  const hamburger  = document.getElementById('navHamburger');
+const navLinks   = document.getElementById('navLinks');
+const navControls = document.getElementById('navControls');
+
+hamburger.addEventListener('click', () => {
+  const isOpen = hamburger.classList.toggle('open');
+
+  navLinks.classList.toggle('open', isOpen);
+  navControls.classList.toggle('open', isOpen);
+  hamburger.setAttribute('aria-expanded', isOpen);
+});
+
+// Close drawer when a nav link is clicked
+navLinks.querySelectorAll('a').forEach(link => {
+  link.addEventListener('click', () => {
+    hamburger.classList.remove('open');
+    navLinks.classList.remove('open');
+    navControls.classList.remove('open');
+    hamburger.setAttribute('aria-expanded', false);
+  });
+});
+</script>

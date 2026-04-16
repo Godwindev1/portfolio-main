@@ -4,6 +4,7 @@ using Portfolio.Models;
 
 namespace Portfolio.Controllers;
 
+//todo Bcket Url Will use this domain bucket.GodwinOluowho.com and later on Bucket will be hidden and all video and images will come through asp.net
 public class HomeController : Controller
 {
 

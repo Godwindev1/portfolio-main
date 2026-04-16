@@ -1,5 +1,6 @@
 @model CaseStudyViewModel
 @using Portfolio.Models;
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
 
 @{ var item = Model; }
 
@@ -116,7 +117,8 @@
                 <div class="modal-gallery-hero">
                     @if (!string.IsNullOrEmpty(cs.CoverImageUrl))
                     {
-                        <img src="@cs.CoverImageUrl" alt="@cs.Title cover" />
+                        var MediaModel = new MediaViewerModel{ Url = cs.CoverImageUrl, Type = "Image", label = $"{cs.Title} cover"}; 
+                        <partial name="_mediaStreamer" model="@MediaModel" />
                     }
                     else
                     {
@@ -146,8 +148,8 @@
                         @foreach (var vid in videos)
                         {
                         <div class="modal-gallery-thumb video-thumb" onclick="playVideo('@vid.Url')">
-                            @* Adding #t=0.1 tells the browser to seek to the first frame for the preview *@
-                            <video src="@vid.Url#t=0.1" preload="metadata" muted playsinline></video>
+                            @{ var MediaModel = new MediaViewerModel{ Url = vid.Url, Type = "Video", label = vid.Label}; }
+                            <partial name="_mediaStreamer" model="@MediaModel" />
                             
                             <div class="video-play-overlay">▶</div>
                             <div class="modal-gallery-thumb-label">@vid.Label.ToUpper()</div>
@@ -162,7 +164,8 @@
                         {
                             var shot = screenshots[i];
                             <div class="modal-gallery-thumb" onclick="lightbox('@shot.Url')">
-                                <img src="@shot.Url" alt="@shot.Label" />
+                                @{ var MediaModel = new MediaViewerModel{ Url = shot.Url, Type = "Image", label = shot.Label}; }
+                                <partial name="_mediaStreamer" model="@MediaModel" />
                                 <div class="modal-gallery-thumb-label">@shot.Label.ToUpper()</div>
                             </div>
                         }
@@ -210,7 +213,8 @@
                         </div>
                     </div>
                     <div class="modal-gallery-hero" style="aspect-ratio: 16/6;">
-                        <img src="@midImage.Url" alt="@midImage.Label" />
+                        @{ var MediaModel = new MediaViewerModel{ Url = midImage.Url, Type = "Image", label = midImage.Label}; }
+                        <partial name="_mediaStreamer" model="@MediaModel" />
                     </div>
                     <div class="modal-gallery-caption">FIG.02 — @midImage.Label</div>
                 </div>
@@ -277,7 +281,7 @@
 
             @{
                 var links = cs.Artifacts
-                    .Where(a => a.Type != ArtifactTypes.ScreenShot && a.Type != ArtifactTypes.ImplementationDetail)
+                    .Where(a => a.Type != ArtifactTypes.ScreenShot && a.Type != ArtifactTypes.ImplementationDetail && a.Type != ArtifactTypes.Videos)
                     .ToList();
             }
             @if (links.Any())
@@ -287,13 +291,21 @@
                     <div class="modal-artifacts-links">
                         @foreach (var artifact in links)
                         {
-                            <a href="@artifact.Url"
-                               target="_blank"
-                               rel="noopener noreferrer"
-                               class="modal-artifact-btn"
-                               data-type="@artifact.Type">
-                                @artifact.Label
-                            </a>
+                            if(artifact.Type == ArtifactTypes.Document)
+                            {
+                                var MediaModel = new MediaViewerModel{ Url = artifact.Url, Type = "File", label = artifact.Label}; 
+                                <partial name="_mediaStreamer" model="@MediaModel" />
+                            }
+                            else
+                            {
+                                <a href="@artifact.Url"
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                class="modal-artifact-btn"
+                                data-type="@artifact.Type">
+                                    @artifact.Label
+                                </a>
+                            }
                         }
                     </div>
                 </div>
@@ -326,7 +338,8 @@ function playVideo(url) {
     const source = document.getElementById('videoSource');
     const modal  = document.getElementById('videoModal');
 
-    source.src = url;
+    const Encoded = encodeURIComponent(url);
+    source.src = `/media/stream?ObjectKey=${Encoded}&type=Video`;
     player.load();
     modal.style.display = 'block';
     player.play();

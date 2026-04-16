@@ -1,0 +1,29 @@
+@model MediaViewerModel  
+
+@{
+    //model.url is object key 
+    var encoded = Uri.EscapeDataString(Model.Url);
+    var streamUrl = $"/media/stream?ObjectKey={encoded}&type={Model.Type}";
+}
+
+@if (Model.Type == "Image")
+{
+    <img src="@streamUrl" alt="@Model.label" class="media-image" />
+}
+else if (Model.Type == "Video")
+{
+    <video controls preload="metadata" class="media-video">
+        <source src="@streamUrl#t=0.1"  muted playsinline/>
+    </video>
+}
+else
+{
+    <a 
+        href="@streamUrl"
+        download 
+        target="_blank"
+        rel="noopener noreferrer"
+        class="modal-artifact-btn"    >
+        @Model.label
+    </a>
+}

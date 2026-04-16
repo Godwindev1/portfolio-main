@@ -69,7 +69,10 @@
             cursor:zoom-out;
         `;
         const img = document.createElement('img');
-        img.src = url;
+        
+        const Encoded = encodeURIComponent(url);
+        img.src = `/media/stream?ObjectKey=${Encoded}&type=Image`;
+        
         img.style.cssText = 'max-width:90vw; max-height:90vh; object-fit:contain;';
         overlay.appendChild(img);
         overlay.addEventListener('click', () => overlay.remove());

@@ -10,7 +10,7 @@ public enum UploadType
     File
 }
 
-public class BucketService
+public partial class BucketService
 {
     private readonly IAmazonS3 _s3Client;
     private readonly AmazonS3Config _s3Config;
@@ -54,6 +54,24 @@ public class BucketService
             Console.WriteLine($"Error setting policy: {e.Message}");
         }
     }
+
+    public async Task MakeBucketPrivateAsync(string bucketName)
+    {
+        try
+        {
+            // Deleting the policy reverts to default — deny all public access
+            await _s3Client.DeleteBucketPolicyAsync(new DeleteBucketPolicyRequest
+            {
+                BucketName = bucketName
+            });
+
+            Console.WriteLine($"Bucket '{bucketName}' is now private.");
+        }
+        catch (AmazonS3Exception e)
+        {
+            Console.WriteLine($"Error making bucket private: {e.Message}");
+        }
+    }
     public async Task CreateBucketAsync()
     {
         var request = new PutBucketRequest
@@ -68,7 +86,7 @@ public class BucketService
             await _s3Client.PutBucketAsync(request);
         }
 
-        await MakeBucketPublicAsync(_bucketName);
+        await MakeBucketPrivateAsync(_bucketName);
     }
 
     public async Task<string> UploadVideo(Stream MultiPartVidStream, string fileName, string ContentType)
@@ -124,7 +142,7 @@ public class BucketService
 
             uploadRequest.UploadProgressEvent += (s, e) =>
             {
-                Console.WriteLine($"Uploaded {e.PercentDone}%...");
+                //Console.WriteLine($"Uploaded {e.PercentDone}%...");
                 _FileNameToProgressMapping[fileName] = $"{e.PercentDone}%";
             };
 
@@ -145,7 +163,8 @@ public class BucketService
             }
 
             // Example Construction
-            string FileUrl = $"{_s3Config.ServiceURL}{_bucketName}/{ObjectKey}";
+            //string FileUrl = $"{_s3Config.ServiceURL}{_bucketName}/{ObjectKey}";
+            string FileUrl = $"{ObjectKey}";
 
             return FileUrl;
         }

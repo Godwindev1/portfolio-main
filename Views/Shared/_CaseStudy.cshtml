@@ -10,7 +10,8 @@
 
       <div class="case-study-body fade-up">
         <div class="case-visual">
-          <img src="@Model.CaseStudy.CoverImageUrl" alt="@Model.CaseStudy.Title" class="case-visual-img" />
+          @{ var MediaModel = new MediaViewerModel{ Url = Model.CaseStudy.CoverImageUrl, Type = "Image", label = $"{Model.CaseStudy.Title} cover"};  }
+          <partial name="_mediaStreamer" model="@MediaModel" />
         </div>
 
         <div class="case-narrative">

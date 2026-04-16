@@ -1,10 +1,12 @@
  @import url("ContactSection.css");
  @import url("Login.css");
  @import url("CaseStudyModal.css");
-@import url("Admin/CaseStudy.css");
+ @import url("Admin/CaseStudy.css");
 @import url("Admin/Exerience.css");
 @import url("Admin/Certifications.css");
 @import url("Admin/TechnicalArsenal.css");
+
+
 /* ─── DARK MODE (default) ─── */
 :root {
   --bg: #080808;
@@ -54,53 +56,6 @@ html.light {
 
 html { scroll-behavior: smooth; }
 
-body {
-  display: block;
-  background: var(--bg);
-  color: var(--text-primary);
-  font-family: var(--font-body);
-  font-size: 15px;
-  line-height: 1.6;
-  overflow-x: hidden;
-  cursor: none;
-  transition: background 0.35s ease, color 0.35s ease;
-}
-
-/* Custom cursor */
-.cursor {
-  position: fixed;
-  width: 8px;
-  height: 8px;
-  background: var(--accent);
-  border-radius: 50%;
-  pointer-events: none;
-  z-index: 9999;
-  transform: translate(-50%, -50%);
-  transition: transform 0.1s ease, width 0.2s ease, height 0.2s ease, opacity 0.2s ease;
-}
-.cursor-ring {
-  position: fixed;
-  width: 32px;
-  height: 32px;
-  border: 1px solid rgba(0,201,167,0.4);
-  border-radius: 50%;
-  pointer-events: none;
-  z-index: 9998;
-  transform: translate(-50%, -50%);
-  transition: transform 0.15s ease, width 0.3s ease, height 0.3s ease;
-}
-body:hover .cursor { opacity: 1; }
-
-/* Grain overlay */
-body::before {
-  content: '';
-  position: fixed;
-  inset: 0;
-  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
-  pointer-events: none;
-  z-index: 9997;
-  opacity: 0.4;
-}
 
 /* MAIN CONTENT CONTAINER */
 .main-content {
@@ -177,6 +132,84 @@ body::before {
 .nav-cta:hover {
   background: var(--accent);
   color: var(--bg);
+}
+
+/* ─── HAMBURGER BUTTON ─── */
+.nav-hamburger {
+  display: none;
+  flex-direction: column;
+  justify-content: center;
+  gap: 5px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 4px;
+}
+
+.nav-hamburger span {
+  display: block;
+  width: 22px;
+  height: 1px;
+  background: var(--text-primary);
+  transition: transform 0.25s, opacity 0.25s;
+}
+
+/* Animate to X when open */
+.nav-hamburger.open span:nth-child(1) { transform: translateY(6px) rotate(45deg); }
+.nav-hamburger.open span:nth-child(2) { opacity: 0; }
+.nav-hamburger.open span:nth-child(3) { transform: translateY(-6px) rotate(-45deg); }
+
+/* ─── MOBILE ─── */
+@media (max-width: 768px) {
+  .navigation {
+    padding: 0 20px;
+    flex-wrap: wrap;
+    height: auto;
+    min-height: 60px;
+  }
+
+  .nav-hamburger {
+    display: flex;
+  }
+
+  /* Drawer — hidden by default */
+  .nav-links {
+    display: none;
+    flex-direction: column;
+    gap: 0;
+    width: 100%;
+    border-top: 1px solid var(--border);
+    padding: 12px 0;
+  }
+
+  .nav-links.open {
+    display: flex;
+  }
+
+  .nav-links li a {
+    display: block;
+    padding: 12px 0;
+    font-size: 12px;
+  }
+
+  .nav-links a.active::after {
+    display: none; /* underline doesn't work vertically */
+  }
+
+  /* Controls row — theme toggle + CTA stacked under logo row */
+  .nav-controls {
+    display: none;
+    width: 100%;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    padding: 12px 0;
+    border-top: 1px solid var(--border);
+  }
+
+  .nav-controls.open {
+    display: flex;
+  }
 }
 
 /* ─── RIGHT SIDEBAR WIDGET ─── */
