@@ -1,0 +1,94 @@
+@model List<Portfolio.Models.Education>
+
+<!-- ═══ EDUCATION ═══ -->
+<section id="education">
+  <div class="section-eyebrow">
+    <div class="section-eyebrow-line"></div>
+    <span class="section-eyebrow-text">03 // ACADEMIC_RECORD</span>
+  </div>
+  <h2 class="section-title">
+    Foundations &amp;<br>
+    <em style="color: var(--accent);">Formal Training.</em>
+  </h2>
+  <p style="font-size:14px; color: var(--text-secondary); max-width: 520px; margin-top: 16px; line-height: 1.7;">
+    The structured learning that underpins everything built in production — theory grounded in real engineering practice.
+  </p>
+
+  <div class="edu-list">
+    @foreach (var edu in Model)
+    {
+      <div class="edu-row fade-up">
+
+        <div class="edu-badge">@edu.Icon</div>
+
+        <div class="edu-info">
+          <div class="edu-degree">@edu.Degree</div>
+          <div class="edu-institution">@edu.Institution</div>
+
+          <div class="edu-meta">
+            <span class="edu-period">@edu.DateRange</span>
+
+            @if (!string.IsNullOrWhiteSpace(edu.Classification))
+            {
+              <span class="edu-meta-sep"></span>
+              <span class="edu-classification">@edu.Classification</span>
+            }
+          </div>
+
+          @if (!string.IsNullOrWhiteSpace(edu.Description))
+          {
+            <p class="edu-desc">@edu.Description</p>
+          }
+
+          @if (edu.Highlights != null && edu.Highlights.Count > 0)
+          {
+            <ul class="edu-highlights">
+              @foreach (var highlight in edu.Highlights)
+              {
+                <li class="edu-highlight-item">
+                  <span class="edu-highlight-bullet"></span>
+                  <span>@highlight</span>
+                </li>
+              }
+            </ul>
+          }
+        </div>
+
+        <div class="edu-right">
+          @if (!string.IsNullOrWhiteSpace(edu.GPA))
+          {
+            <div class="edu-gpa-block">
+              <div class="edu-gpa-label">GPA</div>
+              <div class="edu-gpa-value">@edu.GPA</div>
+            </div>
+          }
+
+          @if (!string.IsNullOrWhiteSpace(edu.VerifyUrl))
+          {
+            <a href="@edu.VerifyUrl" target="_blank" rel="noopener noreferrer" class="edu-verify-btn">
+              VERIFY ↗
+            </a>
+          }
+        </div>
+
+      </div>
+    }
+  </div>
+
+  <div class="edu-footer">
+    <div class="edu-quote-panel fade-up">
+      <p class="edu-quote-text">
+        "A degree teaches you how to<br>learn. Everything after that<br>is just <em>deliberate practice.</em>"
+      </p>
+    </div>
+    <div class="edu-context-panel fade-up">
+      <span class="edu-context-label">LEARNING_PHILOSOPHY</span>
+      <p class="edu-context-text">
+        Academic training laid the groundwork — data structures, algorithms, systems design — but real competency was forged in production: debugging race conditions at midnight, designing schema migrations with zero downtime, and shipping infrastructure that handles real concurrency without ceremony.
+      </p>
+      <p class="edu-context-text">
+        The classroom gave me the language. The terminal gave me the fluency.
+      </p>
+    </div>
+  </div>
+</section>

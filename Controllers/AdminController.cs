@@ -168,23 +168,48 @@ public class AdminController : Controller
 
 
     //CASESTUDIES
-    [Obsolete]
     [HttpGet("admin/CaseStudy/List")]
-    public ViewResult CaseStudyList()
+    public async Task<ViewResult> CaseStudyList()
     {
         Console.WriteLine("Reached AdminController.CaseStudyList");
+        
+        var caseStudies = await _caseStudyModel.GetAllCaseStudiesAsync();
+        
+        // Convert CaseStudyViewModel to SaveCaseStudyViewModel for display
+        var viewModels = caseStudies
+            .Select(cs => _caseStudyModel.ConvertToViewModel(cs.CaseStudy))
+            .ToList();
    
-        return View("Views/Admin/CasestudyList.cshtml");
+        return View("Views/Admin/CaseStudyList.cshtml", viewModels);
     }
 
-
-
     [HttpGet("admin/CaseStudy")]
-    public ViewResult CaseStudy(int? id = null)
+    public async Task<ViewResult> CaseStudy(int? id = null)
     {
         Console.WriteLine("Reached AdminController.CaseStudy");
+        
+        SaveCaseStudyViewModel viewModel;
+        
+        if (id.HasValue && id > 0)
+        {
+            // Load existing case study for editing
+            var caseStudy = await _caseStudyModel.GetCaseStudyByIdAsync(id.Value);
+            if (caseStudy == null)
+            {
+                viewModel = SaveCaseStudyReturnDto.Get();
+            }
+            else
+            {
+                viewModel = _caseStudyModel.ConvertToViewModel(caseStudy.CaseStudy);
+            }
+        }
+        else
+        {
+            // Create new case study
+            viewModel = SaveCaseStudyReturnDto.Get();
+        }
    
-        return View("Views/Admin/CaseStudyAdd.cshtml", SaveCaseStudyReturnDto.Get());
+        return View("Views/Admin/CaseStudyAdd.cshtml", viewModel);
     }
 
     [HttpPost("admin/CaseStudy/Save", Name = "SaveCaseStudy")]
@@ -372,6 +397,7 @@ public class AdminController : Controller
         }
 
         CaseStudy CaseStudyDbStore = new CaseStudy {
+            Id = SaveCaseStudy.Id ?? 0,  // 0 for new, existing ID for edit
             Title = SaveCaseStudy.Title,
             Summary = SaveCaseStudy.Summary,
             Category = SaveCaseStudy.Category,
@@ -391,6 +417,12 @@ public class AdminController : Controller
 
         await _caseStudyModel.SaveCaseStudyAsync(CaseStudyDbStore);
     
-        return LocalRedirect("~/admin/CaseStudy");
+        return LocalRedirect("~/admin/CaseStudy/List");
+    }
+
+    public async Task<IActionResult> DeleteCaseStudy([FromForm]int id)
+    {
+        await _caseStudyModel.DeleteAsync(id);
+        return LocalRedirect("~/admin/CaseStudy/List");
     }
 }

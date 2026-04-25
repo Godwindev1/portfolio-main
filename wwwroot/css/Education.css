@@ -1,0 +1,316 @@
+/* ─── EDUCATION ─── */
+
+.edu-list {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+  background: var(--border);
+  border: 1px solid var(--border);
+  margin-top: 48px;
+}
+
+/* ── Main row ── */
+.edu-row {
+  display: grid;
+  grid-template-columns: 72px 1fr auto;
+  align-items: start;
+  gap: 28px;
+  background: var(--bg-card);
+  padding: 28px 28px;
+  transition: background 0.2s;
+}
+.edu-row:hover { background: var(--bg-card-hover); }
+
+/* ── Badge ── */
+.edu-badge {
+  width: 52px;
+  height: 52px;
+  border: 1px solid var(--border-strong);
+  background: var(--bg-elevated);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  font-family: var(--font-mono);
+  font-size: 13px;
+  letter-spacing: 0.04em;
+  color: var(--text-secondary);
+  transition: border-color 0.2s, color 0.2s;
+  margin-top: 2px;
+}
+.edu-row:hover .edu-badge {
+  border-color: var(--accent);
+  color: var(--accent);
+}
+
+/* ── Info column (left/centre) ── */
+.edu-info {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.edu-degree {
+  font-family: var(--font-display);
+  font-style: italic;
+  font-size: 20px;
+  font-weight: 600;
+  color: var(--text-primary);
+  line-height: 1.2;
+}
+
+.edu-institution {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  color: var(--accent);
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.edu-meta {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  flex-wrap: wrap;
+  margin-top: 2px;
+}
+
+.edu-period {
+  font-family: var(--font-mono);
+  font-size: 9px;
+  color: var(--text-muted);
+  letter-spacing: 0.1em;
+}
+
+.edu-classification {
+  font-family: var(--font-mono);
+  font-size: 9px;
+  color: var(--text-muted);
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+/* Separator dot between meta items */
+.edu-meta-sep {
+  width: 3px;
+  height: 3px;
+  border-radius: 50%;
+  background: var(--border-strong);
+  flex-shrink: 0;
+}
+
+/* Optional description paragraph */
+.edu-desc {
+  font-size: 12px;
+  color: var(--text-secondary);
+  line-height: 1.7;
+  max-width: 540px;
+  margin-top: 10px;
+}
+
+/* Optional bullet highlights */
+.edu-highlights {
+  list-style: none;
+  margin: 10px 0 0 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.edu-highlight-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--text-secondary);
+  line-height: 1.55;
+  transition: color 0.2s;
+}
+.edu-highlight-item:hover { color: var(--text-primary); }
+
+.edu-highlight-bullet {
+  flex-shrink: 0;
+  margin-top: 6px;
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  background: var(--accent);
+  opacity: 0.65;
+  transition: opacity 0.2s;
+}
+.edu-highlight-item:hover .edu-highlight-bullet { opacity: 1; }
+
+/* ── Right column (GPA + verify button) ── */
+.edu-right {
+  display: flex;
+  align-items: flex-start;
+  gap: 24px;
+  flex-shrink: 0;
+  padding-top: 2px;
+}
+
+.edu-gpa-block {
+  text-align: right;
+}
+
+.edu-gpa-label {
+  font-family: var(--font-mono);
+  font-size: 8px;
+  color: var(--text-muted);
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  margin-bottom: 4px;
+}
+
+.edu-gpa-value {
+  font-family: var(--font-mono);
+  font-size: 18px;
+  font-weight: 500;
+  color: var(--text-primary);
+  letter-spacing: -0.02em;
+  line-height: 1;
+}
+
+.edu-verify-btn {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  border: 1px solid var(--border-strong);
+  padding: 8px 16px;
+  text-decoration: none;
+  white-space: nowrap;
+  transition: color 0.2s, border-color 0.2s;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-top: 2px;
+}
+.edu-verify-btn:hover {
+  color: var(--accent);
+  border-color: var(--accent);
+}
+
+/* ── Footer (quote + context panels) ── */
+.edu-footer {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1px;
+  background: var(--border);
+  border: 1px solid var(--border);
+  margin-top: 1px;
+}
+
+.edu-quote-panel {
+  background: var(--bg-card);
+  padding: 36px;
+}
+
+.edu-quote-text {
+  font-family: var(--font-display);
+  font-style: italic;
+  font-size: clamp(18px, 2.5vw, 26px);
+  color: var(--text-primary);
+  line-height: 1.3;
+}
+
+.edu-quote-text em {
+  font-style: normal;
+  color: var(--accent);
+}
+
+.edu-context-panel {
+  background: var(--bg-card);
+  padding: 36px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.edu-context-label {
+  font-family: var(--font-mono);
+  font-size: 9px;
+  color: var(--text-secondary);
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+.edu-context-text {
+  font-size: 13px;
+  color: var(--text-secondary);
+  line-height: 1.75;
+}
+
+/* ─── RESPONSIVE ─── */
+
+@media (max-width: 768px) {
+  /* Row collapses: badge + info stack, right spans full width */
+  .edu-row {
+    grid-template-columns: 52px 1fr;
+    grid-template-rows: auto auto;
+    gap: 16px 14px;
+    padding: 20px 16px;
+  }
+
+  .edu-right {
+    grid-column: 1 / -1;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    padding-top: 12px;
+    border-top: 1px solid var(--border);
+    gap: 12px;
+  }
+
+  .edu-gpa-block { text-align: left; }
+
+  .edu-badge {
+    width: 44px;
+    height: 44px;
+    font-size: 11px;
+  }
+
+  .edu-degree { font-size: 16px; }
+
+  .edu-verify-btn {
+    padding: 7px 12px;
+    font-size: 9px;
+    flex-shrink: 0;
+  }
+
+  .edu-footer { grid-template-columns: 1fr; }
+
+  .edu-quote-panel,
+  .edu-context-panel { padding: 24px 20px; }
+
+  .edu-quote-text { font-size: clamp(16px, 5vw, 22px); }
+
+  .edu-context-panel { border-top: 1px solid var(--border); }
+}
+
+@media (max-width: 480px) {
+  .edu-row {
+    grid-template-columns: 1fr;
+    padding: 16px 12px;
+  }
+
+  .edu-badge {
+    width: 40px;
+    height: 40px;
+    font-size: 11px;
+  }
+
+  .edu-right {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+  }
+
+  .edu-verify-btn {
+    width: 100%;
+    justify-content: center;
+  }
+}

@@ -22,7 +22,7 @@
                 <h1 class="admin-title">@(isEdit ? "EDIT_PROJECT" : "CREATE_NEW")</h1>
             </div>
             <div class="header-actions">
-                <button type="button" class="btn-ghost" onclick="location.href='/Admin'">CANCEL</button>
+                <a href="@Url.Action("CaseStudyList", "Admin")" class="btn-ghost">CANCEL</a>
                 <button type="submit" class="btn-primary">SAVE_CHANGES</button>
             </div>
         </header>

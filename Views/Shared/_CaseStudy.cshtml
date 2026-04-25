@@ -1,4 +1,5 @@
 @model CaseStudyViewModel
+@using Portfolio.Models;
 @addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
 
 @if (Model != null)
@@ -44,6 +45,41 @@
             READ_FULL_ARCHITECTURAL_STORY
             <span class="case-cta-arrow">→</span>
           </div>
+          
+          @{
+                var cs = Model.CaseStudy;
+                var links = cs.Artifacts
+                    .Where(a => a.Type != ArtifactTypes.ScreenShot && a.Type != ArtifactTypes.ImplementationDetail && a.Type != ArtifactTypes.Videos)
+                    .ToList();
+            }
+            @if (links.Any())
+            {
+                <div class="modal-artifacts-section" style="border-top: 1px solid var(--border);">
+                    <span class="modal-artifacts-label">ARTIFACTS &amp; LINKS</span>
+                    <div class="modal-artifacts-links">
+                        @foreach (var artifact in links)
+                        {
+                            if(artifact.Type == ArtifactTypes.Document)
+                            {
+                                var ArtifactModel = new MediaViewerModel{ Url = artifact.Url, Type = "File", label = artifact.Label}; 
+                                <partial name="_mediaStreamer" model="@ArtifactModel" />
+                            }
+                            else
+                            {
+                                <a href="@artifact.Url"
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                class="modal-artifact-btn"
+                                data-type="@artifact.Type">
+                                    @artifact.Label
+                                </a>
+                            }
+                        }
+                    </div>
+                </div>
+            }
+
+
         </div>
       </div>
     </section>

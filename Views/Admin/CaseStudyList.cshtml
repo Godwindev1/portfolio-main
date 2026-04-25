@@ -1,0 +1,350 @@
+@model List<Portfolio.ViewModels.SaveCaseStudyViewModel>
+@{
+    Layout = "_AdminLayout";
+    ViewData["Title"] = "Case Studies // CMS";
+}
+
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+
+<div class="acms-shell">
+
+  <!-- ── HEADER ── -->
+  <div class="acms-header">
+    <div class="acms-header-left">
+      <span class="acms-breadcrumb">ADMIN // PORTFOLIO_ARCHIVE</span>
+      <h1 class="acms-page-title">Case_Studies</h1>
+      <p>No of Items: @Model.Count</p>
+    </div>
+    <a href="~/admin/CaseStudy" class="acms-btn-primary">
+      <span class="btn-icon">+</span> NEW_PROJECT
+    </a>
+  </div>
+
+  <!-- ── ALERTS ── -->
+  @if (TempData["Success"] != null)
+  {
+    <div class="acms-alert acms-alert--ok">
+      <span class="alert-dot"></span> @TempData["Success"]
+    </div>
+  }
+  @if (TempData["Error"] != null)
+  {
+    <div class="acms-alert acms-alert--err">
+      <span class="alert-dot"></span> @TempData["Error"]
+    </div>
+  }
+
+  <!-- ── CASE STUDY LIST ── -->
+  <div class="casestudy-admin-list">
+    @if (!Model.Any())
+    {
+      <div class="acms-empty">
+        <span class="empty-code">[ NULL ]</span>
+        <p>No case studies found. Create your first project.</p>
+      </div>
+    }
+
+    @foreach (var cs in Model.OrderBy(x => x.DisplayOrder))
+    {
+      <div class="casestudy-admin-card">
+        <!-- Cover Image Thumbnail -->
+        @if (!string.IsNullOrEmpty(cs.ExistingCoverImageUrl))
+        {
+          <div class="casestudy-admin-card__thumbnail">
+            <img src="@cs.ExistingCoverImageUrl" alt="@cs.Title" />
+          </div>
+        }
+
+        <div class="casestudy-admin-card__main">
+          <div class="casestudy-admin-card__header">
+            <div>
+              <div class="casestudy-admin-card__category">@cs.Category</div>
+              <div class="casestudy-admin-card__title">@cs.Title</div>
+              <div class="casestudy-admin-card__label">@cs.Label</div>
+            </div>
+            <div class="casestudy-admin-card__badges">
+              @if (cs.IsFeatured)
+              {
+                <span class="badge badge--featured">★ FEATURED</span>
+              }
+              <span class="badge">Order: @cs.DisplayOrder</span>
+            </div>
+          </div>
+
+          <p class="casestudy-admin-card__summary">@cs.Summary</p>
+
+          <div class="casestudy-admin-card__meta">
+            <span class="meta-pill">
+              <span class="meta-label">SKILLS</span>
+              <span class="meta-count">@cs.Skills.Count</span>
+            </span>
+            <span class="meta-pill">
+              <span class="meta-label">STEPS</span>
+              <span class="meta-count">@cs.ImplementationSteps.Count</span>
+            </span>
+            <span class="meta-pill">
+              <span class="meta-label">METRICS</span>
+              <span class="meta-count">@cs.Metrics.Count</span>
+            </span>
+            <span class="meta-pill">
+              <span class="meta-label">ARTIFACTS</span>
+              <span class="meta-count">@(cs.Documents.Count + cs.Videos.Count + cs.Screenshots.Count + cs.implementationDetails.Count + cs.Links.Count + cs.Repos.Count + cs.LiveDemos.Count)</span>
+            </span>
+            <span class="meta-pill">
+              <span class="meta-label">ARCHITECTURE</span>
+              <span class="meta-count">@cs.ArchitectureComponents.Count</span>
+            </span>
+          </div>
+
+          <div class="casestudy-admin-card__skills">
+            @foreach (var skill in cs.Skills.Take(8))
+            {
+              <span class="skill-tag" title="@skill.Category">@skill.Name</span>
+            }
+            @if (cs.Skills.Count > 8)
+            {
+              <span class="skill-tag skill-tag--more">+@(cs.Skills.Count - 8)</span>
+            }
+          </div>
+        </div>
+
+        <div class="casestudy-admin-card__actions">
+          <a href="~/admin/CaseStudy?id=@cs.Id" class="acms-btn-icon">
+            ✦ EDIT
+          </a>
+          <form asp-action="DeleteCaseStudy" asp-controller="Admin" asp-area="Admin"
+                method="post" style="display:inline;"
+                onsubmit="return confirm('Delete this case study and all related data?')">
+            @Html.AntiForgeryToken()
+            <input type="hidden" name="id" value="@cs.Id" />
+            <button type="submit" class="acms-btn-icon acms-btn-icon--danger">⊗ DELETE</button>
+          </form>
+        </div>
+      </div>
+    }
+  </div>
+</div>
+
+<style>
+.casestudy-admin-list {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  margin-top: 2rem;
+}
+
+.casestudy-admin-card {
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  gap: 1.5rem;
+  padding: 1.5rem;
+  border: 1px solid var(--border-color, #e5e7eb);
+  border-radius: 0.5rem;
+  background: var(--bg-secondary, #f9fafb);
+  transition: all 0.2s ease;
+}
+
+.casestudy-admin-card:hover {
+  border-color: var(--primary-color, #3b82f6);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+}
+
+.casestudy-admin-card__thumbnail {
+  width: 120px;
+  height: 120px;
+  flex-shrink: 0;
+  border-radius: 0.375rem;
+  overflow: hidden;
+  background: #f0f0f0;
+}
+
+.casestudy-admin-card__thumbnail img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.casestudy-admin-card__main {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  min-width: 0;
+}
+
+.casestudy-admin-card__header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 1rem;
+}
+
+.casestudy-admin-card__category {
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  color: #6b7280;
+  text-transform: uppercase;
+}
+
+.casestudy-admin-card__title {
+  font-size: 1.125rem;
+  font-weight: 700;
+  color: #1f2937;
+  word-break: break-word;
+}
+
+.casestudy-admin-card__label {
+  font-size: 0.875rem;
+  color: #6b7280;
+  font-style: italic;
+}
+
+.casestudy-admin-card__badges {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  justify-content: flex-end;
+}
+
+.badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.25rem 0.75rem;
+  font-size: 0.75rem;
+  font-weight: 600;
+  background: #e5e7eb;
+  color: #374151;
+  border-radius: 9999px;
+  white-space: nowrap;
+}
+
+.badge--featured {
+  background: #fef3c7;
+  color: #92400e;
+}
+
+.casestudy-admin-card__summary {
+  font-size: 0.875rem;
+  color: #4b5563;
+  line-height: 1.5;
+  margin: 0;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.casestudy-admin-card__meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  margin-top: 0.5rem;
+}
+
+.meta-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.375rem;
+  padding: 0.375rem 0.75rem;
+  font-size: 0.75rem;
+  background: #f3f4f6;
+  color: #6b7280;
+  border-radius: 0.25rem;
+  font-weight: 500;
+}
+
+.meta-label {
+  opacity: 0.75;
+}
+
+.meta-count {
+  font-weight: 700;
+  color: #1f2937;
+}
+
+.casestudy-admin-card__skills {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-top: 0.25rem;
+}
+
+.skill-tag {
+  display: inline-flex;
+  padding: 0.25rem 0.625rem;
+  font-size: 0.75rem;
+  background: #dbeafe;
+  color: #1e40af;
+  border-radius: 0.25rem;
+  font-weight: 500;
+}
+
+.skill-tag--more {
+  background: #e5e7eb;
+  color: #6b7280;
+}
+
+.casestudy-admin-card__actions {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  justify-content: flex-start;
+  flex-shrink: 0;
+}
+
+.acms-btn-icon {
+  padding: 0.625rem 0.875rem;
+  font-size: 0.875rem;
+  font-weight: 600;
+  background: #3b82f6;
+  color: white;
+  border: none;
+  border-radius: 0.375rem;
+  cursor: pointer;
+  white-space: nowrap;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease;
+}
+
+.acms-btn-icon:hover {
+  background: #2563eb;
+}
+
+.acms-btn-icon--danger {
+  background: #ef4444;
+}
+
+.acms-btn-icon--danger:hover {
+  background: #dc2626;
+}
+
+.acms-empty {
+  padding: 3rem 2rem;
+  text-align: center;
+  border: 1px dashed #d1d5db;
+  border-radius: 0.5rem;
+  background: #f9fafb;
+  color: #6b7280;
+}
+
+.empty-code {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #9ca3af;
+  display: block;
+  margin-bottom: 0.5rem;
+}
+
+@@media (max-width: 1024px) {
+  .casestudy-admin-card {
+    grid-template-columns: 1fr;
+  }
+
+  .casestudy-admin-card__thumbnail {
+    display: none;
+  }
+}
+</style>

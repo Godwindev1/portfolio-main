@@ -34,7 +34,8 @@ public class HomeController : Controller
             SkillDomains = await GetSkillDomains(),
             Experiences = await GetWorkHistory(),
             Testimonials = await GetTestimonials(),
-            Certifications = await GetCertifications()
+            Certifications = await GetCertifications(),
+            Education = EducationReturnDto.Get()
         };
 
         return View(viewModel);

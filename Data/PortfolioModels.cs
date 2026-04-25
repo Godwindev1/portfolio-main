@@ -16,12 +16,20 @@ public class HeroStatus
     };
 }
 
+public class Miscalleanous
+{
+    public ArtifactLink Resume { get; set; } 
+
+}
+
 public class PortfolioViewModel
 {
+    public Miscalleanous Miscalleanous { get; set; } = new();
     public HeroStatus HeroStatus { get; set; } = new();
     public List<CaseStudyViewModel> CaseStudies { get; set; } = [];
     public List<SkillDomain> SkillDomains { get; set; } = [];
     public List<Experience> Experiences { get; set; } = [];
     public List<Testimonial> Testimonials { get; set; } = [];
+    public List<Education> Education { get; set; } =[];
     public List<Certification> Certifications { get; set; } = [];
 }

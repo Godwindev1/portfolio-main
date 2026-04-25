@@ -11,6 +11,7 @@ public static class ArtifactTypes
     public const string ImplementationDetail = "ImplementationDetail";
     public const string Videos = "Videos";
     public const string Document = "Document";
+
 }
 public class CaseStudy
 {
