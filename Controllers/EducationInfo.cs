@@ -10,13 +10,13 @@ public static class EducationReturnDto
                 new Education {
                     Icon     = "BSc",
                     Degree   = "B.Sc. in Computer Science",
-                    Institution = "University of Benin",
-                    DateRange   = "2017 – 2021",
-                    Classification = "Second Class Upper",
-                    GPA      = "3.74 / 5.0",          // null to hide
+                    Institution = "Igbinedion University Okada",
+                    DateRange   = "2022 – 2026",
+                    Classification = "First Class",
+                    GPA      = null,          // null to hide
                     Description = "Focused on software engineering, database systems, and networks.",
                     Highlights = new() {
-                        "Final year project: real-time vehicle tracking system (ASP.NET Core + SignalR)",
+                        "Final year project: Background Processing ",
                         "Member, Computer Science Students' Association"
                     },
                     VerifyUrl = null                   // or a real URL to show the VERIFY button

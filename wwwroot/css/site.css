@@ -939,7 +939,7 @@ html.light .level-expert { color: #dc2626; }
 .contact-email {
   font-family: var(--font-display);
   font-style: italic;
-  font-size: clamp(28px, 4vw, 52px);
+  font-size: clamp(24px, 4vw, 47px);
   font-weight: 600;
   color: var(--text-primary);
   text-decoration: none;
