@@ -1,3 +1,6 @@
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+@inject IConfiguration Configuration
+
 <nav class="navigation">
 
   <a href="#hero" class="nav-logo">GODWIN OLUOWHO</a>
@@ -18,7 +21,14 @@
       <div class="toggle-track"><div class="toggle-thumb"></div></div>
       <span class="toggle-label" id="toggleLabel">LIGHT</span>
     </button>
-    <a href="#" class="nav-cta">DOWNLOAD_CV</a>
+    
+    @{
+      var Key = Configuration["RESUMEKEY"];
+
+       var MediaModel = new MediaViewerModel{ Url = Key, Type = "File", label = "DOWNLOAD_CV"}; 
+       <partial class="nav-cta" name="_mediaStreamer" model="@MediaModel" />
+     }
+    
 
     <!-- Hamburger — only visible on mobile, sits inside nav-right -->
     <button class="nav-hamburger" id="navHamburger" aria-label="Toggle menu" aria-expanded="false">
