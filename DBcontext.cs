@@ -24,10 +24,15 @@ public class PortfolioDbContext : DbContext
     public DbSet<ArtifactLink> ArtifactLinks => Set<ArtifactLink>();
     public DbSet<ArchitectureComponent> ArchitectureComponents => Set<ArchitectureComponent>();
 
+    public DbSet<ProjectBrief> ProjectBriefs {get; set; }
+
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         base.OnModelCreating(modelBuilder);
+
+        modelBuilder.Entity<ProjectBrief>().HasKey(x => x.id);
+        modelBuilder.Entity<ProjectBrief>().Property(x => x.id).ValueGeneratedOnAdd();
 
         // -------------------------
         // JSON Conversions (KEEP ONLY WHAT YOU NEED)

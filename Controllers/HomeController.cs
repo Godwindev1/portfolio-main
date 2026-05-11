@@ -57,7 +57,6 @@ public class HomeController : Controller
     }
 
 
-
     private async Task<List<SkillDomain>> GetSkillDomains()
     {
         return await _skilldomainRepository.GetAllAsync();

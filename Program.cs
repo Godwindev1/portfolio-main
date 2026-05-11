@@ -41,6 +41,7 @@ builder.Services.AddScoped<IExperienceRepository, ExperienceRepository>();
 builder.Services.AddScoped<ITestimonialRepository, TestimonialRepository>();
 builder.Services.AddScoped<ICertificationRepository, CertificationRepository>();
 builder.Services.AddScoped<ISkillDomainReposirtory, SkillDomainRepository>();
+builder.Services.AddScoped<IProjectBriefRepository, ProjectBriefRepository>();
 
 
 builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)

@@ -11,7 +11,7 @@ using Portfolio.Data;
 namespace Portfolio.Migrations
 {
     [DbContext(typeof(PortfolioDbContext))]
-    [Migration("20260415171830_Portfolio")]
+    [Migration("20260511180919_Portfolio")]
     partial class Portfolio
     {
         /// <inheritdoc />
@@ -345,6 +345,51 @@ namespace Portfolio.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Testimonials");
+                });
+
+            modelBuilder.Entity("ProjectBrief", b =>
+                {
+                    b.Property<long>("id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bigint");
+
+                    MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<long>("id"));
+
+                    b.Property<string>("Budget")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
+                    b.Property<string>("Email")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
+                    b.Property<string>("ProjectDescription")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
+                    b.Property<string>("ProjectName")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
+                    b.Property<string>("ProjectScope")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
+                    b.Property<string>("Quote")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
+                    b.Property<string>("RoleNeeded")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
+                    b.Property<string>("Timeline")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
+                    b.HasKey("id");
+
+                    b.ToTable("ProjectBriefs");
                 });
 
             modelBuilder.Entity("Portfolio.Models.ArchitectureComponent", b =>

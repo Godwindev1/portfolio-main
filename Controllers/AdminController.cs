@@ -15,9 +15,12 @@ public class AdminController : Controller
     private readonly ITestimonialRepository _testimonialRepo;
     private readonly ICertificationRepository _CertificationRepo;
     private readonly ISkillDomainReposirtory _skilldomainRepository;
+    private readonly IProjectBriefRepository _ProjectBriefHistory;
 
-
-    public AdminController(BucketService bucketService, ICaseStudyRepository caseStudyRepository, IExperienceRepository experienceRepository, ITestimonialRepository testimonialRepository, ICertificationRepository certificationRepository, ISkillDomainReposirtory skillDomainReposirtory)
+    public AdminController(BucketService bucketService, ICaseStudyRepository caseStudyRepository, 
+    IExperienceRepository experienceRepository, ITestimonialRepository testimonialRepository, 
+    ICertificationRepository certificationRepository, ISkillDomainReposirtory skillDomainReposirtory,
+    IProjectBriefRepository projectBriefRepository)
     {
         _bucketService = bucketService;
         _caseStudyModel = new CaseStudyModel(caseStudyRepository);
@@ -25,6 +28,7 @@ public class AdminController : Controller
         _testimonialRepo = testimonialRepository;
         _CertificationRepo = certificationRepository;
         _skilldomainRepository = skillDomainReposirtory;
+        _ProjectBriefHistory = projectBriefRepository;
     }
 
         [HttpGet("admin")]
@@ -32,6 +36,25 @@ public class AdminController : Controller
     {
         return View("Views/Admin/AdminDashboard.cshtml");
     }
+
+    
+    //Project Briefs DOMAINS ( )
+    [HttpGet("admin/Briefs")]
+    public async Task<ViewResult> Briefs()
+    {
+        Console.WriteLine("Reached AdminController.Briefs");
+
+        var Dtos = await _ProjectBriefHistory.GetAllAsync();
+   
+        return View("Views/Admin/ProjectBriefs.cshtml", Dtos);
+    }
+
+    public async Task<IActionResult> DeleteBriefs([FromForm]long id)
+    {
+        await _ProjectBriefHistory.DeleteAsync(id);
+        return LocalRedirect("~/admin/Briefs");
+    }
+
 
     //SKILL DOMAINS (Technical Arsenal )
     [HttpGet("admin/TechnicalArsenal")]

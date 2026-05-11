@@ -1,4 +1,14 @@
 @addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+@inject Microsoft.AspNetCore.Antiforgery.IAntiforgery Antiforgery
+
+
+@{
+    var token = Antiforgery.GetAndStoreTokens(Context).RequestToken;
+}
+
+<input type="hidden" name="__RequestVerificationToken" value="@token" />
+
+
 <!-- ═══ CONTACT ═══ -->
 <section id="contact" style="padding: 0; border-top: 1px solid var(--border);">
 
@@ -58,7 +68,7 @@
         </div>
 
         <!-- Form -->
-       @{/* <form id="project-brief-form" novalidate>
+        <form id="project-brief-form" novalidate>
 
             <div class="brief-grid">
 
@@ -171,14 +181,12 @@
         </form>
 
     </div><!-- /.project-brief-section -->
-    */}
+    
 
 </section>
 
 
-@{
-  
-/*
+
 <script>
     (function () {
         const form     = document.getElementById('project-brief-form');
@@ -187,10 +195,14 @@
         const submitBtn = document.getElementById('brief-submit');
         const submitLabel = document.getElementById('brief-submit-label');
 
+        console.log("Sumit script opened")
+
         if (!form) return;
 
         form.addEventListener('submit', async function (e) {
             e.preventDefault();
+
+            console.log("Submit listener is working ")
 
             // Basic HTML5 validation
             if (!form.checkValidity()) {
@@ -214,15 +226,19 @@
             };
 
             try {
-                // ── Replace this fetch with your actual API endpoint ──
-                await new Promise(resolve => setTimeout(resolve, 1000));
-                // await fetch('/api/contact', {
-                //     method: 'POST',
-                //     headers: { 'Content-Type': 'application/json' },
-                //     body: JSON.stringify(data),
-                // });
+              const response = await fetch('/briefs/SubmitBrief/', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'RequestVerificationToken': document.querySelector('input[name="__RequestVerificationToken"]').value
+                    },
+                    body: JSON.stringify(data),
+                });
 
+                if (!response.ok) throw new Error('Submission failed'); 
+                
                 // Show success
+                
                 emailEl.textContent = data.email;
                 form.style.display = 'none';
                 success.style.display = 'block';
@@ -244,5 +260,4 @@
         });
     })();
 </script>
- */
-}
+ 

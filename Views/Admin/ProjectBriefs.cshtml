@@ -1,0 +1,96 @@
+@model List<ProjectBrief>
+@{
+    Layout = "_AdminLayout";
+    ViewData["Title"] = "Project Briefs // CMS";
+}
+
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+
+<div class="acms-shell">
+
+  <!-- ── HEADER ── -->
+  <div class="acms-header">
+    <div class="acms-header-left">
+      <span class="acms-breadcrumb">ADMIN // ARCHIVE_05</span>
+      <h1 class="acms-page-title">ProjectBrief_Log</h1>
+      <p>No of Items: @Model.Count</p>
+    </div>
+  </div>
+
+  <!-- ── ALERTS ── -->
+  @if (TempData["Success"] != null)
+  {
+    <div class="acms-alert acms-alert--ok">
+      <span class="alert-dot"></span> @TempData["Success"]
+    </div>
+  }
+  @if (TempData["Error"] != null)
+  {
+    <div class="acms-alert acms-alert--err">
+      <span class="alert-dot"></span> @TempData["Error"]
+    </div>
+  }
+
+  <!-- ── ENTRY LIST ── -->
+  <div class="exp-admin-list">
+    @if (!Model.Any())
+    {
+      <div class="acms-empty">
+        <span class="empty-code">[ NULL ]</span>
+        <p>No project brief entries found.</p>
+      </div>
+    }
+
+    @foreach (var b in Model)
+    {
+      <div class="exp-admin-card">
+
+        <div class="exp-admin-card__period">
+          @b.Timeline
+        </div>
+
+        <div class="exp-admin-card__main">
+          <div class="exp-admin-card__role">@b.ProjectName</div>
+          <div class="exp-admin-card__company">@b.Email</div>
+          <p class="exp-admin-card__desc">@b.ProjectDescription</p>
+
+          <div class="exp-admin-card__meta">
+            <span class="meta-pill">
+              <span class="meta-label">SCOPE</span>
+              <span class="meta-count">@b.ProjectScope</span>
+            </span>
+            <span class="meta-pill">
+              <span class="meta-label">ROLE</span>
+              <span class="meta-count">@b.RoleNeeded</span>
+            </span>
+            @if (!string.IsNullOrWhiteSpace(b.Budget))
+            {
+              <span class="meta-pill">
+                <span class="meta-label">BUDGET</span>
+                <span class="meta-count">@b.Budget</span>
+              </span>
+            }
+            @if (!string.IsNullOrWhiteSpace(b.Quote))
+            {
+              <span class="meta-pill">
+                <span class="meta-label">NOTE</span>
+                <span class="meta-count">✓</span>
+              </span>
+            }
+          </div>
+        </div>
+
+        <div class="exp-admin-card__actions">
+          <form asp-action="DeleteBriefs" asp-controller="Admin" 
+                method="post" style="display:inline;"
+                onsubmit="return confirm('Delete this project brief?')">
+            @Html.AntiForgeryToken()
+            <input type="hidden" name="id" value="@b.id" />
+            <button type="submit" class="acms-btn-icon acms-btn-icon--danger">⊗ DELETE</button>
+          </form>
+        </div>
+
+      </div>
+    }
+  </div>
+</div>

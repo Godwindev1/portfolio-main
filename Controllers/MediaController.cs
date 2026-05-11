@@ -81,7 +81,7 @@ public class MediaController : Controller
             Response.Headers.Append("Accept-Ranges", "bytes");
             
             // Use the stream from the bucket service
-            return File(result.Value.stream, result.Value.contentType, enableRangeProcessing: false);
+            return File(result.Value.stream, result.Value.contentType, enableRangeProcessing: false, fileDownloadName: ObjectKey.Split("/").ElementAt(1));
         }
 
         if (type == MediaType.Video)
