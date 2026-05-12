@@ -9,9 +9,12 @@ using Portfolio.ViewModels;
 public class ProjectbriefController : Controller
 {
     private readonly IProjectBriefRepository _projectBriefRepository;
-    public ProjectbriefController(IProjectBriefRepository repo)
+    private readonly IEmailService _service ;
+
+    public ProjectbriefController(IProjectBriefRepository repo, IEmailService service)
     {
         _projectBriefRepository = repo;
+        _service = service;
     }
 
     
@@ -24,6 +27,9 @@ public class ProjectbriefController : Controller
             return BadRequest(ModelState);
 
         await _projectBriefRepository.AddAsync(model);
+
+        await _service.SendProjectBriefNotificationAsync(model);
+        await _service.SendClientConfirmationAsync(model);
 
         return Ok();
     }
