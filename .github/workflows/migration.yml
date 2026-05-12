@@ -28,4 +28,4 @@ jobs:
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           passphrase: ${{ secrets.SSH_PASSPHRASE }}
           script: |
-            docker exec -i devops-tools-mariadb-1 mysql -u root -p${{ secrets.DB_PASSWORD }} Portfolio < /home/user/migrate.sql
+            docker exec -i devops-tools-mariadb-1 mariadb -u root -p${{ secrets.DB_PASSWORD }} Portfolio < /home/user/migrate.sql
