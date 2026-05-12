@@ -1,6 +1,5 @@
-using MailKit.Net.Smtp;
-using MailKit.Security;
-using MimeKit;
+using System.Text;
+using System.Text.Json;
 using Microsoft.Extensions.Options;
 
 public interface IEmailService
@@ -12,27 +11,31 @@ public interface IEmailService
 public class EmailService : IEmailService
 {
     private readonly EmailSettings _settings;
+    private readonly HttpClient _httpClient;
 
-    public EmailService(IOptions<EmailSettings> settings)
+    public EmailService(IOptions<EmailSettings> settings, HttpClient httpClient)
     {
         _settings = settings.Value;
+        _httpClient = httpClient;
+        _httpClient.BaseAddress = new Uri("https://api.brevo.com/v3");
+        _httpClient.DefaultRequestHeaders.Add("api-key", _settings.BrevoApiKey);
     }
 
     private async Task SendAsync(string toEmail, string toName, string subject, string htmlBody)
     {
-        var message = new MimeMessage();
-        message.From.Add(new MailboxAddress(_settings.SenderName, _settings.SenderEmail));
-        message.To.Add(new MailboxAddress(toName, toEmail));
-        message.Subject = subject;
+        var payload = new
+        {
+            sender = new { name = _settings.SenderName, email = _settings.SenderEmail },
+            to = new[] { new { email = toEmail, name = toName } },
+            subject,
+            htmlContent = htmlBody
+        };
 
-        message.Body = new BodyBuilder { HtmlBody = htmlBody }.ToMessageBody();
- 
+        var json = JsonSerializer.Serialize(payload);
+        var content = new StringContent(json, Encoding.UTF8, "application/json");
 
-        using var client = new SmtpClient();
-        await client.ConnectAsync(_settings.SmtpHost, _settings.SmtpPort, SecureSocketOptions.StartTls);
-        await client.AuthenticateAsync(_settings.Username, _settings.Password);
-        await client.SendAsync(message);
-        await client.DisconnectAsync(true);
+        var response = await _httpClient.PostAsync("/v3/smtp/email", content);
+        response.EnsureSuccessStatusCode();
     }
 
     public async Task SendProjectBriefNotificationAsync(ProjectBrief brief)

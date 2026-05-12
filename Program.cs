@@ -15,14 +15,6 @@ var BucketRootUser = builder.Configuration["MINIO_ROOT_USER"];
 var BucketRootPassword = builder.Configuration["MINIO_ROOT_PASSWORD"];
 var BucketLocation = builder.Configuration["DROPLET_PIP"];
 
-EmailSettings emailCredentials = new EmailSettings();
-
-emailCredentials.SenderName = builder.Configuration["EmailSettings:SenderName"];
-emailCredentials.SenderEmail = builder.Configuration["EmailSettings:SenderEmail"];
-emailCredentials.Password = builder.Configuration["EmailSettings:Password"];
-emailCredentials.SmtpPort = int.Parse( builder.Configuration["EmailSettings:SmtpPort"] );
-emailCredentials.SmtpHost = builder.Configuration["EmailSettings:SmtpHost"];
-emailCredentials.Username  = builder.Configuration["EmailSettings:Username"];
 
 builder.Services.Configure<EmailSettings>(
     builder.Configuration.GetSection("EmailSettings"));
@@ -54,7 +46,7 @@ builder.Services.AddScoped<ITestimonialRepository, TestimonialRepository>();
 builder.Services.AddScoped<ICertificationRepository, CertificationRepository>();
 builder.Services.AddScoped<ISkillDomainReposirtory, SkillDomainRepository>();
 builder.Services.AddScoped<IProjectBriefRepository, ProjectBriefRepository>();
-builder.Services.AddScoped<IEmailService, EmailService>();
+builder.Services.AddHttpClient<IEmailService, EmailService>();
 
 builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
     .AddCookie(options =>
