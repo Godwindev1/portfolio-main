@@ -918,6 +918,11 @@ html.light .level-expert { color: #dc2626; }
 }
 
 /* ─── CONTACT ─── */
+
+#contact {
+
+}
+
 .contact-section {
   padding: 80px 40px;
   display: grid;
