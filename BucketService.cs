@@ -3,6 +3,7 @@ using Amazon.S3.Model;
 using Amazon.S3.Transfer;
 using Amazon.S3.Util;
 
+
 public enum UploadType
 {
     Video,
@@ -23,55 +24,7 @@ public partial class BucketService
         _s3Config = s3Config;
     }
 
-    public async Task MakeBucketPublicAsync(string bucketName)
-    {
-        // Define the policy (ensure the bucket name is correct in the Resource string)
-        string publicPolicy = $@"{{
-            ""Version"": ""2012-10-17"",
-            ""Statement"": [
-                {{
-                    ""Effect"": ""Allow"",
-                    ""Principal"": ""*"",
-                    ""Action"": ""s3:GetObject"",
-                    ""Resource"": ""arn:aws:s3:::{bucketName}/*""
-                }}
-            ]
-        }}";
 
-        try
-        {
-            var request = new PutBucketPolicyRequest
-            {
-                BucketName = bucketName,
-                Policy = publicPolicy
-            };
-
-            await _s3Client.PutBucketPolicyAsync(request);
-            Console.WriteLine($"Bucket '{bucketName}' is now public.");
-        }
-        catch (AmazonS3Exception e)
-        {
-            Console.WriteLine($"Error setting policy: {e.Message}");
-        }
-    }
-
-    public async Task MakeBucketPrivateAsync(string bucketName)
-    {
-        try
-        {
-            // Deleting the policy reverts to default — deny all public access
-            await _s3Client.DeleteBucketPolicyAsync(new DeleteBucketPolicyRequest
-            {
-                BucketName = bucketName
-            });
-
-            Console.WriteLine($"Bucket '{bucketName}' is now private.");
-        }
-        catch (AmazonS3Exception e)
-        {
-            Console.WriteLine($"Error making bucket private: {e.Message}");
-        }
-    }
     public async Task CreateBucketAsync()
     {
         var request = new PutBucketRequest
@@ -85,8 +38,6 @@ public partial class BucketService
             Console.WriteLine($"Creating bucket '{_bucketName}'...");
             await _s3Client.PutBucketAsync(request);
         }
-
-        await MakeBucketPrivateAsync(_bucketName);
     }
 
     public async Task<string> UploadVideo(Stream MultiPartVidStream, string fileName, string ContentType)

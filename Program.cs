@@ -11,10 +11,7 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.Configuration.AddEnvironmentVariables();
 
-var BucketRootUser = builder.Configuration["MINIO_ROOT_USER"];
-var BucketRootPassword = builder.Configuration["MINIO_ROOT_PASSWORD"];
-var BucketLocation = builder.Configuration["DROPLET_PIP"];
-
+//THIS CURRENT BRANCH USES R2 intead of MINIO 
 
 builder.Services.Configure<EmailSettings>(
     builder.Configuration.GetSection("EmailSettings"));
@@ -25,17 +22,23 @@ builder.Services.AddDbContext<PortfolioDbContext>(options =>
     )
 );
 
- var s3Config = new AmazonS3Config
+var s3Config = new AmazonS3Config
 {
-    ServiceURL = $"http://{BucketLocation}:9000",
-    ForcePathStyle = true // Essential for MinIO
+    ServiceURL = Environment.GetEnvironmentVariable("R2_ENDPOINT"), // https://<account-id>.r2.cloudflarestorage.com
+    ForcePathStyle = true,
+    AuthenticationRegion = "auto",
+    RequestChecksumCalculation = Amazon.Runtime.RequestChecksumCalculation.WHEN_REQUIRED,
+    ResponseChecksumValidation = Amazon.Runtime.ResponseChecksumValidation.WHEN_REQUIRED
 };
 
 builder.Services.AddSingleton(s3Config);
 
-builder.Services.AddSingleton<IAmazonS3>(sp => 
-    new AmazonS3Client(BucketRootUser, BucketRootPassword, s3Config));
-
+builder.Services.AddSingleton<IAmazonS3>(sp =>
+    new AmazonS3Client(
+        Environment.GetEnvironmentVariable("R2_ACCESS_KEY_ID"),
+        Environment.GetEnvironmentVariable("R2_SECRET_ACCESS_KEY"),
+        s3Config));
+        
 builder.Services.AddSingleton<BucketService>()
 ;
 

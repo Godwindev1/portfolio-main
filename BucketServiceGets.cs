@@ -41,30 +41,6 @@ public class DisposeChainStream(Stream inner, IDisposable chain) : Stream
 }
 public partial class BucketService
 {
-
-    public string GetPresignedUrl(string objectKey, int expiryMinutes = 60)
-    {
-        var request = new GetPreSignedUrlRequest
-        {
-            Protocol = Amazon.S3.Protocol.HTTP,
-            BucketName = _bucketName,
-            Key        = objectKey,
-            Expires    = DateTime.UtcNow.AddMinutes(expiryMinutes)
-        };
-
-        return _s3Client.GetPreSignedURL(request);
-    }
-
-    public string GetVideoUrl(string fileName, int expiryMinutes = 60)
-        => GetPresignedUrl($"{fileName}", expiryMinutes);
-
-    public string GetScreenshotUrl(string fileName, int expiryMinutes = 60)
-        => GetPresignedUrl($"{fileName}", expiryMinutes);
-
-    public string GetFileUrl(string fileName, int expiryMinutes = 60)
-        => GetPresignedUrl($"{fileName}", expiryMinutes);
-
-
     public async Task<(DisposeChainStream stream, string contentType, long contentLength)?> GetObjectStreamAsync(string objectKey, ByteRange ? Range = null, bool isVideo = false)
     {
         try
