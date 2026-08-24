@@ -58,13 +58,18 @@ public partial class BucketService
             
             var response = await _s3Client.GetObjectAsync(request);
 
-            long? totalLength = null;
-            if (response.Headers["Content-Length"] is string contentRange)
+           long? totalLength = null;
+
+            // Read Content-Range header for Range requests
+            if (response.Headers["Content-Range"] is string contentRange)
             {
-                // Format: "bytes 0-1023/94832"
                 var total = contentRange.Split('/').LastOrDefault();
                 if (long.TryParse(total, out var parsed))
                     totalLength = parsed;
+            }
+            else
+            {
+                totalLength = response.ContentLength;
             }
 
             var combinedStream = new DisposeChainStream(response.ResponseStream, response);

@@ -17,26 +17,33 @@ public partial class BucketService
     private readonly AmazonS3Config _s3Config;
     private readonly string _bucketName = "portfolio-bucket";
 
-    private Dictionary<string, string> _FileNameToProgressMapping = new Dictionary<string, string>();
+    private readonly ConcurrentDictionary<string, string> _FileNameToProgressMapping = new();
+    
     public BucketService(IAmazonS3 s3Client, AmazonS3Config s3Config)
     {
         _s3Client = s3Client;
         _s3Config = s3Config;
     }
 
-
     public async Task CreateBucketAsync()
     {
-        var request = new PutBucketRequest
+        try
         {
-            BucketName = _bucketName,
-            UseClientRegion = true
-        };
-
-        if(!await AmazonS3Util.DoesS3BucketExistV2Async(_s3Client, _bucketName))
+            // HeadBucket checks if the bucket exists without invoking ACL APIs
+            await _s3Client.HeadBucketAsync(new HeadBucketRequest { BucketName = _bucketName });
+        }
+        catch (AmazonS3Exception e) when (e.StatusCode == System.Net.HttpStatusCode.NotFound)
         {
             Console.WriteLine($"Creating bucket '{_bucketName}'...");
-            await _s3Client.PutBucketAsync(request);
+            await _s3Client.PutBucketAsync(new PutBucketRequest
+            {
+                BucketName = _bucketName,
+                UseClientRegion = true
+            });
+        }
+        catch (AmazonS3Exception e)
+        {
+            Console.WriteLine($"Bucket check failed: {e.Message}");
         }
     }
 
