@@ -2,7 +2,7 @@ using Amazon.S3;
 using Amazon.S3.Model;
 using Amazon.S3.Transfer;
 using Amazon.S3.Util;
-
+using System.Collections.Concurrent;
 
 public enum UploadType
 {
