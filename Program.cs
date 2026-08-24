@@ -10,6 +10,7 @@ DotEnv.Load();
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Configuration.AddEnvironmentVariables();
+builder.Configuration.AddJsonFile("appsettings.json", optional: true, reloadOnChange: false);
 
 //THIS CURRENT BRANCH USES R2 intead of MINIO 
 
