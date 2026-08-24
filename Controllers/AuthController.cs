@@ -52,7 +52,7 @@ public class AuthController : Controller
             LoginRateLimitMiddleware.RecordFailedAttempt(ip);
             _logger.LogWarning("Failed login attempt from IP {IP} at {Time}", ip, DateTime.UtcNow);
 
-            ModelState.AddModelError(string.Empty, "Invalid username or password.");
+            ModelState.AddModelError(string.Empty, $"{adminUsername}, {adminPassword} Invalid username or password.");
             return View(model);
         }
 
