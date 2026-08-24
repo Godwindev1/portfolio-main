@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Authentication.Cookies;
 using dotenv.net;
 using Microsoft.EntityFrameworkCore;
 using Portfolio.Data;
+using Microsoft.AspNetCore.HttpOverrides;
 using Amazon.S3;
 
 DotEnv.Load();
@@ -42,6 +43,8 @@ builder.Services.AddSingleton<IAmazonS3>(sp =>
         
 builder.Services.AddSingleton<BucketService>()
 ;
+
+
 
 builder.Services.AddControllersWithViews();
 builder.Services.AddScoped<ICaseStudyRepository, CaseStudyRepository>();
