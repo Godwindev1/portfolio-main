@@ -30,7 +30,7 @@ var s3Config = new AmazonS3Config
     ForcePathStyle = true,
     AuthenticationRegion = "auto",
     RequestChecksumCalculation = Amazon.Runtime.RequestChecksumCalculation.WHEN_REQUIRED,
-    ResponseChecksumValidation = Amazon.Runtime.ResponseChecksumValidation.WHEN_REQUIRED
+    ResponseChecksumValidation = Amazon.Runtime.ResponseChecksumValidation.WHEN_REQUIRED,
 };
 
 builder.Services.AddSingleton(s3Config);

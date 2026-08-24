@@ -95,7 +95,9 @@ public partial class BucketService
                 Key = ObjectKey,
                 BucketName = _bucketName,
                 ContentType = ContentType,
-                PartSize = 6291456, // 6 MB chunks
+                PartSize = 6291456, // 6 MB chunks,
+                DisablePayloadSigning = true,             // Disables Streaming SigV4 payload signing for R2
+                DisableDefaultChecksumValidation = true    // Recommended: Prevents signature mismatch on R2
             };
 
             uploadRequest.UploadProgressEvent += (s, e) =>
